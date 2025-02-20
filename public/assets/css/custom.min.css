@@ -1,0 +1,36 @@
+tr td {
+    max-width: 220px;
+    max-height: 1.1em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.select2-container--default .select2-selection--multiple::after {
+    content: "\25BE";
+    font-size: 18px;
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    color: #8f8f8f;
+}
+.select2-container--default .select2-selection--multiple,
+.select2-container--default .select2-selection--single {
+    height: 42px !important;
+    padding: 6px;
+    border-color: #EAEAEA !important;
+    cursor: pointer !important;
+}
+.select2-container--default textarea {
+    cursor: pointer !important;
+}
+.select2-selection__arrow {
+    margin-top: 6px;
+}
+.g-modal-image {
+    height: 400px !important;
+    object-fit: cover;
+}
+.navbar-nav .simplebar-content-wrapper .simplebar-content {
+    padding: 0 !important;
+}
