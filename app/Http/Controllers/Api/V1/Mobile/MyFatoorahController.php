@@ -92,9 +92,17 @@ class MyFatoorahController extends Controller
             'ErrorUrl'          => $callbackURL,
             'Language'          => 'ar',
             'MobileCountryCode' => '+966',
-            'CustomerMobile'    => $order->patient?->user?->phone,
+            'CustomerMobile'    => $this->formatPhoneNumber($order->patient?->user?->phone),
             'CustomerReference' => $orderId,
         ];
+    }
+
+    public function formatPhoneNumber($phone)
+    {
+        if (strlen($phone) > 11) {
+            $phone = preg_replace('/^\+?966/', '', $phone);
+        }
+        return $phone;
     }
 
     /**
