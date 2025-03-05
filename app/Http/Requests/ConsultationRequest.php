@@ -7,6 +7,7 @@ use App\Constants\ConsultationPaymentTypeConstants;
 use App\Constants\ConsultationStatusConstants;
 use App\Constants\ConsultationTypeConstants;
 use App\Constants\ReminderConstants;
+use App\Models\Doctor;
 use App\Repositories\Contracts\ConsultationContract;
 use App\Repositories\Contracts\DoctorContract;
 use App\Repositories\Contracts\DoctorScheduleDayShiftContract;
@@ -34,14 +35,18 @@ class ConsultationRequest extends FormRequest
     {
         $validated = parent::validated($key, $default);
         $validated['patient_id'] = $validated['patient_id'] ?? $this->user()->patient?->id;
+
         if ($validated['type'] == ConsultationTypeConstants::WITH_APPOINTMENT->value) {
             $shiftTaken = resolve(ConsultationContract::class)->findBy('doctor_schedule_day_shift_id', $validated['doctor_schedule_day_shift_id'], false);
+
             if ($shiftTaken) {
                 throw new ValidationException(__('messages.schedule_slot_expired'));
             }
+
             $validated['amount'] = resolve(DoctorContract::class)->find($validated['doctor_id'])->with_appointment_consultation_price;
             $scheduleSlot = resolve(DoctorScheduleDayShiftContract::class)->find($validated['doctor_schedule_day_shift_id']);
             $actualTime = Carbon::parse($scheduleSlot->day->date->format('Y-m-d') . ' ' . $scheduleSlot->from_time->format('H:i:s'));
+
             if ($actualTime->isPast()) {
                 throw new ValidationException(__('messages.schedule_slot_expired'));
             } else {
@@ -54,6 +59,15 @@ class ConsultationRequest extends FormRequest
 
             $validated['is_active'] = false;
         }
+
+        if (! isset($validated['contact_type']) || $validated['contact_type'] == null) {
+            $validated['contact_type'] = ConsultationContactTypeConstants::AUDIO->value;
+        }
+
+        if (! isset($validated['medical_speciality_id']) || $validated['medical_speciality_id'] == null) {
+            $validated['medical_speciality_id'] = Doctor::find($validated['doctor_id'])->medicalSpecialities->first()->id;
+        }
+
         return $validated;
     }
 
@@ -73,12 +87,11 @@ class ConsultationRequest extends FormRequest
             $patientCount = resolve(ConsultationContract::class)->countWithFilters($filters);
             $relative = request('patient_id');
             $relativesCount = 0;
-            if($relative){
+            if ($relative) {
                 $filters['patient'] = $patient->relatives->where('id', request('patient_id'))->first()?->id;
                 $relativesCount = resolve(ConsultationContract::class)->countWithFilters($filters);
             }
-            if (($patientCount && !request('patient_id')) || $relativesCount)
-            {
+            if (($patientCount && !request('patient_id')) || $relativesCount) {
                 abort(403, __('messages.new_urgent_consultation_validation'));
             }
         }
@@ -93,18 +106,20 @@ class ConsultationRequest extends FormRequest
     {
         return [
             'patient_id' => sprintf(config('validations.model.active_null'), 'patients'),
-            'doctor_id' => sprintf(config('validations.model.active_null'), 'doctors')
-                . '|required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value,
-            'patient_description' => config('validations.text.req'),
+            'doctor_id' => sprintf(config('validations.model.active_null'), 'doctors') . '|required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value,
+
+            // remove from here
+            'patient_description' => config('validations.text.null'),
             'attachments' => config('validations.array.null'),
             'attachments.*' => sprintf(config('validations.model.req'), 'files'),
+
             'type' => config('validations.integer.req') . '|in:' . implode(',', ConsultationTypeConstants::values()),
-            'doctor_schedule_day_shift_id' => 'required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value . '|' .
-                sprintf(config('validations.model.null'), 'doctor_schedule_day_shifts', 'id'),
-            'contact_type' => config('validations.integer.null') . '|required_if:type,==,' . ConsultationTypeConstants::URGENT->value
-                . '|in:' . implode(',', ConsultationContactTypeConstants::values()),
-            'reminder_before' => 'required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value . '|' .
-                config('validations.integer.null') . '|in:' . implode(',', ReminderConstants::values()),
+            'doctor_schedule_day_shift_id' => 'required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value . '|' . sprintf(config('validations.model.null'), 'doctor_schedule_day_shifts', 'id'),
+
+            'contact_type' => config('validations.integer.null') . '|required_if:type,==,' . ConsultationTypeConstants::URGENT->value . '|in:' . implode(',', ConsultationContactTypeConstants::values()),
+
+            // 'reminder_before' => 'required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value . '|' . config('validations.integer.null') . '|in:' . implode(',', ReminderConstants::values()), // removed
+
             'payment_type' => config('validations.integer.req') . '|in:' . implode(',', ConsultationPaymentTypeConstants::values()),
             'medical_speciality_id' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
             'coupon_code' => ['nullable', 'exists:coupons,code', new ValidCouponRule()]

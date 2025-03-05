@@ -13,12 +13,13 @@ class DoctorResource extends BaseResource
      * @param Request $request
      * @return array
      */
-    public function toArray(Request $request) : array
+    public function toArray(Request $request): array
     {
         $this->micro = [
             'id' => $this->id,
             'national_id' => $this->national_id,
             'medical_id' => $this->medical_id,
+            'has_upcoming_shifts' => $this->has_upcoming_shifts,
         ];
         $this->mini = [
             'is_active' => $this->is_active,
