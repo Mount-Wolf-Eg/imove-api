@@ -36,7 +36,7 @@ class ConsultationRequest extends FormRequest
         $validated = parent::validated($key, $default);
         $validated['patient_id'] = $validated['patient_id'] ?? $this->user()->patient?->id;
 
-        if ($validated['type'] == ConsultationTypeConstants::WITH_APPOINTMENT->value) {
+        if (isset($validated['type']) && $validated['type'] == ConsultationTypeConstants::WITH_APPOINTMENT->value) {
             $shiftTaken = resolve(ConsultationContract::class)->findBy('doctor_schedule_day_shift_id', $validated['doctor_schedule_day_shift_id'], false);
 
             if ($shiftTaken) {
@@ -104,26 +104,50 @@ class ConsultationRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'patient_id' => sprintf(config('validations.model.active_null'), 'patients'),
-            'doctor_id' => sprintf(config('validations.model.active_null'), 'doctors') . '|required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value,
+        if (! $this->consultation) {
+            return [
+                'patient_id' => sprintf(config('validations.model.active_null'), 'patients'),
+                'doctor_id' => sprintf(config('validations.model.active_null'), 'doctors') . '|required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value,
+    
+                'type' => config('validations.integer.req') . '|in:' . implode(',', ConsultationTypeConstants::values()),
+                'doctor_schedule_day_shift_id' => 'required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value . '|' . sprintf(config('validations.model.null'), 'doctor_schedule_day_shifts', 'id'),
+    
+                'contact_type' => config('validations.integer.null') . '|in:' . implode(',', ConsultationContactTypeConstants::values()),
+    
+                // 'reminder_before' => 'required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value . '|' . config('validations.integer.null') . '|in:' . implode(',', ReminderConstants::values()), // removed
+    
+                'payment_type' => config('validations.integer.req') . '|in:' . implode(',', ConsultationPaymentTypeConstants::values()),
+                'medical_speciality_id' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
+                'coupon_code' => ['nullable', 'exists:coupons,code', new ValidCouponRule()]
+            ];
+        } else {
+            return [
+                'patient_description' => config('validations.text.null'),
+                'attachments' => config('validations.array.null'),
+                'attachments.*' => sprintf(config('validations.model.req'), 'files'),
+            ];
+        }
 
-            // remove from here
-            'patient_description' => config('validations.text.null'),
-            'attachments' => config('validations.array.null'),
-            'attachments.*' => sprintf(config('validations.model.req'), 'files'),
+        // return [
+        //     'patient_id' => sprintf(config('validations.model.active_null'), 'patients'),
+        //     'doctor_id' => sprintf(config('validations.model.active_null'), 'doctors') . '|required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value,
 
-            'type' => config('validations.integer.req') . '|in:' . implode(',', ConsultationTypeConstants::values()),
-            'doctor_schedule_day_shift_id' => 'required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value . '|' . sprintf(config('validations.model.null'), 'doctor_schedule_day_shifts', 'id'),
+        //     // remove from here
+        //     'patient_description' => config('validations.text.null'),
+        //     'attachments' => config('validations.array.null'),
+        //     'attachments.*' => sprintf(config('validations.model.req'), 'files'),
 
-            'contact_type' => config('validations.integer.null') . '|required_if:type,==,' . ConsultationTypeConstants::URGENT->value . '|in:' . implode(',', ConsultationContactTypeConstants::values()),
+        //     'type' => config('validations.integer.req') . '|in:' . implode(',', ConsultationTypeConstants::values()),
+        //     'doctor_schedule_day_shift_id' => 'required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value . '|' . sprintf(config('validations.model.null'), 'doctor_schedule_day_shifts', 'id'),
 
-            // 'reminder_before' => 'required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value . '|' . config('validations.integer.null') . '|in:' . implode(',', ReminderConstants::values()), // removed
+        //     'contact_type' => config('validations.integer.null') . '|required_if:type,==,' . ConsultationTypeConstants::URGENT->value . '|in:' . implode(',', ConsultationContactTypeConstants::values()),
 
-            'payment_type' => config('validations.integer.req') . '|in:' . implode(',', ConsultationPaymentTypeConstants::values()),
-            'medical_speciality_id' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
-            'coupon_code' => ['nullable', 'exists:coupons,code', new ValidCouponRule()]
-        ];
+        //     // 'reminder_before' => 'required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value . '|' . config('validations.integer.null') . '|in:' . implode(',', ReminderConstants::values()), // removed
+
+        //     'payment_type' => config('validations.integer.req') . '|in:' . implode(',', ConsultationPaymentTypeConstants::values()),
+        //     'medical_speciality_id' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
+        //     'coupon_code' => ['nullable', 'exists:coupons,code', new ValidCouponRule()]
+        // ];
     }
 
     /**
