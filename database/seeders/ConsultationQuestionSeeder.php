@@ -23,7 +23,7 @@ class ConsultationQuestionSeeder extends Seeder
 
         foreach ($questions as $question) {
             ConsultationQuestion::create([
-                'name' => $question['question'], // Storing name as JSON
+                'question' => $question['question'], // Storing name as JSON
             ]);
         }
     }
