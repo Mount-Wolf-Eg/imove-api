@@ -116,6 +116,12 @@ class Consultation extends Model
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
+
+    public function consultationQuestions(): BelongsToMany
+    {
+        return $this->belongsToMany(ConsultationQuestion::class, 'consultation_question')->withPivot('answer');
+    }
+
     //---------------------relations-------------------------------------
     //---------------------constants-------------------------------------
     public static function types(): array

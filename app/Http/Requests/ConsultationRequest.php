@@ -125,6 +125,10 @@ class ConsultationRequest extends FormRequest
                 'patient_description' => config('validations.text.null'),
                 'attachments' => config('validations.array.null'),
                 'attachments.*' => sprintf(config('validations.model.req'), 'files'),
+
+                'questions' => 'nullable|array',
+                'questions.*.consultation_question_id' => 'required|exists:consultation_questions,id',
+                'questions.*.answer' => 'required|string',
             ];
         }
 
