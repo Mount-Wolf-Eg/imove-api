@@ -24,7 +24,7 @@ class Article extends Model
         'mostLiked', 'active'];
     protected array $searchable = ['title', 'content'];
     protected array $dates = ['publish_date'];
-    public array $filterModels = ['MedicalSpeciality'];
+    public array $filterModels = ['MedicalSpeciality', 'ConsultationQuestion'];
     public array $filterCustom = ['complaintsTypes'];
     public array $translatable = ['title', 'content'];
 
