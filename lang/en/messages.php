@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'credit' => 'Credit',
+    'wallet' => 'Wallet',
     'tabibak' => 'Tabibak',
     'dashboard' => 'Dashboard',
     'overview' => 'Overview',

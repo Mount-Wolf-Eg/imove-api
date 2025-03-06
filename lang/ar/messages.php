@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'credit' => 'فيزا / ماستر كارد',
+    'wallet' => 'محفظة',
     'tabibak' => 'طبيبك',
     'dashboard' => 'لوحة القيادة',
     'overview' => 'ملخص',

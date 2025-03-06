@@ -7,14 +7,14 @@ enum ConsultationPaymentTypeConstants : int
 {
     use ConstantsTrait;
 
-    case TABBY = 1;
-    case INSURANCE = 2;
+    case CREDIT = 1;
+    case WALLET = 2;
 
     public static function getLabels($value): string
     {
         return match ($value) {
-            self::TABBY => __('messages.tabby'),
-            self::INSURANCE => __('messages.insurance')
+            self::CREDIT => __('messages.credit'),
+            self::WALLET => __('messages.wallet')
         };
     }
 
