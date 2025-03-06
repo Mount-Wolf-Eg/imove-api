@@ -8,28 +8,25 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
-class Hospital extends Model
+class ConsultationQuestion extends Model
 {
-    use ModelTrait, SearchTrait, SoftDeletes, HasTranslations;
+    use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     
     public const ADDITIONAL_PERMISSIONS = [];
-    protected $fillable = ['name', 'is_active'];
-    protected array $filters = ['keyword', 'name'];
-    protected array $searchable = ['name'];
+    protected $fillable = ['question', 'is_active'];
+    protected array $filters = ['keyword', 'question'];
+    protected array $searchable = ['question'];
     protected array $dates = [];
     public array $filterModels = [];
     public array $filterCustom = [];
-    public array $translatable = ['name'];
+    public array $translatable = ['question'];
 
     //---------------------relations-------------------------------------
 
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
-    public function scopeOfName($query, $name)
-    {
-        return $query->where('name', $name);
-    }
+
     //---------------------Scopes-------------------------------------
 
 }

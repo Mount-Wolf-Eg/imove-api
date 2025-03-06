@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AcademicDegreeResource;
 use App\Http\Resources\CityResource;
+use App\Http\Resources\ConsultationQuestionResource;
 use App\Http\Resources\DiseaseResource;
 use App\Http\Resources\FaqSubjectResource;
 use App\Http\Resources\HospitalResource;
@@ -68,6 +69,7 @@ class FilterController extends Controller
         return match ($model) {
             'City' => CityResource::collection($data),
             'MedicalSpeciality' => MedicalSpecialityResource::collection($data),
+            'ConsultationQuestion' => ConsultationQuestionResource::collection($data),
             'AcademicDegree' => AcademicDegreeResource::collection($data),
             'VendorType' => VendorTypeResource::collection($data),
             'VendorService' => VendorServiceResource::collection($data),
