@@ -32,6 +32,10 @@ class MedicalSpecialityRequest extends FormRequest
             'description.ar' => config('validations.string.null'),
             'description.en' => config('validations.string.null'),
             'percentage' => config('validations.double.req') . '|min:1|max:100',
+
+            'position' => 'required|min:front,back',
+
+            'icon' => sprintf(config('validations.model.null'), 'files')
         ];
     }
 
@@ -47,6 +51,8 @@ class MedicalSpecialityRequest extends FormRequest
             'description.ar' => __('messages.description_ar'),
             'description.en' => __('messages.description_en'),
             'percentage' => __('messages.percentage'),
+
+            'icon' => __('attributes.image')
         ];
     }
 

@@ -13,12 +13,13 @@ class MedicalSpecialityResource extends BaseResource
      * @param Request $request
      * @return array
      */
-    public function toArray(Request $request) : array
+    public function toArray(Request $request): array
     {
         $this->micro = [
             'id' => $this->id,
             'name' => $this->name,
             'position' => $this->position,
+            'icon' => FileResource::make($this->icon),
         ];
         $this->mini = [
             'is_active' => $this->is_active,
@@ -27,11 +28,9 @@ class MedicalSpecialityResource extends BaseResource
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
         ];
-        $this->full = [
-        ];
+        $this->full = [];
         //$this->relationLoaded()
-        $this->relations = [
-        ];
+        $this->relations = [];
         return $this->getResource();
     }
 }

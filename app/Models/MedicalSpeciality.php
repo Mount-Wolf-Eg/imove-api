@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\FileConstants;
 use App\Traits\ModelTrait;
 use App\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,7 @@ class MedicalSpeciality extends Model
     public array $filterCustom = [];
     public array $translatable = ['name', 'description'];
     protected array $definedRelations = ['doctors', 'coupons', 'articles', 'consultations'];
+    protected $with = ['icon'];
 
     //---------------------relations-------------------------------------
 
@@ -45,6 +47,11 @@ class MedicalSpeciality extends Model
         return $this->hasMany(Consultation::class);
     }
 
+    public function icon()
+    {
+        return $this->morphOne(File::class, 'fileable')
+            ->where('type', FileConstants::MEDICAL_SPECIALTY_ICON)->latest();
+    }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
