@@ -17,6 +17,9 @@ class ConsultationQuestionResource extends BaseResource
         $this->micro = [
             'id' => $this->id,
             'question' => $this->question,
+            'answer' => $this->whenPivotLoaded('consultation_question', function () {
+                return $this->pivot->answer;
+            }),
         ];
         $this->mini = [
             'is_active' => $this->is_active,

@@ -69,6 +69,7 @@ class ConsultationResource extends BaseResource
             'doctor' => $this->relationLoaded('doctor') ? new DoctorResource($this->doctor) : null,
             'vendors' => $this->relationLoaded('vendors') ? VendorResource::collection($this->vendors) : [],
             'medicalSpeciality' => $this->relationLoaded('medicalSpeciality') ? new MedicalSpecialityResource($this->medicalSpeciality) : null,
+            'consultationQuestions' => $this->relationLoaded('consultationQuestions') ? ConsultationQuestionResource::collection($this->consultationQuestions) : [],
             'doctorScheduleDayShift' => $this->relationLoaded('doctorScheduleDayShift') ? new DoctorScheduleDayShiftResource($this->doctorScheduleDayShift) : null,
             'replies' => $this->relationLoaded('replies') ? ConsultationReplyResource::collection($this->replies) : [],
             'parent' => $this->relationLoaded('parent') ? new self($this->parent) : null,

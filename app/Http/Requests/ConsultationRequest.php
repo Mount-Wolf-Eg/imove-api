@@ -49,7 +49,7 @@ class ConsultationRequest extends FormRequest
 
             if ($actualTime->isPast()) {
                 throw new ValidationException(__('messages.schedule_slot_expired'));
-            } else {
+            } elseif(isset($validated['reminder_before'])) {
                 $scheduleDay = $scheduleSlot->day;
                 $scheduleTime = $scheduleDay->date->format('Y-m-d') . ' ' . $scheduleSlot->from_time->format('H:i:s');
                 $scheduleTime = Carbon::parse($scheduleTime);
