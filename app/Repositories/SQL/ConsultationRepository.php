@@ -2,6 +2,7 @@
 
 namespace App\Repositories\SQL;
 
+use App\Constants\ConsultationPaymentTypeConstants;
 use App\Constants\PaymentMethodConstants;
 use App\Constants\PaymentStatusConstants;
 use App\Models\Consultation;
@@ -29,8 +30,8 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
 
     public function syncRelations($model, $relations): void
     {
-        if (!empty($relations['attachments'])){
-            foreach ($relations['attachments'] as $attachment){
+        if (!empty($relations['attachments'])) {
+            foreach ($relations['attachments'] as $attachment) {
                 $fileModel = resolve(FileContract::class)->find($attachment);
                 $model->attachments()->save($fileModel);
             }
@@ -42,7 +43,7 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
             $model->consultationQuestions()->sync($relations['questions']);
 
         // this is temporary, till payment gateway is implemented
-        if ($model->amount && !$model->payment){
+        if ($model->amount && !$model->payment) {
             $paymentData = [
                 'payer_id' => $model->patient->user_id,
                 'beneficiary_id' => $model->doctor?->user_id,
@@ -51,18 +52,29 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
                 'currency_id' => 1,
                 'payment_method' => PaymentMethodConstants::CREDIT_CARD->value,
             ];
-            if (!empty($relations['coupon_code'])){
+            if (!empty($relations['coupon_code'])) {
                 $coupon = resolve(CouponContract::class)->findBy('code', $relations['coupon_code'], false);
-                if ($coupon?->isValidForUser($model->patient->user_id, $model->medical_speciality_id))
-                {
+                if ($coupon?->isValidForUser($model->patient->user_id, $model->medical_speciality_id)) {
                     $paymentData['coupon_id'] = $coupon->id;
                     $paymentData['amount'] = $coupon->applyDiscount($model->amount);
                 }
             }
+
             $model->payment()->create($paymentData);
+
+            if ((int) request()->payment_type == ConsultationPaymentTypeConstants::WALLET->value) {
+                $user = auth()->user();
+                // if ($user->wallet < $paymentData['amount']) {
+                //     throw new \Exception(__('messages.insufficient_balance'));
+                // }
+
+                $user->update([
+                    'wallet' => $user->wallet - $paymentData['amount']
+                ]);
+            }
         }
 
-        if ($model->status && $model->isCancelled() && $model->payment){
+        if ($model->status && $model->isCancelled() && $model->payment) {
             $model->payment->update([
                 'status' => PaymentStatusConstants::REFUNDED->value
             ]);

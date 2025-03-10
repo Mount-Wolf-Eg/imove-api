@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'insufficient_wallet_balance' => 'رصيد المحفظة غير كافٍ',
     'credit' => 'فيزا / ماستر كارد',
     'wallet' => 'محفظة',
     'tabibak' => 'طبيبك',

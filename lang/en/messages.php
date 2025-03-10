@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'insufficient_wallet_balance' => 'Insufficient wallet balance',
     'credit' => 'Credit',
     'wallet' => 'Wallet',
     'tabibak' => 'Tabibak',
