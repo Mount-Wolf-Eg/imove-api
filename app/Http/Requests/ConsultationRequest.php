@@ -36,6 +36,10 @@ class ConsultationRequest extends FormRequest
         $validated = parent::validated($key, $default);
         $validated['patient_id'] = $validated['patient_id'] ?? $this->user()->patient?->id;
 
+        if (! isset($validated['doctor_id'])) {
+            return $validated;
+        }
+
         if (isset($validated['doctor_id']) && isset($validated['type']) && $validated['type'] == ConsultationTypeConstants::WITH_APPOINTMENT->value) {
             $shiftTaken = resolve(ConsultationContract::class)->findBy('doctor_schedule_day_shift_id', $validated['doctor_schedule_day_shift_id'], false);
 
