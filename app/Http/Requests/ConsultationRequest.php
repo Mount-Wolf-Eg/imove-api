@@ -36,7 +36,7 @@ class ConsultationRequest extends FormRequest
         $validated = parent::validated($key, $default);
         $validated['patient_id'] = $validated['patient_id'] ?? $this->user()->patient?->id;
 
-        if (isset($validated['type']) && $validated['type'] == ConsultationTypeConstants::WITH_APPOINTMENT->value) {
+        if (isset($validated['type']) && $validated['type'] == ConsultationTypeConstants::WITH_APPOINTMENT->value && isset($validated['doctor_id'])) {
             $shiftTaken = resolve(ConsultationContract::class)->findBy('doctor_schedule_day_shift_id', $validated['doctor_schedule_day_shift_id'], false);
 
             if ($shiftTaken) {
@@ -64,7 +64,7 @@ class ConsultationRequest extends FormRequest
             $validated['contact_type'] = ConsultationContactTypeConstants::AUDIO->value;
         }
 
-        if (! isset($validated['medical_speciality_id']) || $validated['medical_speciality_id'] == null) {
+        if (! isset($validated['medical_speciality_id']) || $validated['medical_speciality_id'] == null && isset($validated['doctor_id'])) {
             $validated['medical_speciality_id'] = Doctor::find($validated['doctor_id'])->medicalSpecialities->first()->id;
         }
 
@@ -96,7 +96,7 @@ class ConsultationRequest extends FormRequest
             }
         }
 
-        if ((int) request(('payment_type')) === ConsultationPaymentTypeConstants::WALLET->value) {
+        if ((int) request(('payment_type')) === ConsultationPaymentTypeConstants::WALLET->value && isset(request('doctor_id'))) {
             $amount = Doctor::find(request('doctor_id'))->with_appointment_consultation_price;
             if ($amount > auth()->user()->wallet) {
                 abort(422, __('messages.insufficient_wallet_balance'));
