@@ -96,7 +96,7 @@ class ConsultationRequest extends FormRequest
             }
         }
 
-        if ((int) request(('payment_type')) === ConsultationPaymentTypeConstants::WALLET->value && isset(request('doctor_id'))) {
+        if ((int) request(('payment_type')) === ConsultationPaymentTypeConstants::WALLET->value && request('doctor_id')) {
             $amount = Doctor::find(request('doctor_id'))->with_appointment_consultation_price;
             if ($amount > auth()->user()->wallet) {
                 abort(422, __('messages.insufficient_wallet_balance'));
