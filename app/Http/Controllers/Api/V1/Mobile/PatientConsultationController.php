@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Api\V1\Mobile;
 
 use App\Constants\ConsultationStatusConstants;
+use App\Constants\FileConstants;
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Requests\ConsultationRequest;
 use App\Http\Requests\PatientUrgentApproveRequest;
 use App\Http\Requests\PatientUrgentRejectRequest;
 use App\Http\Resources\ConsultationResource;
+use App\Http\Resources\FileResource;
 use App\Models\Consultation;
+use App\Models\File;
 use App\Repositories\Contracts\ConsultationContract;
 use App\Repositories\Contracts\DoctorContract;
 use App\Services\Repositories\ConsultationNotificationService;
@@ -220,5 +223,19 @@ class PatientConsultationController extends BaseApiController
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
+    }
+
+    public function files()
+    {
+        $attachments = File::where('type', FileConstants::FILE_TYPE_CONSULTATION_ATTACHMENTS)
+            ->whereHas('consultation', function ($query) {
+                $query->where('patient_id', auth()->user()->patient?->id);
+            })
+            ->get();
+
+        return response()->json([
+            'status' => 200,
+            'files'  => FileResource::collection($attachments),
+        ]);
     }
 }

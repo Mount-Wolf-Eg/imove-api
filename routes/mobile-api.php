@@ -21,6 +21,7 @@ use App\Http\Controllers\Api\V1\Mobile\PatientRelativeController;
 use App\Http\Controllers\Api\V1\Mobile\PaymentController;
 use App\Http\Controllers\Api\V1\Mobile\RateController;
 use App\Http\Controllers\Api\V1\Mobile\VendorController;
+use Illuminate\Routing\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
     Route::post('register-user-as-patient', [AuthController::class, 'registerUserAsPatient']);
@@ -57,6 +58,9 @@ Route::group(['middleware' => 'locale'], static function () {
                 Route::post('/{consultation}/approve-urgent-doctor-offer', 'approveUrgentDoctorOffer');
                 Route::post('/{consultation}/reject-urgent-doctor-offer',  'rejectUrgentDoctorOffer');
             });
+
+            Route::get('consultations-files', [PatientConsultationController::class, 'files']);
+
             Route::apiResource('rates', RateController::class)->only('store', 'update', 'destroy');
             Route::apiResource('complaints', ComplaintController::class)->only('store', 'show', 'update', 'destroy');
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('index');
