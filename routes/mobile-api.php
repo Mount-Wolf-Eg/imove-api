@@ -77,6 +77,8 @@ Route::group(['middleware' => 'locale'], static function () {
         });
 
         Route::group(['prefix' => 'doctor', 'middleware' => 'active_doctor'], static function () {
+            Route::get('consultation-files', [FileController::class, 'consultationFiles']);
+            
             Route::put('update-main-info', [DoctorProfileController::class, 'updateMainInfo']);
             Route::put('update-professional-status', [DoctorProfileController::class, 'updateProfessionalStatus']);
             Route::put('update-schedule', [DoctorProfileController::class, 'updateSchedule']);
