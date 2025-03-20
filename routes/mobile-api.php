@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\V1\Mobile\PatientRelativeController;
 use App\Http\Controllers\Api\V1\Mobile\PaymentController;
 use App\Http\Controllers\Api\V1\Mobile\RateController;
 use App\Http\Controllers\Api\V1\Mobile\VendorController;
-use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
     Route::post('register-user-as-patient', [AuthController::class, 'registerUserAsPatient']);
@@ -78,7 +78,7 @@ Route::group(['middleware' => 'locale'], static function () {
 
         Route::group(['prefix' => 'doctor', 'middleware' => 'active_doctor'], static function () {
             Route::get('consultation-files', [FileController::class, 'consultationFiles']);
-            
+
             Route::put('update-main-info', [DoctorProfileController::class, 'updateMainInfo']);
             Route::put('update-professional-status', [DoctorProfileController::class, 'updateProfessionalStatus']);
             Route::put('update-schedule', [DoctorProfileController::class, 'updateSchedule']);
