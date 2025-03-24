@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Api\V1\FilterController;
 use App\Http\Controllers\Api\V1\Mobile\ArticleController;
-use App\Http\Controllers\Api\V1\Mobile\AuthController;
+use App\Http\Controllers\Api\V1\Mobile\NewAuthController;
 use App\Http\Controllers\Api\V1\Mobile\ComplaintController;
 use App\Http\Controllers\Api\V1\Mobile\ContactController;
 use App\Http\Controllers\Api\V1\Mobile\CouponController;
@@ -24,9 +24,9 @@ use App\Http\Controllers\Api\V1\Mobile\VendorController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
-    Route::post('register-user-as-patient', [AuthController::class, 'registerUserAsPatient']);
-    Route::post('send-verification-code', [AuthController::class, 'sendVerificationCode']);
-    Route::post('login', [AuthController::class, 'login']);
+    // Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // old
+    Route::post('send-verification-code', [NewAuthController::class, 'sendVerificationCode']);
+    Route::post('login', [NewAuthController::class, 'login']);
 
     // visitors apis (not authenticated)
     Route::get('filters/{model}', FilterController::class);
@@ -34,11 +34,14 @@ Route::group(['middleware' => 'locale'], static function () {
     Route::apiResource('faqs', FaqController::class)->only('index');
     Route::apiResource('doctors', DoctorController::class)->only('index', 'show');
     Route::apiResource('files', FileController::class)->only('store', 'destroy');
-
+    
     Route::group(['middleware' => 'auth:sanctum'], static function () {
+        Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // new
+        Route::post('register-user-as-doctor', [NewAuthController::class, 'registerUserAsDoctor']); // new
+        Route::post('add-schedules', [NewAuthController::class, 'updateSchedule']); // new
 
-        Route::post('logout', [AuthController::class, 'logout']);
-        Route::get('profile', [AuthController::class, 'profile']);
+        Route::post('logout', [NewAuthController::class, 'logout']);
+        Route::get('profile', [NewAuthController::class, 'profile']);
 
         Route::apiResource('contact', ContactController::class)->only('store');
 
@@ -70,7 +73,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::resource('coupons', CouponController::class)->only('index');
             Route::get('coupons/{coupon:code}/apply', [CouponController::class, 'applyCoupon']);
 
-            Route::post('register-user-as-doctor', [AuthController::class, 'registerUserAsDoctor']);
+            // Route::post('register-user-as-doctor', [NewAuthController::class, 'registerUserAsDoctor']); // old
 
             Route::controller(MyFatoorahController::class)->prefix('payment')->group(function () {
                 Route::post('/', 'getUrl');

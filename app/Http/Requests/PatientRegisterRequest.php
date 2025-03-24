@@ -21,7 +21,9 @@ class PatientRegisterRequest extends FormRequest
 
     public function validated($key = null, $default = null): array
     {
-        $validated = parent::validated();
+        $validated            = parent::validated();
+        $validated['phone']   = $validated['phone'] ?? auth()->user()->phone;
+        $validated['user_id'] = auth()->id();
         return UserRequest::prepareUserForRoles($validated, RoleNameConstants::PATIENT->value);
     }
 
@@ -34,12 +36,12 @@ class PatientRegisterRequest extends FormRequest
     {
         return [
             'name' => 'required|string|min:3|max:250|regex:/^(\b[\pL\pM]+\b\s+){2}\b[\pL\pM]+\b$/u',
-            'gender' => config('validations.integer.req').'|in:'. implode(',', UserGenderConstants::values()),
-            'national_id' => config('validations.integer.req').'|unique:patients,national_id',
-            // 'date_of_birth' => config('validations.date.req'),
-            'date_of_birth' => sprintf(config('validations.date.req_after'), '1960-12-31'),
-            'phone' => config('validations.phone.req').'|unique:users,phone',
-            'city_id' => sprintf(config('validations.model.req'), 'cities'),
+            'gender' => config('validations.integer.req') . '|in:' . implode(',', UserGenderConstants::values()),
+            'national_id' => config('validations.integer.req') . '|unique:patients,national_id',
+            // 'date_of_birth' => config('validations.date.req'), // old
+            'date_of_birth' => sprintf(config('validations.date.null_after'), '1960-12-31'),
+            // 'phone' => config('validations.phone.req') . '|unique:users,phone', // old
+            'city_id' => sprintf(config('validations.model.null'), 'cities'), // new null
             'image' => sprintf(config('validations.model.null'), 'files')
         ];
     }

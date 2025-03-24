@@ -61,13 +61,14 @@ class UserAuthService
 
     public function registerUserAsPatient($data)
     {
-        $patient = $this->patientContract->create($data);
-        $this->sendVerificationCode($patient->user);
+        $patient = $this->patientContract->defaultUpdateOrCreate(['user_id' => $data['user_id']], $data);
+        // $this->sendVerificationCode($patient->user);
         return $patient;
     }
 
     public function registerUserAsDoctor($data)
     {
-        return $this->doctorContract->create($data);
+        return $this->doctorContract->defaultUpdateOrCreate(['user_id' => $data['user_id']], $data);
+        // return $this->doctorContract->create($data);
     }
 }

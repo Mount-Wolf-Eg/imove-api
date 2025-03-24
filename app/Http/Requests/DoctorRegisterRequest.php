@@ -24,30 +24,34 @@ class DoctorRegisterRequest extends FormRequest
 
     public function validated($key = null, $default = null)
     {
-        $validated = parent::validated();
-        $validated['user_id'] = auth()->id();
-        $validated['role'] = resolve(RoleContract::class)->findBy('name', RoleNameConstants::DOCTOR->value);
+        $validated              = parent::validated();
+        $validated['user_id']   = auth()->id();
+        $validated['role']      = resolve(RoleContract::class)->findBy('name', RoleNameConstants::DOCTOR->value);
         $validated['is_active'] = false;
-        return array_merge($validated, DoctorScheduleRequest::afterValidation($validated));
+
+        return $validated;
+
+        // return array_merge($validated, DoctorScheduleRequest::afterValidation($validated));
     }
 
     public function rules(): array
     {
         $rules = [
-            'specialities' => config('validations.array.req'),
-            'specialities.*' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
-            'academic_degree_id' => sprintf(config('validations.model.active_req'), 'academic_degrees'),
-            'national_id' => config('validations.string.req'),
-            'medical_id' => config('validations.string.req'),
-            'city_id' => sprintf(config('validations.model.active_req'), 'cities'),
-            'experience_years' => config('validations.integer.req'),
-            'bio' => config('validations.string.req'),
-            'attachments' => config('validations.array.null'),
-            'attachments.*' => sprintf(config('validations.model.req'), 'files'),
-            'urgent_consultation_enabled' => config('validations.boolean.req'),
-            'with_appointment_consultation_enabled' => config('validations.boolean.req'),
+            'specialities'                          => config('validations.array.req'),
+            'specialities.*'                        => sprintf(config('validations.model.active_req'), 'medical_specialities'),
+            'academic_degree_id'                    => sprintf(config('validations.model.active_req'), 'academic_degrees'),
+            'national_id'                           => config('validations.string.req'),
+            'medical_id'                            => config('validations.string.req'),
+            'city_id'                               => sprintf(config('validations.model.active_null'), 'cities'),
+            'experience_years'                      => config('validations.integer.null'),
+            'bio'                                   => config('validations.string.null'),
+            'attachments'                           => config('validations.array.null'),
+            'attachments.*'                         => sprintf(config('validations.model.req'), 'files'),
+            'urgent_consultation_enabled'           => config('validations.boolean.null'),
+            'with_appointment_consultation_enabled' => config('validations.boolean.null'),
         ];
-        return array_merge($rules, (new DoctorScheduleRequest())->rules());
-    }
 
+        return $rules;
+        // return array_merge($rules, (new DoctorScheduleRequest())->rules());
+    }
 }
