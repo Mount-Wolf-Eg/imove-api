@@ -39,9 +39,18 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
         if (!empty($relations['vendors']))
             $model->vendors()->sync($relations['vendors']);
 
-        if (!empty($relations['questions']))
+        if (!empty($relations['questions'])) {
             info($relations['questions']);
-            $model->consultationQuestions()->sync($relations['questions']);
+
+            $formatted = collect($relations['questions'])
+                ->keyBy('consultation_question_id')
+                ->map(function ($item) {
+                    return ['answer' => $item['answer']];
+                })
+                ->toArray();
+
+            $model->consultationQuestions()->sync($formatted);
+        }
 
         // this is temporary, till payment gateway is implemented
         if ($model->amount && !$model->payment) {
