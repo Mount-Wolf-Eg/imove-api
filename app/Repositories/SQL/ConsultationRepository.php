@@ -40,8 +40,6 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
             $model->vendors()->sync($relations['vendors']);
 
         if (!empty($relations['questions'])) {
-            info($relations['questions']);
-
             $formatted = collect($relations['questions'])
                 ->keyBy('consultation_question_id')
                 ->map(function ($item) {
