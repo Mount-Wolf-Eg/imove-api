@@ -7,7 +7,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class DoctorScheduleRequest extends FormRequest
 {
-
     public function authorize(): bool
     {
         return (bool) auth()->user()->doctor;

@@ -33,7 +33,7 @@ class CouponRequest extends FormRequest
             'valid_from' => config('validations.date.req').'|after_or_equal:today',
             'valid_to' => config('validations.date.req') .'|after:valid_from',
             'description' => config('validations.string.null'),
-            'specialities' => config('validations.array.req'),
+            'specialities' => config('validations.array.null'),
             'specialities.*' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
             'user_limit' => config('validations.integer.req'),
             'total_limit' => config('validations.integer.req').'|gte:user_limit',

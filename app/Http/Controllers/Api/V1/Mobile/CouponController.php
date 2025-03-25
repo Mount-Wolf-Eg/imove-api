@@ -19,14 +19,18 @@ class CouponController extends BaseApiController
     public function applyCoupon(Coupon $coupon, Request $request)
     {
         $request->validate([
-            'medical_speciality_id' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
-            'amount' => config('validations.integer.req')
+            'medical_speciality_id' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
+            'amount'                => config('validations.integer.req')
         ]);
+
         $valid = $coupon->isValidForUser(auth()->id(), request('medical_speciality_id'));
+
         if (!$valid) {
             return $this->respondWithError(__('messages.invalid_coupon'));
         }
+
         $amountAfterDiscount = $coupon->applyDiscount($request->amount);
+
         return $this->respondWithSuccess(__('messages.valid_coupon'), ['amount_after_discount' => $amountAfterDiscount]);
     }
 }
