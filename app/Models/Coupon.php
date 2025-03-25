@@ -102,8 +102,8 @@ class Coupon extends Model
     public function isValidForUser($userId, $specialityId = null): bool
     {
         return $this->isValid()
-            && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
-            && $this->medicalSpecialities->contains($specialityId);
+            && $this->payments->where('payer_id', $userId)->count() < $this->user_limit;
+            // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
     }
 
     public function applyDiscount($amount): float
