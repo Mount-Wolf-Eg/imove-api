@@ -115,7 +115,6 @@ class ConsultationRequest extends FormRequest
      */
     public function rules(): array
     {
-        info(request()->all());
         if (! $this->consultation) {
             return [
                 'patient_id' => sprintf(config('validations.model.active_null'), 'patients'),

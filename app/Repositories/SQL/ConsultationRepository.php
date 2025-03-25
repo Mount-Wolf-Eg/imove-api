@@ -40,6 +40,7 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
             $model->vendors()->sync($relations['vendors']);
 
         if (!empty($relations['questions']))
+            info($relations['questions']);
             $model->consultationQuestions()->sync($relations['questions']);
 
         // this is temporary, till payment gateway is implemented
