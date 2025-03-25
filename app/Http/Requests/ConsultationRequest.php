@@ -138,7 +138,7 @@ class ConsultationRequest extends FormRequest
                 'attachments.*' => sprintf(config('validations.model.req'), 'files'),
 
                 'questions' => 'nullable|array',
-                'questions.*.consultation_question_id' => 'required|exists:consultation_questions,id',
+                'questions.*.consultation_question_id' => 'required|exists:consultation_questions,id|distinct',
                 'questions.*.answer' => 'required|string',
             ];
         }
