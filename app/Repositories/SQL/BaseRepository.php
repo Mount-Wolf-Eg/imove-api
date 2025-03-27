@@ -235,7 +235,7 @@ abstract class BaseRepository implements BaseContract
         // Clean the attributes from unnecessary inputs
         $attributes = $this->cleanUpAttributes($attributes);
         $identifier = $this->cleanUpAttributes($identifier);
-        return $this->query->updateOrCreate($attributes, $identifier);
+        return $this->query->updateOrCreate($identifier, $attributes);
     }
 
     /**

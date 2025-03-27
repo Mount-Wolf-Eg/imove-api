@@ -24,12 +24,32 @@ use Spatie\Translatable\HasTranslations;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasTranslations,
-        HasRoles, HasPermissions, ModelTrait, SearchTrait, SoftDeletes;
+    use HasApiTokens,
+        HasFactory,
+        Notifiable,
+        HasTranslations,
+        HasRoles,
+        HasPermissions,
+        ModelTrait,
+        SearchTrait,
+        SoftDeletes;
 
-	protected $fillable = ['name', 'username', 'email', 'password', 'phone', 'gender',
-        'city_id', 'date_of_birth', 'address','wallet', 'verification_code',
-        'phone_verified_at', 'is_active'];
+    protected $fillable = [
+        'name',
+        'username',
+        'email',
+        'password',
+        'phone',
+        'gender',
+        'city_id',
+        'date_of_birth',
+        'address',
+        'wallet',
+        'verification_code',
+        'phone_verified_at',
+        'is_active'
+    ];
+
     protected array $filters = ['keyword', 'role', 'roleName', 'email', 'active', 'onlyUsersRoles'];
     public array $filterModels = ['Role'];
     public array $filterCustom = [];
@@ -102,8 +122,11 @@ class User extends Authenticatable
 
     public function scopeOfOnlyUsersRoles($query)
     {
-        $roles = [RoleNameConstants::DOCTOR->value, RoleNameConstants::PATIENT->value,
-            RoleNameConstants::VENDOR->value];
+        $roles = [
+            RoleNameConstants::DOCTOR->value,
+            RoleNameConstants::PATIENT->value,
+            RoleNameConstants::VENDOR->value
+        ];
         return $query->whereHas('roles', function ($query) use ($roles) {
             $query->whereNotIn('name', $roles);
         });
@@ -157,5 +180,4 @@ class User extends Authenticatable
     {
         return $this->tokens->whereNotNull('fcm_token')->unique('fcm_token')->pluck('fcm_token')->toArray();
     }
-
 }

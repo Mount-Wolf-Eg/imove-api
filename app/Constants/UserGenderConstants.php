@@ -10,7 +10,7 @@ enum UserGenderConstants : int
     case MALE = 1;
     case FEMALE = 2;
 
-    public function getLabels($value):string
+    public static function getLabels($value):string
     {
         return match ($value) {
             self::MALE => __('messages.male'),

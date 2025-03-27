@@ -30,10 +30,11 @@ class DoctorConsultationController extends BaseApiController
      * @param ConsultationNotificationService $notificationService
      * @param ConsultationDoctorReferralService $doctorReferralService
      */
-    public function __construct(ConsultationContract              $contract,
-                                ConsultationNotificationService   $notificationService,
-                                ConsultationDoctorReferralService $doctorReferralService)
-    {
+    public function __construct(
+        ConsultationContract              $contract,
+        ConsultationNotificationService   $notificationService,
+        ConsultationDoctorReferralService $doctorReferralService
+    ) {
         $this->middleware('role:doctor');
         $this->defaultScopes = ['doctorsList' => true, 'doctorNoConsultationPatient' => true];
         $this->relations = ['patient.parent', 'patient.diseases', 'doctorScheduleDayShift.day', 'doctor.rates', 'attachments'];
@@ -167,8 +168,7 @@ class DoctorConsultationController extends BaseApiController
     public function cancel(Consultation $consultation)
     {
         try {
-            if (!$consultation->doctorCanCancel())
-                abort(422, __('messages.doctor_cancel_validation', ['status' => $consultation->status->label()]));
+            if (!$consultation->doctorCanCancel()) abort(422, __('messages.doctor_cancel_validation', ['status' => $consultation->status->label()]));
             $consultation = $this->contract->update($consultation, ['status' => ConsultationStatusConstants::DOCTOR_CANCELLED->value]);
             $this->notificationService->doctorCancel($consultation);
             return $this->respondWithModel($consultation);
@@ -185,8 +185,8 @@ class DoctorConsultationController extends BaseApiController
     public function reschedule(Consultation $consultation)
     {
         try {
-            if (!$consultation->doctorCanReschedule())
-                abort(422, __('messages.doctor_cancel_validation', ['status' => $consultation->status->label()]));
+            if (!$consultation->doctorCanReschedule()) abort(422, __('messages.doctor_cancel_validation', ['status' => $consultation->status->label()]));
+
             $consultation = $this->contract->update($consultation, ['status' => ConsultationStatusConstants::NEEDS_RESCHEDULE->value]);
             $this->notificationService->doctorReschedule($consultation);
             return $this->respondWithModel($consultation);
@@ -213,5 +213,4 @@ class DoctorConsultationController extends BaseApiController
             return $this->respondWithError($e->getMessage());
         }
     }
-
 }
