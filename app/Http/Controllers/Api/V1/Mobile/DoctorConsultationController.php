@@ -9,6 +9,7 @@ use App\Http\Requests\ConsultationDoctorReferralRequest;
 use App\Http\Requests\ConsultationPrescriptionRequest;
 use App\Http\Requests\ConsultationVendorReferralRequest;
 use App\Http\Requests\DoctorAcceptUrgentConsultationRequest;
+use App\Http\Requests\DoctorRescheduleConsultationRequest;
 use App\Http\Resources\ConsultationResource;
 use App\Models\Consultation;
 use App\Repositories\Contracts\ConsultationContract;
@@ -170,6 +171,7 @@ class DoctorConsultationController extends BaseApiController
         try {
             if (!$consultation->doctorCanCancel()) abort(422, __('messages.doctor_cancel_validation', ['status' => $consultation->status->label()]));
             $consultation = $this->contract->update($consultation, ['status' => ConsultationStatusConstants::DOCTOR_CANCELLED->value]);
+            if ($consultation->returnMony) $this->contract->refundAmount($consultation, $consultation->amount);
             $this->notificationService->doctorCancel($consultation);
             return $this->respondWithModel($consultation);
         } catch (Exception $e) {
@@ -182,12 +184,16 @@ class DoctorConsultationController extends BaseApiController
      * @param Consultation $consultation
      * @return JsonResponse
      */
-    public function reschedule(Consultation $consultation)
+    public function reschedule(DoctorRescheduleConsultationRequest $request, Consultation $consultation)
     {
         try {
             if (!$consultation->doctorCanReschedule()) abort(422, __('messages.doctor_cancel_validation', ['status' => $consultation->status->label()]));
 
-            $consultation = $this->contract->update($consultation, ['status' => ConsultationStatusConstants::NEEDS_RESCHEDULE->value]);
+            $consultation = $this->contract->update($consultation, [
+                'reschedule_notes' => request()->reschedule_notes, 
+                'status'           => ConsultationStatusConstants::NEEDS_RESCHEDULE->value
+            ]);
+
             $this->notificationService->doctorReschedule($consultation);
             return $this->respondWithModel($consultation);
         } catch (Exception $e) {

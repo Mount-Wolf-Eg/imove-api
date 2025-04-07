@@ -11,6 +11,9 @@ class GeneralSettings extends Settings
     public $featured_list_title;
     public $featured_list_text;
 
+    public float $reschedule_grace_period;
+    public float $cancel_grace_period;
+
     public static function group(): string
     {
         return 'general';

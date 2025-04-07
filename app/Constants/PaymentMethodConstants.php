@@ -9,12 +9,14 @@ enum PaymentMethodConstants : int
 
     case CREDIT_CARD = 1;
     case DEBIT_CARD = 2;
+    case WALLET = 3;
 
     public function getLabels($value):string
     {
         return match ($value) {
             self::CREDIT_CARD => __('messages.credit_card'),
-            self::DEBIT_CARD => __('messages.debit_card')
+            self::DEBIT_CARD => __('messages.debit_card'),
+            self::WALLET => __('messages.wallet'),
         };
     }
 

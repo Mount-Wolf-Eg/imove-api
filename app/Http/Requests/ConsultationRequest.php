@@ -132,7 +132,7 @@ class ConsultationRequest extends FormRequest
                 'coupon_code' => ['nullable', 'exists:coupons,code', new ValidCouponRule()]
             ];
         } else {
-            return [
+            $rules = [
                 'patient_description' => config('validations.text.null'),
                 'attachments' => config('validations.array.null'),
                 'attachments.*' => sprintf(config('validations.model.req'), 'files'),
@@ -141,6 +141,12 @@ class ConsultationRequest extends FormRequest
                 'questions.*.consultation_question_id' => 'required|exists:consultation_questions,id|distinct',
                 'questions.*.answer' => 'required|string',
             ];
+
+            if ($this->consultation->status == ConsultationStatusConstants::NEEDS_RESCHEDULE->value || $this->consultation->patientCanReschedule) {
+                $rules['doctor_schedule_day_shift_id'] = 'required|' . sprintf(config('validations.model.null'), 'doctor_schedule_day_shifts', 'id');
+            }
+            
+            return $rules;
         }
 
         // return [

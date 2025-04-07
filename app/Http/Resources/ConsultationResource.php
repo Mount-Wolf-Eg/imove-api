@@ -54,6 +54,7 @@ class ConsultationResource extends BaseResource
             'reminder_at' => $this->reminder_at?->format('Y-m-d H:i:s'),
             'transfer_reason' => $this->transfer_reason,
             'transfer_notes' => $this->transfer_notes,
+            'reschedule_notes' => $this->reschedule_notes,
             'is_mine_as_patient' => $this->isMineAsPatient(),
             'is_mine_as_doctor' => $this->isMineAsDoctor(),
             'doctor_can_do_vendor_referral' => $this->doctorCanDoVendorReferral(),

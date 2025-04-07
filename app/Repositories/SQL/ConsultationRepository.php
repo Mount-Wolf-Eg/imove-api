@@ -36,6 +36,7 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
                 $model->attachments()->save($fileModel);
             }
         }
+        
         if (!empty($relations['vendors']))
             $model->vendors()->sync($relations['vendors']);
 
@@ -60,26 +61,31 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
                 'currency_id' => 1,
                 'payment_method' => PaymentMethodConstants::CREDIT_CARD->value,
             ];
+
             if (!empty($relations['coupon_code'])) {
                 $coupon = resolve(CouponContract::class)->findBy('code', $relations['coupon_code'], false);
                 if ($coupon?->isValidForUser($model->patient->user_id, $model->medical_speciality_id)) {
                     $paymentData['coupon_id'] = $coupon->id;
                     $paymentData['amount'] = $coupon->applyDiscount($model->amount);
+                    $model->update(['amount' => $paymentData['amount']]);
                 }
             }
 
-            $model->payment()->create($paymentData);
-
             if ((int) request()->payment_type == ConsultationPaymentTypeConstants::WALLET->value) {
                 $user = auth()->user();
+
+                $paymentData['status'] = PaymentStatusConstants::COMPLETED->value;
+
                 // if ($user->wallet < $paymentData['amount']) {
                 //     throw new \Exception(__('messages.insufficient_balance'));
                 // }
 
-                $user->update([
-                    'wallet' => $user->wallet - $paymentData['amount']
-                ]);
+                $user->update(['wallet' => $user->wallet - $paymentData['amount']]);
+
+                $model->update(['is_active' => true]);
             }
+
+            $model->payment()->create($paymentData);
         }
 
         if ($model->status && $model->isCancelled() && $model->payment) {
@@ -87,6 +93,21 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
                 'status' => PaymentStatusConstants::REFUNDED->value
             ]);
         }
+    }
+
+    public function refundAmount($model, $amount): void
+    {
+        $model->payment()->create([
+            'payer_id' => $model->doctor?->user_id,
+            'beneficiary_id' => $model->patient->user_id,
+            'amount' => $amount,
+            'transaction_id' => rand(1000000000, 9999999999),
+            'currency_id' => 1,
+            'payment_method' => PaymentMethodConstants::WALLET->value,
+            'status' => PaymentStatusConstants::REFUNDED->value
+        ]);
+
+        $model->patient->user->increment('wallet', $amount);
     }
 
     public function afterCreate($model, $attributes): void
