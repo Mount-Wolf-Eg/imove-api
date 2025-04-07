@@ -128,6 +128,20 @@ trait ConsultationScopesTrait
         return $query->whereTime('created_at', '<', now()->subHour());
     }
 
+    public function scopeOfOutGracePeriod($query)
+    {
+        $grace_period = now()->subHours(5);
+
+        return $query->where(function ($query) use ($grace_period) {
+            $query->whereHas('doctorScheduleDayShift', function ($query) use ($grace_period) {
+                $query->whereHas('day', function ($dayQuery) {
+                    $dayQuery->where('date', '>=', now()->format('Y-m-d'));
+                })
+                    ->whereRaw("CONCAT((SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), ' ', from_time) <= ?", [$grace_period->format('Y-m-d H:i')]);
+            });
+        });
+    }
+
     public function scopeOfDayShift($query, $dayShiftId)
     {
         return $query->where('doctor_schedule_day_shift_id', $dayShiftId);

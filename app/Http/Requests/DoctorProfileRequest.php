@@ -24,7 +24,7 @@ class DoctorProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'national_id' => config('validations.string.req'),
+            'national_id' => config('validations.string.req') . '|regex:/^[1-4]/',
             'medical_id' => config('validations.string.req'),
             'date_of_birth' => config('validations.date.req'),
             'phone' => config('validations.phone.req'),

@@ -56,7 +56,7 @@ class NewAuthController extends BaseApiController
                 'verification_code' => $existedUser->verification_code,
                 'has_patient'       => $existedUser->patient()->exists(),
                 'has_doctor'        => $existedUser->doctor()->exists(),
-                'doctor_is_active'  => $existedUser->doctor_is_active // $existedUser->is_active && $existedUser->doctor?->is_active && $existedUser->doctor?->request_status == 2 ? 1 : 0,
+                'doctor_is_active'  => (bool) $existedUser->doctor_is_active // $existedUser->is_active && $existedUser->doctor?->is_active && $existedUser->doctor?->request_status == 2 ? 1 : 0,
             ]);
         } else {
             $newUser = $this->contract->create(['phone' => $request->phone]);

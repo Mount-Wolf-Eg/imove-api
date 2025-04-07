@@ -40,7 +40,7 @@ class DoctorRegisterRequest extends FormRequest
             'specialities'                          => config('validations.array.req'),
             'specialities.*'                        => sprintf(config('validations.model.active_req'), 'medical_specialities'),
             'academic_degree_id'                    => sprintf(config('validations.model.active_req'), 'academic_degrees'),
-            'national_id'                           => config('validations.string.req'),
+            'national_id'                           => config('validations.string.req') . '|regex:/^[1-4]/',
             'medical_id'                            => config('validations.string.req'),
             'city_id'                               => sprintf(config('validations.model.active_null'), 'cities'),
             'experience_years'                      => config('validations.integer.null'),
