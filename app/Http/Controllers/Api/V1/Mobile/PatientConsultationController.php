@@ -67,6 +67,7 @@ class PatientConsultationController extends BaseApiController
             return $this->respondWithError($e->getMessage());
         }
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -83,6 +84,7 @@ class PatientConsultationController extends BaseApiController
             return $this->respondWithError($e->getMessage());
         }
     }
+    
     /**
      * Remove the specified resource from storage.
      * @param Consultation $consultation
