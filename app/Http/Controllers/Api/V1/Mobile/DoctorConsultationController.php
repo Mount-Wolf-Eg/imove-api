@@ -191,7 +191,7 @@ class DoctorConsultationController extends BaseApiController
             if (!$consultation->doctorCanReschedule()) abort(422, __('messages.doctor_cancel_validation', ['status' => $consultation->status->label()]));
 
             $consultation = $this->contract->update($consultation, [
-                'reschedule_notes' => request()->reschedule_notes, 
+                'reschedule_notes' => $request->reschedule_notes, 
                 'status'           => ConsultationStatusConstants::NEEDS_RESCHEDULE->value
             ]);
 
