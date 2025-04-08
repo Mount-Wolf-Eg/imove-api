@@ -142,7 +142,7 @@ class ConsultationRequest extends FormRequest
                 'questions.*.answer' => 'required|string',
             ];
 
-            if ($this->has('doctor_schedule_day_shift_id') && ! $this->consultation->patientCanReschedule) {
+            if ($this->has('doctor_schedule_day_shift_id') && ! $this->consultation->patientCanReschedule() ) {
                 abort(422, __('messages.patient_can_not_reschedule_consultation'));
             }
 
