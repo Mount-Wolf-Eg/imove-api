@@ -137,4 +137,20 @@ class NewAuthController extends BaseApiController
         $relations = array_merge($this->doctorRelations, $this->patientRelations);
         return $this->respondWithModel(auth()->user()->load($relations));
     }
+
+    public function reminderDurations()
+    {
+        $durations = [
+            '10',
+            '15',
+            '20',
+            '30',
+            '45',
+            '60',
+            '90',
+            '120',
+        ];
+
+        return response()->json(['durations' => $durations]);
+    }
 }

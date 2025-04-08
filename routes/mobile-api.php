@@ -34,6 +34,8 @@ Route::group(['middleware' => 'locale'], static function () {
     Route::apiResource('faqs', FaqController::class)->only('index');
     Route::apiResource('doctors', DoctorController::class)->only('index', 'show');
     Route::apiResource('files', FileController::class)->only('store', 'destroy');
+
+    Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
     
     Route::group(['middleware' => 'auth:sanctum'], static function () {
         Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // new
