@@ -362,30 +362,22 @@ class Consultation extends Model
 
     public function inGracePeriod($graceLimit): bool
     {
-        return $this->where(function ($query) use ($graceLimit) {
-            $query->whereHas('doctorScheduleDayShift', function ($query) use ($graceLimit) {
-                $query->whereHas('day', function ($dayQuery) {
-                    $dayQuery->where('date', '>=', now()->format('Y-m-d'));
-                })->whereRaw(
-                    "STR_TO_DATE(CONCAT(
-                    (SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), 
-                    ' ', 
-                    from_time
-                ), '%Y-%m-%d %H:%i:%s') > ?",
-                    [$graceLimit->format('Y-m-d H:i:s')]
-                );
-            });
-        })->exists();
+        $shift = $this->doctorScheduleDayShift;
 
-        // return $this->where(function ($query) use ($grace_period) {
-        //     $query->whereHas('doctorScheduleDayShift', function ($query) use ($grace_period) {
-        //         $query->whereHas('day', function ($dayQuery) {
-        //             $dayQuery->where('date', '>=', now()->format('Y-m-d'));
-        //         })
-        //             ->whereRaw("CONCAT((SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), ' ', from_time) > ?", [$grace_period->format('Y-m-d H:i')]);
-        //     });
-        // })->exists();
+        if (!$shift || !$shift->day) {
+            return false;
+        }
+
+        try {
+            $shiftDateTime = $shift->day->date->copy()->setTimeFrom($shift->from_time);
+        } catch (\Exception $e) {
+            \Log::error('Failed to combine date and time: ' . $e->getMessage());
+            return false;
+        }
+
+        return $shiftDateTime->greaterThan($graceLimit);
     }
+
     //---------------------methods-------------------------------------
 
     //---------------------attributes-------------------------------------
