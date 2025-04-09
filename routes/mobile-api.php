@@ -51,6 +51,9 @@ Route::group(['middleware' => 'locale'], static function () {
         Route::apiResource('notifications', NotificationController::class)->only('index');
 
         Route::group(['prefix' => 'patient', 'middleware' => 'active_patient'], static function () {
+            Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
+            Route::post('add-reminder-before', [NewAuthController::class, 'updateReminderDurations']);
+
             Route::get('consultation-files', [FileController::class, 'consultationFiles']);
             
             Route::put('update-main-info', [PatientProfileController::class, 'updateMainInfo']);
@@ -84,6 +87,9 @@ Route::group(['middleware' => 'locale'], static function () {
         });
 
         Route::group(['prefix' => 'doctor', 'middleware' => 'active_doctor'], static function () {
+            Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
+            Route::post('add-reminder-before', [NewAuthController::class, 'updateReminderDurations']);
+            
             Route::put('update-main-info', [DoctorProfileController::class, 'updateMainInfo']);
             Route::put('update-professional-status', [DoctorProfileController::class, 'updateProfessionalStatus']);
             Route::put('update-schedule', [DoctorProfileController::class, 'updateSchedule']);
