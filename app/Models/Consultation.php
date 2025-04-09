@@ -320,9 +320,12 @@ class Consultation extends Model
 
     public function patientCanCancel(): bool
     {
-        return $this->status->is(ConsultationStatusConstants::PENDING)
+        $grace_period = now()->addHours(5);
+
+        return ($this->status->is(ConsultationStatusConstants::PENDING)
             || $this->status->is(ConsultationStatusConstants::URGENT_HAS_DOCTORS_REPLIES)
-            || $this->status->is(ConsultationStatusConstants::REFERRED_FROM_ANOTHER_DOCTOR);
+            || $this->status->is(ConsultationStatusConstants::REFERRED_FROM_ANOTHER_DOCTOR))
+            && $this->inGracePeriod($grace_period);
     }
 
     public function patientCanConfirmReferral(): bool
