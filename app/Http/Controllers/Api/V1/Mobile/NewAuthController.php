@@ -8,6 +8,7 @@ use App\Http\Requests\DoctorScheduleRequest;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\PatientRegisterRequest;
 use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Repositories\Contracts\DoctorContract;
 use App\Repositories\Contracts\UserContract;
 use App\Services\Repositories\UserAuthService;
@@ -33,6 +34,7 @@ class NewAuthController extends BaseApiController
     ];
 
     private array $patientRelations = ['patient.diseases'];
+    private UserContract $userContract;
 
     public function __construct(UserContract $userContract, UserAuthService $userAuthService)
     {
@@ -138,19 +140,30 @@ class NewAuthController extends BaseApiController
         return $this->respondWithModel(auth()->user()->load($relations));
     }
 
+    public $durations = [
+        '10',
+        '15',
+        '20',
+        '30',
+        '45',
+        '60',
+        '90',
+        '120',
+    ];
+
     public function reminderDurations()
     {
-        $durations = [
-            '10',
-            '15',
-            '20',
-            '30',
-            '45',
-            '60',
-            '90',
-            '120',
-        ];
+        return response()->json(['durations' => $this->durations]);
+    }
 
-        return response()->json(['durations' => $durations]);
+    public function updateReminderDurations(Request $request)
+    {
+        $request->validate([
+            'reminder_before_consultation' => 'required|in:' . implode(',', $this->durations)
+        ]);
+
+        $this->userContract->update(auth()->user(), ['reminder_before_consultation' => $request->reminder_before_consultation]);
+
+        return response()->json(['message' => __('messages.updated_successfully')]);
     }
 }
