@@ -332,7 +332,7 @@ class Consultation extends Model
 
     public function returnMony(): bool
     {
-        $grace_period = now()->subHours(5);
+        $grace_period = now()->addHours(5);
 
         return $this->is_active && $this->payment
             && $this->payment->status->is(PaymentStatusConstants::COMPLETED)
@@ -341,8 +341,8 @@ class Consultation extends Model
 
     public function patientCanReschedule(): bool
     {
-        $grace_period = now()->subHours(5);
-        
+        $grace_period = now()->addHours(5);
+
         return $this->type->is(ConsultationTypeConstants::WITH_APPOINTMENT)
             && $this->status->is(ConsultationStatusConstants::PENDING)
             && $this->inGracePeriod($grace_period);
@@ -350,23 +350,38 @@ class Consultation extends Model
 
     public function doctorCanReschedule(): bool
     {
-        $grace_period = now()->subHours(5);
-        
+        $grace_period = now()->addHours(5);
+
         return $this->type->is(ConsultationTypeConstants::WITH_APPOINTMENT)
             && $this->status->is(ConsultationStatusConstants::PENDING)
             && $this->inGracePeriod($grace_period);
     }
 
-    public function inGracePeriod($grace_period): bool
+    public function inGracePeriod($graceLimit): bool
     {
-        return $this->where(function ($query) use ($grace_period) {
-            $query->whereHas('doctorScheduleDayShift', function ($query) use ($grace_period) {
+        return $this->where(function ($query) use ($graceLimit) {
+            $query->whereHas('doctorScheduleDayShift', function ($query) use ($graceLimit) {
                 $query->whereHas('day', function ($dayQuery) {
                     $dayQuery->where('date', '>=', now()->format('Y-m-d'));
-                })
-                    ->whereRaw("CONCAT((SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), ' ', from_time) > ?", [$grace_period->format('Y-m-d H:i')]);
+                })->whereRaw(
+                    "STR_TO_DATE(CONCAT(
+                    (SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), 
+                    ' ', 
+                    from_time
+                ), '%Y-%m-%d %H:%i:%s') > ?",
+                    [$graceLimit->format('Y-m-d H:i:s')]
+                );
             });
         })->exists();
+
+        // return $this->where(function ($query) use ($grace_period) {
+        //     $query->whereHas('doctorScheduleDayShift', function ($query) use ($grace_period) {
+        //         $query->whereHas('day', function ($dayQuery) {
+        //             $dayQuery->where('date', '>=', now()->format('Y-m-d'));
+        //         })
+        //             ->whereRaw("CONCAT((SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), ' ', from_time) > ?", [$grace_period->format('Y-m-d H:i')]);
+        //     });
+        // })->exists();
     }
     //---------------------methods-------------------------------------
 
