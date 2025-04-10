@@ -208,6 +208,15 @@
                     </a>
                 </li>
                 @endif
+
+                @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
+                <li class="nav-item">
+                    <a href="{{route('settings.edit')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('settings.edit')])>
+                        <i class="bi bi-question-octagon"></i>
+                        <span data-key="t-dashboard">{{ __('messages.settings') }}</span>
+                    </a>
+                </li>
+                @endif
             </ul>
         </div>
         <!-- Sidebar -->

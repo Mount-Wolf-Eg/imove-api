@@ -1,6 +1,16 @@
 <?php
 
 return [
+    'site_name' => 'Site Name',
+    'app_payment_percentage' => 'App Payment Percentage',
+    'featured_list_title' => 'Featured List Title',
+    'featured_list_text' => 'Featured List Text',
+    'reschedule_grace_period' => 'Reschedule Grace Period',
+    'cancel_grace_period' => 'Cancel Grace Period',
+    'save_changes' => 'Save Changes',
+    'general_settings' => 'General Settings',
+    'settings_updated' => 'Settings updated successfully',
+    
     'insufficient_wallet_balance' => 'Insufficient wallet balance',
     'credit' => 'Credit',
     'wallet' => 'Wallet',
