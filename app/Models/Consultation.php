@@ -320,7 +320,7 @@ class Consultation extends Model
 
     public function patientCanCancel(): bool
     {
-        $grace_period = now()->addHours(5);
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('cancel_grace_period'));
 
         return ($this->status->is(ConsultationStatusConstants::PENDING)
             || $this->status->is(ConsultationStatusConstants::URGENT_HAS_DOCTORS_REPLIES)
@@ -335,7 +335,7 @@ class Consultation extends Model
 
     public function returnMony(): bool
     {
-        $grace_period = now()->addHours(5);
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('cancel_grace_period'));
 
         return $this->is_active && $this->payment
             && $this->payment->status->is(PaymentStatusConstants::COMPLETED)
@@ -344,7 +344,7 @@ class Consultation extends Model
 
     public function patientCanReschedule(): bool
     {
-        $grace_period = now()->addHours(5);
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('reschedule_grace_period'));
 
         return $this->type->is(ConsultationTypeConstants::WITH_APPOINTMENT)
             && $this->status->is(ConsultationStatusConstants::PENDING)
@@ -353,7 +353,7 @@ class Consultation extends Model
 
     public function doctorCanReschedule(): bool
     {
-        $grace_period = now()->addHours(5);
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('reschedule_grace_period'));
 
         return $this->type->is(ConsultationTypeConstants::WITH_APPOINTMENT)
             && $this->status->is(ConsultationStatusConstants::PENDING)
