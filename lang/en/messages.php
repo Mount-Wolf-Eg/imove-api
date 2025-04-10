@@ -2,7 +2,7 @@
 
 return [
     'site_name' => 'Site Name',
-    'app_payment_percentage' => 'App Payment Percentage',
+    'app_payment_percentage' => 'App Payment Percentage (%)',
     'featured_list_title' => 'Featured List Title',
     'featured_list_text' => 'Featured List Text',
     'reschedule_grace_period' => 'Reschedule Grace Period (hours)',
