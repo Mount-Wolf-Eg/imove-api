@@ -378,6 +378,29 @@ class Consultation extends Model
         return $shiftDateTime->greaterThan($graceLimit);
     }
 
+    public function getIsPastConsultationAttribute(): bool
+    {
+        $hasPastShift = $this->doctorScheduleDayShift()
+            ->whereHas('day', function ($dayQuery) {
+                $dayQuery->where('date', '<', now()->format('Y-m-d'));
+            })
+            ->whereRaw("
+            CONCAT(
+                (SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), 
+                ' ', 
+                from_time
+            ) < ?
+        ", [now()->format('Y-m-d H:i')])
+            ->exists();
+
+        $hasPastReply = $this->replies()
+            ->where('consultation_doctor_replies.status', ConsultationPatientStatusConstants::APPROVED->value)
+            ->whereDate('consultation_doctor_replies.doctor_set_consultation_at', '<', now())
+            ->exists();
+
+        return $hasPastShift || $hasPastReply;
+    }
+
     //---------------------methods-------------------------------------
 
     //---------------------attributes-------------------------------------

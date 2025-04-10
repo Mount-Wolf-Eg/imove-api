@@ -32,6 +32,7 @@ class ConsultationResource extends BaseResource
             'active_class' => $this->active_class,
             'patient_can_reschedule' => (bool) $this->patientCanReschedule(),
             'patient_can_cancel' => (bool) $this->patientCanCancel(),
+            'is_past_consultation' => (bool) $this->is_past_consultation,
             // 'doctor_can_reschedule' => (bool) $this->doctorCanReschedule(),
             // 'doctor_can_cancel' => (bool) $this->doctorCanCancel(),
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
