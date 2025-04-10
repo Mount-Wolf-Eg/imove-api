@@ -580,4 +580,6 @@ return [
     "shift_time_conflict" => "تعارض في وقت الوردية",
     "contacts" => "الرسائل",
     "manage_contacts" => "إدارة الرسائل",
+    'patient_can_not_reschedule_consultation' => 'لا يمكن إعادة جدولة الاستشارة لانك خارج الوقت المسموح',
+
 ];

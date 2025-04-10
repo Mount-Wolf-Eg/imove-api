@@ -583,4 +583,6 @@ return [
     "shift_time_conflict" => "Shift Time Conflict",
     "contacts" => "Contacts",
     "manage_contacts" => "Manage Contacts",
+    'patient_can_not_reschedule_consultation' => 'The consultation cannot be rescheduled because you are outside the permitted time',
+
 ];
