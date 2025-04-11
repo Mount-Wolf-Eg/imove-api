@@ -40,6 +40,7 @@ class NewAuthController extends BaseApiController
     {
         parent::__construct($userContract, UserResource::class);
         $this->userAuthService = $userAuthService;
+        $this->userContract = $userContract;
     }
 
     public function sendVerificationCode(Request $request)
