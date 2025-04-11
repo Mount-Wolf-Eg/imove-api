@@ -47,7 +47,8 @@ class User extends Authenticatable
         'wallet',
         'verification_code',
         'phone_verified_at',
-        'is_active'
+        'is_active',
+        'reminder_before_consultation'
     ];
 
     protected array $filters = ['keyword', 'role', 'roleName', 'email', 'active', 'onlyUsersRoles'];
