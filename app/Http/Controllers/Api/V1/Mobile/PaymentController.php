@@ -51,12 +51,20 @@ class PaymentController extends BaseApiController
         return parent::index(['available_balance' => $user->wallet]);
     }
 
+    public function refundRequest()
+    {
+        $user = auth()->user();
+        $user->update(['wallet' => 0]);
+
+        return $this->contract->refundRequest($user, $user->bank->id);
+    }
+
     public function destroy(Payment $payment)
     {
-        try{
+        try {
             $this->contract->remove($payment);
             return $this->respondWithSuccess(__('Deleted Successfully'));
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }

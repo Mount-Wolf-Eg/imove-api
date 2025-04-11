@@ -162,7 +162,13 @@ class NewAuthController extends BaseApiController
             'reminder_before_consultation' => 'required|in:' . implode(',', $this->durations)
         ]);
 
-        $this->userContract->update(auth()->user(), ['reminder_before_consultation' => $request->reminder_before_consultation]);
+        $user = auth()->user();
+
+        if ($user) {
+            $this->userContract->update($user instanceof \App\Models\User ? $user : \App\Models\User::find($user->id), ['reminder_before_consultation' => $request->reminder_before_consultation]);
+        } else {
+            return response()->json(['message' => __('auth.user_not_authenticated')], 401);
+        }
 
         return response()->json(['message' => __('messages.updated_successfully')]);
     }

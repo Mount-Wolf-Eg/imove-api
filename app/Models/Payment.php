@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Constants\PaymentMethodConstants;
 use App\Constants\PaymentStatusConstants;
+use App\Constants\PaymentTypeConstants;
 use App\Traits\ModelTrait;
 use App\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -17,10 +18,33 @@ class Payment extends Model
 {
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     public const ADDITIONAL_PERMISSIONS = [];
-    protected $fillable = ['payer_id', 'beneficiary_id', 'payable_id', 'payable_type', 'coupon_id',
-        'transaction_id', 'amount', 'currency_id', 'payment_method', 'status', 'metadata'];
-    protected array $filters = ['keyword', 'status', 'paymentMethod', 'creationDate', 'payer',
-        'beneficiary', 'fromCreationDate', 'toCreationDate', 'consultationType', 'coupon'];
+    protected $fillable = [
+        'payer_id',
+        'beneficiary_id',
+        'payable_id',
+        'payable_type',
+        'coupon_id',
+        'transaction_id',
+        'amount',
+        'currency_id',
+        'payment_method',
+        'status',
+        'metadata',
+        'bank_id',
+        'type'
+    ];
+    protected array $filters = [
+        'keyword',
+        'status',
+        'paymentMethod',
+        'creationDate',
+        'payer',
+        'beneficiary',
+        'fromCreationDate',
+        'toCreationDate',
+        'consultationType',
+        'coupon'
+    ];
     protected array $searchable = ['transaction_id', 'currency.name', 'payer.name', 'beneficiary.name'];
     protected array $dates = [];
     public array $filterModels = [];
@@ -29,7 +53,8 @@ class Payment extends Model
     public $casts = [
         'metadata' => 'array',
         'status' => PaymentStatusConstants::class,
-        'payment_method' => PaymentMethodConstants::class
+        'payment_method' => PaymentMethodConstants::class,
+        'type' => PaymentTypeConstants::class,
     ];
 
     //---------------------relations-------------------------------------
@@ -58,6 +83,10 @@ class Payment extends Model
         return $this->belongsTo(Coupon::class);
     }
 
+    // public function bank(): BelongsTo
+    // {
+    //     return $this->belongsTo(Bank::class);
+    // }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
@@ -110,13 +139,13 @@ class Payment extends Model
     //---------------------Scopes-------------------------------------
 
     //---------------------Attributes-------------------------------------
-    public function appPercentage():Attribute
+    public function appPercentage(): Attribute
     {
         $appPaymentPercentage = GeneralSettings::getSettingValue('app_payment_percentage');
         return Attribute::make(fn() => $this->amount * $appPaymentPercentage);
     }
 
-    public function doctorPercentage():Attribute
+    public function doctorPercentage(): Attribute
     {
         return Attribute::make(fn() => $this->amount - $this->app_percentage);
     }

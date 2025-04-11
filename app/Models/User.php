@@ -100,6 +100,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo(City::class);
     }
+
+    public function bank()
+    {
+        return $this->hasOne(Bank::class);
+    }
     //---------------------relations-------------------------------------
     // ----------------------- Scopes -----------------------
     public function getRoleId()
