@@ -77,6 +77,9 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('index');
             Route::get('payments', [PaymentController::class, 'patientIndex']);
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
+
+            Route::apiResource('banks', BankController::class)->only('index', 'store', 'update', 'destroy');
+
             Route::resource('coupons', CouponController::class)->only('index');
             Route::get('coupons/{coupon:code}/apply', [CouponController::class, 'applyCoupon']);
 
