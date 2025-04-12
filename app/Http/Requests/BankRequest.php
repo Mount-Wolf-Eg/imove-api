@@ -45,7 +45,7 @@ class BankRequest extends FormRequest
     {
         $data = parent::validated($key, $default);
         // Add any additional processing of the validated data here
-        $data['user_id'] = auth()->user()->id;
+        $data['user_id'] = auth()->id();
         return $data;
     }
 

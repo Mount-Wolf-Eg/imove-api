@@ -13,7 +13,7 @@ class Bank extends Model
     use ModelTrait, SearchTrait, HasTranslations; // SoftDeletes
 
     public const ADDITIONAL_PERMISSIONS = [];
-    protected $fillable = ['name', 'account_number', 'iban'];
+    protected $fillable = ['user_id', 'name', 'account_number', 'iban'];
     protected array $filters = ['keyword'];
     protected array $searchable = [];
     protected array $dates = [];
