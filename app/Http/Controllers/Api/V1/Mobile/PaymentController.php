@@ -62,9 +62,12 @@ class PaymentController extends BaseApiController
         }
 
         $user = auth()->user();
+
+        $model = $this->contract->refundRequest($user, $user->bank->id);
+
         $user->update(['wallet' => 0]);
 
-        return $this->contract->refundRequest($user, $user->bank->id);
+        return $model;
     }
 
     public function destroy(Payment $payment)
