@@ -41,6 +41,14 @@ class BankRequest extends FormRequest
         ];
     }
 
+    public function validated($key = null, $default = null)
+    {
+        $data = parent::validated($key, $default);
+        // Add any additional processing of the validated data here
+        $data['user_id'] = auth()->user()->id;
+        return $data;
+    }
+
     /**
      * Customizing input names displayed for user
      * @return array
