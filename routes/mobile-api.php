@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\FilterController;
 use App\Http\Controllers\Api\V1\Mobile\ArticleController;
+use App\Http\Controllers\Api\V1\Mobile\BankController;
 use App\Http\Controllers\Api\V1\Mobile\NewAuthController;
 use App\Http\Controllers\Api\V1\Mobile\ComplaintController;
 use App\Http\Controllers\Api\V1\Mobile\ContactController;
@@ -115,6 +116,9 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::get('payments', [PaymentController::class, 'doctorIndex']);
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
             Route::resource('payments', PaymentController::class)->only('destroy');
+
+            Route::apiResource('banks', BankController::class)->only('index', 'store', 'update', 'destroy');
+            
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('store', 'update', 'destroy');
             Route::apiResource('doctor-schedule-day-shifts', DoctorScheduleDayShiftController::class)->only( 'store', 'update', 'destroy');
             Route::get('nearest-doctor-schedule-day/{doctor}', [DoctorScheduleDayController::class, 'nearestAvailableDay']);
