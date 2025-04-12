@@ -136,6 +136,17 @@ class Payment extends Model
     {
         return $query->where('coupon_id', $coupon_id);
     }
+
+    public function scopeOfPatient($query, $userId)
+    {
+        return $query->where(function ($query) use ($userId) {
+            $query->where('payer_id', $userId)
+                ->orWhere(function ($query) use ($userId) {
+                    $query->where('beneficiary_id', $userId)
+                        ->where('type', PaymentTypeConstants::REFUND->value);
+                });
+        });
+    }
     //---------------------Scopes-------------------------------------
 
     //---------------------Attributes-------------------------------------

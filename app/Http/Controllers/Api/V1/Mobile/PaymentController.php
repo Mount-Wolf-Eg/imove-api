@@ -47,7 +47,8 @@ class PaymentController extends BaseApiController
     public function patientIndex()
     {
         $user = auth()->user();
-        $this->defaultScopes = ['payer' => $user->id];
+        // $this->defaultScopes = ['payer' => $user->id];
+        $this->defaultScopes = ['patient' => $user->id];
         return parent::index(['available_balance' => $user->wallet]);
     }
 
