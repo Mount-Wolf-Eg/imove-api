@@ -10,7 +10,8 @@ use Spatie\Translatable\HasTranslations;
 
 class Bank extends Model
 {
-    use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
+    use ModelTrait, SearchTrait, HasTranslations; // SoftDeletes
+
     public const ADDITIONAL_PERMISSIONS = [];
     protected $fillable = ['name', 'account_number', 'iban'];
     protected array $filters = ['keyword'];
