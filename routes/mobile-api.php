@@ -75,6 +75,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('complaints', ComplaintController::class)->only('store', 'show', 'update', 'destroy');
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('index');
             Route::get('payments', [PaymentController::class, 'patientIndex']);
+            Route::post('refund-request', [PaymentController::class, 'refundRequest']);
             Route::resource('coupons', CouponController::class)->only('index');
             Route::get('coupons/{coupon:code}/apply', [CouponController::class, 'applyCoupon']);
 
@@ -112,6 +113,7 @@ Route::group(['middleware' => 'locale'], static function () {
                 Route::post('/{consultation}/reschedule', 'reschedule');
             });
             Route::get('payments', [PaymentController::class, 'doctorIndex']);
+            Route::post('refund-request', [PaymentController::class, 'refundRequest']);
             Route::resource('payments', PaymentController::class)->only('destroy');
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('store', 'update', 'destroy');
             Route::apiResource('doctor-schedule-day-shifts', DoctorScheduleDayShiftController::class)->only( 'store', 'update', 'destroy');
