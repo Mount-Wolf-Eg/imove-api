@@ -53,6 +53,14 @@ class PaymentController extends BaseApiController
 
     public function refundRequest()
     {
+        if (auth()->user()->wallet <= 0) {
+            return $this->respondWithError(__('You have no available balance'));
+        }
+        
+        if (auth()->user()->bank === null) {
+            return $this->respondWithError(__('You have no bank account'));
+        }
+
         $user = auth()->user();
         $user->update(['wallet' => 0]);
 
