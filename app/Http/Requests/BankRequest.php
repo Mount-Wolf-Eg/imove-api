@@ -29,9 +29,9 @@ class BankRequest extends FormRequest
         // check the user has one bank account
         if ($this->isMethod('post')) {
             $user = auth()->user();
-            if ($user->banks()->count() > 0) abort(422, 'You can only have one bank account');
+            if ($user->bank()->count() > 0) abort(422, 'You can only have one bank account');
         }
-        
+
         // check the user has one bank account
         return [
             'name' => 'required|string|max:255',

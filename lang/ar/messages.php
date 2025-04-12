@@ -312,6 +312,8 @@ return [
         'note' => 'الملاحظة'
     ],
     'models' => [
+        'bank' => 'البنوك',
+        'consultationQuestion' => 'أسئلة الاستشارة',
         'referral' => 'تحويلات',
         'contact' => 'التواصل',
         'city' => 'المدن',
