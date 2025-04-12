@@ -13,6 +13,7 @@ class GeneralSettings extends Settings
 
     public float $reschedule_grace_period;
     public float $cancel_grace_period;
+    public float $tax_percentage;
 
     public static function group(): string
     {

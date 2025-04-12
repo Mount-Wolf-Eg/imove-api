@@ -344,7 +344,7 @@ class Consultation extends Model
 
     public function patientCanReschedule(): bool
     {
-        $grace_period = now()->addHours(GeneralSettings::getSettingValue('reschedule_grace_period'));
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('normal_grace_period'));
 
         return $this->type->is(ConsultationTypeConstants::WITH_APPOINTMENT)
             && $this->status->is(ConsultationStatusConstants::PENDING)
@@ -353,7 +353,7 @@ class Consultation extends Model
 
     public function doctorCanReschedule(): bool
     {
-        $grace_period = now()->addHours(GeneralSettings::getSettingValue('reschedule_grace_period'));
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('normal_grace_period'));
 
         return $this->type->is(ConsultationTypeConstants::WITH_APPOINTMENT)
             && $this->status->is(ConsultationStatusConstants::PENDING)

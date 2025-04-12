@@ -2,9 +2,12 @@
 
 return [
     'site_name' => 'اسم الموقع',
-    'app_payment_percentage' => 'نسبة التطبيق (%)',
+    'app_payment_percentage' => 'نسبة العمولة (%)',
     'reschedule_grace_period' => 'فترة السماح لإعادة الجدولة (بالساعات)',
     'cancel_grace_period' => 'فترة السماح للإلغاء (بالساعات)',
+    'tax_percentage' => 'نسبة الضريبة (%)',
+    'urgent_grace_period' => 'فترة السماح للاستشارة العاجلة (بالساعات)',
+    'normal_grace_period' => 'فترة السماح للاستشارة العادية (بالساعات)',
     'save_changes' => 'حفظ التغييرات',
     'general_settings' => 'الإعدادات العامة',
     'settings_updated' => 'تم تحديث الإعدادات بنجاح',
