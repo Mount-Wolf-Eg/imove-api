@@ -36,6 +36,7 @@ class Bank extends Model
     //---------------------Scopes-------------------------------------
     public function scopeOfUser($query, $userId)
     {
+        dd('dd');
         return $query->where('user_id', $userId);
     }
     //---------------------Scopes-------------------------------------
