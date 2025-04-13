@@ -36,6 +36,7 @@ class Bank extends Model
     //---------------------Scopes-------------------------------------
     public function scopeOfAuth($query)
     {
+        dd('auth', auth()->id());
         return $query->where('user_id', auth()->id());
     }
     //---------------------Scopes-------------------------------------
