@@ -34,9 +34,9 @@ class BankRequest extends FormRequest
 
         // check the user has one bank account
         return [
-            'name' => 'required|string|max:255',
-            'account_number' => 'required|string|max:255',
-            'iban' => 'required|string|max:255',
+            'name'           => 'required|string|max:255',
+            'account_number' => 'nullable|string|max:255',
+            'iban'           => 'required|string|max:255',
             // Add other validation rules as needed
         ];
     }
