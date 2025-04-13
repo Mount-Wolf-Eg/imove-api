@@ -152,6 +152,25 @@ class NewAuthController extends BaseApiController
         '120',
     ];
 
+    public $urgentDurations = [
+        '15',
+        '20',
+        '30',
+        '45',
+        '60',
+        '120',
+        '180',
+        '360',
+        '720',
+        '1440',
+        '2880',
+    ];
+
+    public function urgentReminderDurations()
+    {
+        return response()->json(['durations' => $this->urgentDurations]);
+    }
+
     public function reminderDurations()
     {
         return response()->json(['durations' => $this->durations]);
@@ -167,6 +186,23 @@ class NewAuthController extends BaseApiController
 
         if ($user) {
             $this->userContract->update($user instanceof \App\Models\User ? $user : \App\Models\User::find($user->id), ['reminder_before_consultation' => $request->reminder_before_consultation]);
+        } else {
+            return response()->json(['message' => __('auth.user_not_authenticated')], 401);
+        }
+
+        return response()->json(['message' => __('messages.updated_successfully')]);
+    }
+
+    public function updateUrgentReminderDurations(Request $request)
+    {
+        $request->validate([
+            'reminder_before_consultation' => 'required|in:' . implode(',', $this->urgentDurations)
+        ]);
+
+        $user = auth()->user();
+
+        if ($user) {
+            $this->userContract->update($user instanceof \App\Models\User ? $user : \App\Models\User::find($user->id), ['urgent_reminder_before_consultation' => $request->reminder_before_consultation]);
         } else {
             return response()->json(['message' => __('auth.user_not_authenticated')], 401);
         }

@@ -37,6 +37,7 @@ Route::group(['middleware' => 'locale'], static function () {
     Route::apiResource('files', FileController::class)->only('store', 'destroy');
 
     Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
+    Route::get('urgent-reminder-durations', [NewAuthController::class, 'urgentReminderDurations']);
     
     Route::group(['middleware' => 'auth:sanctum'], static function () {
         Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // new
@@ -53,7 +54,9 @@ Route::group(['middleware' => 'locale'], static function () {
 
         Route::group(['prefix' => 'patient', 'middleware' => 'active_patient'], static function () {
             Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
+            Route::get('urgent-reminder-durations', [NewAuthController::class, 'urgentReminderDurations']);
             Route::post('add-reminder-before', [NewAuthController::class, 'updateReminderDurations']);
+            Route::post('add-urgent-reminder-before', [NewAuthController::class, 'updateUrgentReminderDurations']);
 
             Route::get('consultation-files', [FileController::class, 'consultationFiles']);
             
@@ -96,7 +99,9 @@ Route::group(['middleware' => 'locale'], static function () {
 
         Route::group(['prefix' => 'doctor', 'middleware' => 'active_doctor'], static function () {
             Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
+            Route::get('urgent-reminder-durations', [NewAuthController::class, 'urgentReminderDurations']);
             Route::post('add-reminder-before', [NewAuthController::class, 'updateReminderDurations']);
+            Route::post('add-urgent-reminder-before', [NewAuthController::class, 'updateUrgentReminderDurations']);
             
             Route::put('update-main-info', [DoctorProfileController::class, 'updateMainInfo']);
             Route::put('update-professional-status', [DoctorProfileController::class, 'updateProfessionalStatus']);
