@@ -103,6 +103,8 @@ class PaymentController extends BaseApiController
     {
         $transactions = $this->contract->search(['patient' => true]);
 
+        dd($transactions);
+
         $html = view('invoice.all', compact('transactions'))->render();
 
         $mpdf = new \Mpdf\Mpdf([
