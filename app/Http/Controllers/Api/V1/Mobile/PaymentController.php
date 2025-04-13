@@ -8,6 +8,7 @@ use App\Models\GeneralSettings;
 use App\Models\Payment;
 use App\Repositories\Contracts\PaymentContract;
 use Exception;
+use Mpdf\Mpdf;
 
 class PaymentController extends BaseApiController
 {
@@ -79,5 +80,22 @@ class PaymentController extends BaseApiController
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
+    }
+
+    public function exportPaymentInvoice(Payment $payment)
+    {
+        $html = view('invoice.show', compact('payment'))->render();
+
+        $mpdf = new Mpdf([
+            'mode'         => 'utf-8',
+            'format'       => 'A4',
+            'default_font' => 'dejavusans',
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="transactions.pdf"');
     }
 }

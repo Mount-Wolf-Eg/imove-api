@@ -338,7 +338,7 @@ class Consultation extends Model
         $grace_period = now()->addHours(GeneralSettings::getSettingValue('normal_grace_period'));
 
         return $this->is_active && $this->payment
-            // && $this->payment->status->is(PaymentStatusConstants::COMPLETED)
+            && $this->payment->status->is(PaymentStatusConstants::COMPLETED)
             && $this->inGracePeriod($grace_period);
     }
 

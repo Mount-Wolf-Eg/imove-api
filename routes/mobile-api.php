@@ -75,8 +75,10 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('rates', RateController::class)->only('store', 'update', 'destroy');
             Route::apiResource('complaints', ComplaintController::class)->only('store', 'show', 'update', 'destroy');
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('index');
+            
             Route::get('payments', [PaymentController::class, 'patientIndex']);
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
+            Route::post('payments/{payment}/export-invoice', [PaymentController::class, 'exportPaymentInvoice']);
 
             Route::apiResource('banks', BankController::class);
 
