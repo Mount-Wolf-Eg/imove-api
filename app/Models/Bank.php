@@ -14,7 +14,7 @@ class Bank extends Model
 
     public const ADDITIONAL_PERMISSIONS = [];
     protected $fillable = ['user_id', 'name', 'account_number', 'iban'];
-    protected array $filters = ['keyword'];
+    protected array $filters = ['keyword', 'user'];
     protected array $searchable = [];
     protected array $dates = [];
     public array $filterModels = [];
