@@ -106,6 +106,14 @@ trait ConsultationScopesTrait
         return $query->whereNotIn('status', $completedStatuses);
     }
 
+    public function scopeOfCancelled($query)
+    {
+        return $query->whereIn('status', [
+            ConsultationStatusConstants::PATIENT_CANCELLED->value,
+            ConsultationStatusConstants::DOCTOR_CANCELLED->value
+        ]);
+    }
+
     public function scopeOfUrgentWithNoDoctor($query)
     {
         return $query->where('type', ConsultationTypeConstants::URGENT)
