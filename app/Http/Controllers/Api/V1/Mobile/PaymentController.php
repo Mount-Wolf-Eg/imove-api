@@ -101,7 +101,9 @@ class PaymentController extends BaseApiController
 
     public function exportPaymentAllInvoice()
     {
-        $transactions = \App\Models\Payment::ofPatient()
+        $user = auth()->user();
+
+        $transactions = \App\Models\Payment::ofPatient($user->id)
             ->latest()
             ->get();
 
