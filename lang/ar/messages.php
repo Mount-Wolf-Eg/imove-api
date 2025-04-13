@@ -12,6 +12,10 @@ return [
     'general_settings' => 'الإعدادات العامة',
     'settings_updated' => 'تم تحديث الإعدادات بنجاح',
 
+    'withdrawal' => 'السحب',
+    'deposit' => 'الإيداع',
+    'refund' => 'استرداد',
+    
     'insufficient_wallet_balance' => 'رصيد المحفظة غير كافٍ',
     'credit' => 'فيزا / ماستر كارد',
     'wallet' => 'محفظة',
