@@ -37,23 +37,23 @@ class BankController extends BaseApiController
         try {
             $bank = $this->contract->create($request->validated());
             return $this->respondWithModel($bank->load($this->relations));
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }
-   /**
-    * Display the specified resource.
-    * @param Bank $bank
-    * @return JsonResponse
-    */
-   public function show(Bank $bank): JsonResponse
-   {
-       try {
-           return $this->respondWithModel($bank->load($this->relations));
-       }catch (Exception $e) {
-           return $this->respondWithError($e->getMessage());
-       }
-   }
+    /**
+     * Display the specified resource.
+     * @param Bank $bank
+     * @return JsonResponse
+     */
+    public function show(Bank $bank): JsonResponse
+    {
+        try {
+            return $this->respondWithModel($bank->load($this->relations));
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage());
+        }
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -61,12 +61,12 @@ class BankController extends BaseApiController
      * @param Bank $bank
      * @return JsonResponse
      */
-    public function update(BankRequest $request, Bank $bank) : JsonResponse
+    public function update(BankRequest $request, Bank $bank): JsonResponse
     {
         try {
             $bank = $this->contract->update($bank, $request->validated());
             return $this->respondWithModel($bank->load($this->relations));
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }
@@ -80,7 +80,7 @@ class BankController extends BaseApiController
         try {
             $this->contract->remove($bank);
             return $this->respondWithSuccess(__('messages.deleted'));
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }
@@ -95,7 +95,7 @@ class BankController extends BaseApiController
         try {
             $this->contract->toggleField($bank, 'is_active');
             return $this->respondWithModel($bank->load($this->relations));
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }
