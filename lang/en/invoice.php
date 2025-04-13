@@ -1,3 +1,5 @@
+<?php
+
 return [
     'invoice_title' => 'Payment Invoice',
     'transaction_info' => 'Transaction Info',

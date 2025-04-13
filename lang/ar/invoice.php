@@ -1,3 +1,5 @@
+<?php
+
 return [
     'invoice_title' => 'فاتورة الدفع',
     'transaction_info' => 'معلومات المعاملة',
