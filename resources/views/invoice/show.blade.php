@@ -95,10 +95,10 @@
                 <tbody>
                     <tr>
                         <td>{{ $payment->payable_type ?? '-' }}</td>
-                        <td>{{ __('invoice.type_' . $payment->type->label()) }}</td>
+                        <td>{{ __('invoice.type_' . $payment->type->value) }}</td>
                         <td>
                             @php
-                                $methodKey = 'method_' . $payment->payment_method->label();
+                                $methodKey = 'method_' . $payment->payment_method->value;
                             @endphp
                             {{ __('invoice.' . $methodKey) }}
                         </td>
