@@ -20,6 +20,13 @@ class BankController extends BaseApiController
     {
         parent::__construct($contract, BankResource::class);
     }
+
+    public function index(array $additional = []): mixed
+    {
+        $this->defaultScopes = ['user' => auth()->id()];
+        return parent::index($additional);
+    }
+
     /**
      * Store a newly created resource in storage.
      * @param BankRequest $request
