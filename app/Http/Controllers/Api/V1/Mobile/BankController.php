@@ -41,8 +41,9 @@ class BankController extends BaseApiController
      * @param Bank $bank
      * @return JsonResponse
      */
-    public function show(Bank $bank): JsonResponse
+    public function show($id): JsonResponse
     {
+        $bank = $this->contract->findOrFail($id, [], ['auth']);
         try {
             return $this->respondWithModel($bank->load($this->relations));
         } catch (Exception $e) {
@@ -56,8 +57,9 @@ class BankController extends BaseApiController
      * @param Bank $bank
      * @return JsonResponse
      */
-    public function update(BankRequest $request, Bank $bank): JsonResponse
+    public function update(BankRequest $request, $id): JsonResponse
     {
+        $bank = $this->contract->findOrFail($id, [], ['auth']);
         try {
             $bank = $this->contract->update($bank, $request->validated());
             return $this->respondWithModel($bank->load($this->relations));
@@ -70,8 +72,9 @@ class BankController extends BaseApiController
      * @param Bank $bank
      * @return JsonResponse
      */
-    public function destroy(Bank $bank): JsonResponse
+    public function destroy($id): JsonResponse
     {
+        $bank = $this->contract->findOrFail($id, [], ['auth']);
         try {
             $this->contract->remove($bank);
             return $this->respondWithSuccess(__('messages.deleted'));
@@ -85,8 +88,9 @@ class BankController extends BaseApiController
      * @param Bank $bank
      * @return JsonResponse
      */
-    public function changeActivation(Bank $bank): JsonResponse
+    public function changeActivation($id): JsonResponse
     {
+        $bank = $this->contract->findOrFail($id, [], ['auth']);
         try {
             $this->contract->toggleField($bank, 'is_active');
             return $this->respondWithModel($bank->load($this->relations));
