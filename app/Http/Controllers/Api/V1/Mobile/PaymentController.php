@@ -101,9 +101,9 @@ class PaymentController extends BaseApiController
 
     public function exportPaymentAllInvoice()
     {
-        $transactions = $this->contract->search(['patient' => true]);
-
-        dd($transactions);
+        $transactions = \App\Models\Payment::ofPatient()
+            ->latest()
+            ->get();
 
         $html = view('invoice.all', compact('transactions'))->render();
 
