@@ -79,6 +79,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::get('payments', [PaymentController::class, 'patientIndex']);
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
             Route::get('payments/{payment}/export-invoice', [PaymentController::class, 'exportPaymentInvoice']);
+            Route::get('export-all-invoice', [PaymentController::class, 'exportPaymentAllInvoice']);
 
             Route::apiResource('banks', BankController::class);
 
