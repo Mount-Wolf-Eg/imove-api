@@ -18,7 +18,7 @@ class BankController extends BaseApiController
      */
     public function __construct(BankContract $contract)
     {
-        parent::__construct($contract, BankResource::class, 'Bank');
+        parent::__construct($contract, BankResource::class);
     }
     /**
      * Store a newly created resource in storage.
