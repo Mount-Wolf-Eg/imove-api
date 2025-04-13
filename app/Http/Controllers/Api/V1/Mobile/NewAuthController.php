@@ -83,6 +83,10 @@ class NewAuthController extends BaseApiController
         }
 
         if ($loginUser && $loginUser->is_active) {
+            if ($loginUser->doctor && ! $loginUser->doctor->is_active) {
+                return $this->respondWithError(__('auth.not_active_account'), 422);
+            }
+
             Auth::login($loginUser);
 
             $this->userAuthService->verifyUser($loginUser);
