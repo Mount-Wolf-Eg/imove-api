@@ -18,7 +18,7 @@ class BankController extends BaseApiController
      */
     public function __construct(BankContract $contract)
     {
-        $this->defaultScopes = ['auth'];
+        $this->defaultScopes = ['auth' => true];
         parent::__construct($contract, BankResource::class);
     }
 
@@ -59,7 +59,7 @@ class BankController extends BaseApiController
      */
     public function update(BankRequest $request, $id): JsonResponse
     {
-        $bank = $this->contract->findOrFail($id, [], ['auth']);
+        $bank = $this->contract->findOrFail($id, [], ['auth' => true]);
         try {
             $bank = $this->contract->update($bank, $request->validated());
             return $this->respondWithModel($bank->load($this->relations));
@@ -74,7 +74,7 @@ class BankController extends BaseApiController
      */
     public function destroy($id): JsonResponse
     {
-        $bank = $this->contract->findOrFail($id, [], ['auth']);
+        $bank = $this->contract->findOrFail($id, [], ['auth' => true]);
         try {
             $this->contract->remove($bank);
             return $this->respondWithSuccess(__('messages.deleted'));
@@ -90,7 +90,7 @@ class BankController extends BaseApiController
      */
     public function changeActivation($id): JsonResponse
     {
-        $bank = $this->contract->findOrFail($id, [], ['auth']);
+        $bank = $this->contract->findOrFail($id, [], ['auth' => true]);
         try {
             $this->contract->toggleField($bank, 'is_active');
             return $this->respondWithModel($bank->load($this->relations));
