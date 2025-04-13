@@ -43,7 +43,7 @@ class BankController extends BaseApiController
      */
     public function show($id): JsonResponse
     {
-        $bank = $this->contract->findOrFail($id, [], ['auth']);
+        $bank = $this->contract->findOrFail($id, [], ['auth' => true]);
         try {
             return $this->respondWithModel($bank->load($this->relations));
         } catch (Exception $e) {
