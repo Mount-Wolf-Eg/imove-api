@@ -14,10 +14,6 @@ return [
     'general_settings' => 'General Settings',
     'settings_updated' => 'Settings updated successfully',
 
-    'withdraw' => 'Withdraw',
-    'deposit' => 'Deposit',
-    'refund' => 'Refund',
-
     'insufficient_wallet_balance' => 'Insufficient wallet balance',
     'credit' => 'Credit',
     'wallet' => 'Wallet',
