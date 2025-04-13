@@ -123,6 +123,10 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
             Route::resource('payments', PaymentController::class)->only('destroy');
 
+            Route::get('payments/{payment}/export-invoice', [PaymentController::class, 'exportPaymentInvoice']);
+
+            Route::get('export-all-invoice', [PaymentController::class, 'exportDoctorPaymentAllInvoice']);
+
             Route::apiResource('banks', BankController::class);
             
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('store', 'update', 'destroy');

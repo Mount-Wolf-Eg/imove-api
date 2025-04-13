@@ -122,4 +122,28 @@ class PaymentController extends BaseApiController
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="all.pdf"');
     }
+
+    public function exportDoctorPaymentAllInvoice()
+    {
+        $user = auth()->user();
+
+        $transactions = \App\Models\Payment::ofBeneficiary($user->id)
+            ->latest()
+            ->get();
+
+        $html = view('invoice.all', compact('transactions'))->render();
+
+        $mpdf = new \Mpdf\Mpdf([
+            'mode'         => 'utf-8',
+            'format'       => 'A4',
+            'default_font' => 'dejavusans',
+            'tempDir'      => storage_path('app/tmp'),
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="all.pdf"');
+    }
 }
