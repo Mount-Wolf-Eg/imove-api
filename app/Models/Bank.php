@@ -14,7 +14,7 @@ class Bank extends Model
 
     public const ADDITIONAL_PERMISSIONS = [];
     protected $fillable = ['user_id', 'name', 'account_number', 'iban'];
-    protected array $filters = ['keyword', 'user'];
+    protected array $filters = ['keyword', 'auth'];
     protected array $searchable = [];
     protected array $dates = [];
     public array $filterModels = [];
@@ -34,10 +34,9 @@ class Bank extends Model
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
-    public function scopeOfUser($query, $userId)
+    public function scopeOfAuth($query)
     {
-        dd('dd');
-        return $query->where('user_id', $userId);
+        return $query->where('user_id', auth()->id());
     }
     //---------------------Scopes-------------------------------------
 

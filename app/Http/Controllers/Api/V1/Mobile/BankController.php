@@ -18,7 +18,7 @@ class BankController extends BaseApiController
      */
     public function __construct(BankContract $contract)
     {
-        $this->defaultScopes = ['user' => auth()->id()];
+        $this->defaultScopes = ['auth'];
         parent::__construct($contract, BankResource::class);
     }
 
