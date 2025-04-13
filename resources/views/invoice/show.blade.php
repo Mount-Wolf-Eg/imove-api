@@ -5,7 +5,6 @@
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
-            direction: {{ app()->getLocale() == 'ar' ? 'rtl' : 'ltr' }};
             padding: 30px;
         }
 
@@ -37,7 +36,6 @@
         .details-table th {
             background-color: #f0f0f0;
             padding: 8px;
-            text-align: {{ app()->getLocale() == 'ar' ? 'right' : 'left' }};
             border: 1px solid #ddd;
         }
 
@@ -58,7 +56,6 @@
             font-size: 18px;
             font-weight: bold;
             margin-top: 10px;
-            text-align: {{ app()->getLocale() == 'ar' ? 'right' : 'left' }};
         }
     </style>
 </head>
@@ -73,12 +70,12 @@
             <div class="section-title">{{ __('invoice.transaction_info') }}</div>
             <table class="info-table">
                 <tr>
-                    <td><strong>{{ __('invoice.transaction_id') }}:</strong> {{ $transaction->transaction_id }}</td>
-                    <td><strong>{{ __('invoice.created_at') }}:</strong> {{ $transaction->created_at->format('Y-m-d H:i') }}</td>
+                    <td><strong>{{ __('invoice.transaction_id') }}:</strong> {{ $payment->transaction_id }}</td>
+                    <td><strong>{{ __('invoice.created_at') }}:</strong> {{ $payment->created_at->format('Y-m-d H:i') }}</td>
                 </tr>
                 <tr>
-                    <td><strong>{{ __('invoice.payer') }}:</strong> {{ $transaction->payer?->name ?? '---' }}</td>
-                    <td><strong>{{ __('invoice.beneficiary') }}:</strong> {{ $transaction->beneficiary?->name ?? '---' }}</td>
+                    <td><strong>{{ __('invoice.payer') }}:</strong> {{ $payment->payer?->name ?? '---' }}</td>
+                    <td><strong>{{ __('invoice.beneficiary') }}:</strong> {{ $payment->beneficiary?->name ?? '---' }}</td>
                 </tr>
             </table>
         </div>
@@ -97,15 +94,15 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{ $transaction->payable_type ?? '-' }}</td>
-                        <td>{{ __('invoice.type_' . $transaction->type) }}</td>
+                        <td>{{ $payment->payable_type ?? '-' }}</td>
+                        <td>{{ __('invoice.type_' . $payment->type) }}</td>
                         <td>
                             @php
-                                $methodKey = 'method_' . $transaction->payment_method;
+                                $methodKey = 'method_' . $payment->payment_method;
                             @endphp
                             {{ __('invoice.' . $methodKey) }}
                         </td>
-                        <td>{{ $transaction->amount }} {{ $transaction->currency?->code ?? 'SAR' }}</td>
+                        <td>{{ $payment->amount }} {{ $payment->currency?->code ?? 'SAR' }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -113,7 +110,7 @@
 
         {{-- Total --}}
         <div class="total">
-            {{ __('invoice.total') }}: {{ $transaction->amount }} {{ $transaction->currency?->code ?? 'SAR' }}
+            {{ __('invoice.total') }}: {{ $payment->amount }} {{ $payment->currency?->code ?? 'SAR' }}
         </div>
 
     </div>
