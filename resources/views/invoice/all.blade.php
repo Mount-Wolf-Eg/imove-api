@@ -77,9 +77,9 @@
             <tbody>
                 <tr>
                     <td>{{ $transaction->payable_type ?? '-' }}</td>
-                    <td>{{ __('invoice.type_' . $transaction->type) }}</td>
+                    <td>{{ __('invoice.type_' . $transaction->type->value) }}</td>
                     <td>
-                        @php $methodKey = 'method_' . $transaction->payment_method; @endphp
+                        @php $methodKey = 'method_' . $transaction->payment_method->value; @endphp
                         {{ __('invoice.' . $methodKey) }}
                     </td>
                     <td>{{ $transaction->amount }} {{ $transaction->currency?->code ?? 'SAR' }}</td>
