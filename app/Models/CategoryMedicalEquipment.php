@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Traits\ModelTrait;
 use App\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
@@ -21,8 +22,11 @@ class CategoryMedicalEquipment extends Model
     public array $filterCustom = [];
     public array $translatable = ['name'];
 
-    
     //---------------------relations-------------------------------------
+    public function medicalEquipment(): HasMany
+    {
+        return $this->hasMany(MedicalEquipment::class);
+    }
 
     //---------------------relations-------------------------------------
 
