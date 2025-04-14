@@ -25,7 +25,7 @@ class PaymentController extends BaseApiController
     public function __construct(PaymentContract $paymentContract)
     {
         parent::__construct($paymentContract, PaymentResource::class);
-        $this->relations = ['payer', 'beneficiary', 'currency', 'payable'];
+        $this->relations = ['payer', 'beneficiary', 'currency', 'payable', 'beneficiary.doctor.medicalSpecialities'];
     }
 
     /**
