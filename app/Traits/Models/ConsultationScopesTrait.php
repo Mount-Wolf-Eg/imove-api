@@ -114,6 +114,11 @@ trait ConsultationScopesTrait
         ]);
     }
 
+    public function scopeOfDoctorScheduleDayShiftId($query, $doctorScheduleDayShiftId)
+    {
+        return $query->where('doctor_schedule_day_shift_id', $doctorScheduleDayShiftId);
+    }
+
     public function scopeOfUrgentWithNoDoctor($query)
     {
         return $query->where('type', ConsultationTypeConstants::URGENT)

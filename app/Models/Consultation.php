@@ -76,7 +76,10 @@ class Consultation extends Model
         'dayShift',
         'onlyApprovedReferral',
         'nextConsultation',
-        'missedConsultation'
+        'missedConsultation',
+        'cancelled',
+        'doctorScheduleDayShiftId',
+        'patient',
     ];
 
     protected array $searchable = ['patient.user.name', 'doctor.user.name', 'id'];
