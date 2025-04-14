@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
         //     CurrenciesTableSeeder::class
         // ]);
         $this->call(CategoryMedicalEquipmentSeeder::class);
+        $this->call(MedicalEquipmentSeeder::class);
 
     }
 }
