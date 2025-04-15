@@ -68,7 +68,7 @@ class CategoryMedicalEquipmentController extends BaseWebController
      */
     public function show(CategoryMedicalEquipment $categoryMedicalEquipment): View|Factory|Application
     {
-        return $this->showBlade(['categoryMedicalEquipment' => $categoryMedicalEquipment]);
+        return $this->showBlade(['equipmentCategory' => $categoryMedicalEquipment]);
     }
 
     /**
@@ -78,9 +78,9 @@ class CategoryMedicalEquipmentController extends BaseWebController
      *
      * @return View|Factory|Application
      */
-    public function edit(CategoryMedicalEquipment $academicDegree): View|Factory|Application
+    public function edit(CategoryMedicalEquipment $categoryMedicalEquipment): View|Factory|Application
     {
-        return $this->editBlade(['categoryMedicalEquipment' => $academicDegree]);
+        return $this->editBlade(['equipmentCategory' => $categoryMedicalEquipment]);
     }
 
     /**
@@ -116,7 +116,7 @@ class CategoryMedicalEquipmentController extends BaseWebController
 
     /**
      * active & inactive the specified resource from storage.
-     * @param CategoryMedicalEquipment $academicategoryMedicalEquipmentcDegree
+     * @param CategoryMedicalEquipment $categoryMedicalEquipment
      * @return RedirectResponse
      */
     public function changeActivation(CategoryMedicalEquipment $categoryMedicalEquipment): RedirectResponse

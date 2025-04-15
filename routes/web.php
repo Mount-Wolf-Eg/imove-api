@@ -112,8 +112,8 @@ Route::group([
         Route::get('featured-list', [FeaturedListController::class, 'edit'])->name('featured-list.edit');
         Route::put('featured-list', [FeaturedListController::class, 'update'])->name('featured-list.update');
         Route::resource('contact', ContactController::class)->only(['index']);
-        Route::resource('equipment-categories', CategoryMedicalEquipmentController::class);
-        Route::put('equipment-categories/{equipmentDategory}/change-activation', [CategoryMedicalEquipmentController::class, 'changeActivation'])->name('equipment-categories.active');
+        Route::resource('category-medical-equipments', CategoryMedicalEquipmentController::class);
+        Route::put('category-medical-equipments/{categoryMedicalEquipment}/change-activation', [CategoryMedicalEquipmentController::class, 'changeActivation'])->name('category-medical-equipments.active');
 
         Route::prefix('profile')->group(function () {
             Route::get('/', [ProfileController::class, 'profile'])->name('profile');

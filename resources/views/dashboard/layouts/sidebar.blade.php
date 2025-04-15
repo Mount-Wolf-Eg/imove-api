@@ -200,6 +200,16 @@
                 </li>
                 @endif
 
+                @if(auth()->user()->can('read-academic-degree') || auth()->user()->can('view-all-academic-degree'))
+                <li class="nav-item">
+                    <a href="{{route('category-medical-equipments.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('category-medical-equipments.index', 'category-medical-equipments.show', 'category-medical-equipments.create',
+                        'category-medical-equipments.edit')])>
+                        <i class="bi bi-book"></i>
+                        <span data-key="t-dashboard">{{ __('messages.equipment-categories') }}</span>
+                    </a>
+                </li>
+                @endif
+
                 @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
                 <li class="nav-item">
                     <a href="{{route('contact.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('contacts.index')])>
