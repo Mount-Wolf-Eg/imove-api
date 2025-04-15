@@ -251,6 +251,8 @@ abstract class BaseRepository implements BaseContract
 
         $model = $this->query->where($identifier)->first();
 
+        dd($attributes, $identifier);
+
         if ($model) {
             return $this->update($model, $attributes);
         } else {
