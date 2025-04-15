@@ -5,6 +5,7 @@ namespace App\Repositories\SQL;
 use App\Models\Consultation;
 use App\Models\MedicalEquipment;
 use App\Repositories\Contracts\MedicalEquipmentContract;
+use Illuminate\Database\Eloquent\Collection;
 
 class MedicalEquipmentRepository extends BaseRepository implements MedicalEquipmentContract
 {
@@ -48,6 +49,16 @@ class MedicalEquipmentRepository extends BaseRepository implements MedicalEquipm
             return false;
         }
     }
-
-
+    
+ 
+    public function getByConsultation(Consultation $consultation, array $relations = []): Collection
+    {
+        try {
+            return $consultation->medicalEquipments()->with($relations)->get();
+        } catch (\Exception $e) {
+            \Log::error('Failed to retrieve medical equipment for consultation: ' . $e->getMessage());
+            return new Collection();
+        }
+    }
+    
 }
