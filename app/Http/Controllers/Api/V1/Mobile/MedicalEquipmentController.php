@@ -67,10 +67,10 @@ class MedicalEquipmentController extends BaseApiController
                 'medical_equipment_ids.*' => 'exists:medical_equipment,id',
             ]);
 
-            $doctor = 205;
-            $success = $this->contract->removeFromConsultation($consultation, $validated['medical_equipment_ids'], 205);
-            // $doctor = auth()->user()->doctor;
-            // $success = $this->contract->removeFromConsultation($consultation, $validated['medical_equipment_ids'], $doctor->id);
+            // $doctor = 205;
+            // $success = $this->contract->removeFromConsultation($consultation, $validated['medical_equipment_ids'], 205);
+            $doctor = auth()->user()->doctor;
+            $success = $this->contract->removeFromConsultation($consultation, $validated['medical_equipment_ids'], $doctor->id);
 
             if ($success) {
                 return $this->respondWithArray(['message' => 'Medical equipment removed successfully'], [], Response::HTTP_OK);

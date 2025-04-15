@@ -35,8 +35,8 @@ Route::group(['middleware' => 'locale'], static function () {
         Route::get('/', 'index');
         Route::get('show/{id}', 'show');
         Route::get('consultation/{consultation}/medical-equipments', 'getByConsultation');
-        Route::post('consultation/{consultation}/assign-medical-equipments', 'assignToConsultation');
-        Route::post('consultation/{consultation}/remove-medical-equipments', 'removeFromConsultation');
+        Route::post('consultation/{consultation}/assign-medical-equipments', 'assignToConsultation')->withoutMiddleware(['auth:sanctum', 'active_doctor']);
+        Route::post('consultation/{consultation}/remove-medical-equipments', 'removeFromConsultation')->withoutMiddleware(['auth:sanctum', 'active_doctor']);
     });
 
     // visitors apis (not authenticated)
