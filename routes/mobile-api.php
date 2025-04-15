@@ -81,8 +81,9 @@ Route::group(['middleware' => 'locale'], static function () {
 
             Route::get('payments', [PaymentController::class, 'patientIndex']);
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
-            Route::get('payments/{payment}/export-invoice', [PaymentController::class, 'exportPaymentInvoice']);
-            Route::get('export-all-invoice', [PaymentController::class, 'exportPaymentAllInvoice']);
+
+            Route::get('payments/{payment}/export-invoice', [PaymentController::class, 'exportPaymentInvoice'])->withoutMiddleware(['auth:sanctum', 'patient', 'active_patient']);
+            Route::get('export-all-invoice', [PaymentController::class, 'exportPaymentAllInvoice'])->withoutMiddleware(['auth:sanctum', 'patient', 'active_patient']);
 
             Route::apiResource('banks', BankController::class);
 
@@ -128,9 +129,8 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
             Route::resource('payments', PaymentController::class)->only('destroy');
 
-            Route::get('payments/{payment}/export-invoice', [PaymentController::class, 'exportPaymentInvoice']);
-
-            Route::get('export-all-invoice', [PaymentController::class, 'exportDoctorPaymentAllInvoice']);
+            Route::get('payments/{payment}/export-invoice', [PaymentController::class, 'exportPaymentInvoice'])->withoutMiddleware(['auth:sanctum', 'doctor', 'active_doctor']);
+            Route::get('export-all-invoice', [PaymentController::class, 'exportDoctorPaymentAllInvoice'])->withoutMiddleware(['auth:sanctum', 'doctor', 'active_doctor']);
 
             Route::apiResource('banks', BankController::class);
             
