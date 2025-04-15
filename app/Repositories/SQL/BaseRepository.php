@@ -240,6 +240,24 @@ abstract class BaseRepository implements BaseContract
         return $this->query->updateOrCreate($identifier, $attributes);
     }
 
+    public function customUpdateOrCreate(array $attributes, array $identifier = [])
+    {
+        if (empty($attributes)) {
+            return false;
+        }
+
+        $attributes = $this->cleanUpAttributes($attributes);
+        $identifier = $this->cleanUpAttributes($identifier);
+
+        $model = $this->query->where($identifier)->first();
+
+        if ($model) {
+            return $model->update($attributes);
+        } else {
+            return $this->query->create($attributes);
+        }
+    }
+
     /**
      * @param Model $model
      * @return bool|mixed|null

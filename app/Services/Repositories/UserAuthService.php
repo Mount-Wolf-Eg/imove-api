@@ -14,6 +14,7 @@ class UserAuthService
     private UserContract $contract;
     private PatientContract $patientContract;
     private DoctorContract $doctorContract;
+
     public function __construct(UserContract $contract, PatientContract $patientContract, DoctorContract $doctorContract)
     {
         $this->contract = $contract;
@@ -62,15 +63,15 @@ class UserAuthService
     public function registerUserAsPatient($data)
     {
         // $user = $this->contract->createOrUpdate($data['user'], $data['user_id']);
-        $user = $this->contract->defaultUpdateOrCreate($data['user'], ['phone' => $data['user']['phone']]);
-        $patient = $this->patientContract->defaultUpdateOrCreate($data, ['user_id' => $data['user_id']]);
+        $user = $this->contract->customUpdateOrCreate($data['user'], ['phone' => $data['user']['phone']]);
+        $patient = $this->patientContract->customUpdateOrCreate($data, ['user_id' => $data['user_id']]);
         // $this->sendVerificationCode($patient->user);
         return $patient;
     }
 
     public function registerUserAsDoctor($data)
     {
-        return $this->doctorContract->defaultUpdateOrCreate($data, ['user_id' => $data['user_id']]);
+        return $this->doctorContract->customUpdateOrCreate($data, ['user_id' => $data['user_id']]);
         // return $this->doctorContract->create($data);
     }
 }
