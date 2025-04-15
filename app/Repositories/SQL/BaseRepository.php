@@ -249,6 +249,8 @@ abstract class BaseRepository implements BaseContract
         // $attributes = $this->cleanUpAttributes($attributes);
         $identifier = $this->cleanUpAttributes($identifier);
 
+        dd($identifier, $attributes);
+
         $model = $this->query->where($identifier)->first();
 
         if ($model) {
