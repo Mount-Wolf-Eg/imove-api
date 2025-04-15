@@ -252,9 +252,9 @@ abstract class BaseRepository implements BaseContract
         $model = $this->query->where($identifier)->first();
 
         if ($model) {
-            return $model->update($attributes);
+            return $this->update($model, $attributes);
         } else {
-            return $this->query->create($attributes);
+            return $this->create($attributes);
         }
     }
 
