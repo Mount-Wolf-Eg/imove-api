@@ -217,6 +217,27 @@ trait ConsultationScopesTrait
         });
     }
 
+    // public function scopeOfMissedConsultation($query)
+    // {
+    //     $query->where(function ($query) {
+    //         $query->whereHas('doctorScheduleDayShift', function ($query) {
+    //             $query->whereHas('day', function ($dayQuery) {
+    //                 $dayQuery->where('date', '<', now()->format('Y-m-d'));
+    //             })
+    //                 ->whereRaw("
+    //         CONCAT(
+    //             (SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), 
+    //             ' ', 
+    //             from_time
+    //         ) < ?
+    //     ", [now()->format('Y-m-d H:i')]);
+    //         })->orWhereHas('replies', function ($query) {
+    //             $query->where('consultation_doctor_replies.status', ConsultationPatientStatusConstants::APPROVED->value)
+    //                 ->whereDate('consultation_doctor_replies.doctor_set_consultation_at', '<', now());
+    //         });
+    //     })->ofCompleted(false);
+    // }
+
     public function scopeOfMissedConsultation($query)
     {
         $query->where(function ($query) {
@@ -225,18 +246,24 @@ trait ConsultationScopesTrait
                     $dayQuery->where('date', '<', now()->format('Y-m-d'));
                 })
                     ->whereRaw("
-            CONCAT(
-                (SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), 
-                ' ', 
-                from_time
-            ) < ?
-        ", [now()->format('Y-m-d H:i')]);
+                STR_TO_DATE(
+                    CONCAT(
+                        (SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), 
+                        ' ', 
+                        from_time
+                    ), 
+                    '%Y-%m-%d %H:%i:%s'
+                ) < ?
+            ", [now()->format('Y-m-d H:i:s')]);
             })->orWhereHas('replies', function ($query) {
                 $query->where('consultation_doctor_replies.status', ConsultationPatientStatusConstants::APPROVED->value)
-                    ->whereDate('consultation_doctor_replies.doctor_set_consultation_at', '<', now());
+                    ->where('consultation_doctor_replies.doctor_set_consultation_at', '<', now());
             });
-        })->ofCompleted(false);
+        });
+
+        return $query->ofCompleted(false);
     }
+
     //---------------------Scopes-------------------------------------
 
 }
