@@ -8,6 +8,7 @@ use App\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
@@ -23,7 +24,7 @@ class MedicalEquipment extends Model
     public array $filterModels = [];
     public array $filterCustom = [];
     public array $translatable = ['name'];
-    protected $with = ['photo'];
+    protected $with = ['photo', 'category'];
 
     //---------------------relations-------------------------------------
 
@@ -36,6 +37,13 @@ class MedicalEquipment extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(CategoryMedicalEquipment::class, 'category_id');
+    }
+
+    public function consultations(): BelongsToMany
+    {
+        return $this->belongsToMany(Consultation::class, 'consultation_medical_equipment')
+                    ->withPivot('doctor_id')
+                    ->withTimestamps();
     }
 
     //---------------------relations-------------------------------------

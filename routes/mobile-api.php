@@ -22,12 +22,21 @@ use App\Http\Controllers\Api\V1\Mobile\PatientRelativeController;
 use App\Http\Controllers\Api\V1\Mobile\PaymentController;
 use App\Http\Controllers\Api\V1\Mobile\RateController;
 use App\Http\Controllers\Api\V1\Mobile\VendorController;
+use App\Http\Controllers\Api\V1\Mobile\MedicalEquipmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
     // Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // old
     Route::post('send-verification-code', [NewAuthController::class, 'sendVerificationCode']);
     Route::post('login', [NewAuthController::class, 'login']);
+    // Route::get('get_medical_equipment', [MedicalEquipmentController::class, 'index']);
+
+    Route::controller(MedicalEquipmentController::class)->prefix('medical-equipments')->group(function () {
+        Route::get('/', 'index');
+        Route::get('show/{id}', 'show');
+        Route::post('consultation/{consultation}/assign-medical-equipments', 'assignToConsultation');
+        Route::post('consultation/{consultation}/remove-medical-equipments', 'removeFromConsultation');
+    });
 
     // visitors apis (not authenticated)
     Route::get('filters/{model}', FilterController::class);
