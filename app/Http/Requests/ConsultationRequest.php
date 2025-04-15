@@ -141,6 +141,8 @@ class ConsultationRequest extends FormRequest
                 'questions' => 'nullable|array',
                 'questions.*.consultation_question_id' => 'required|exists:consultation_questions,id|distinct',
                 'questions.*.answer' => 'required|string',
+
+                'contact_type' => config('validations.integer.null') . '|in:' . implode(',', ConsultationContactTypeConstants::values()),
             ];
 
             if ($this->has('doctor_schedule_day_shift_id') && ! $this->consultation->patientCanReschedule()) {
