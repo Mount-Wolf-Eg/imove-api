@@ -560,7 +560,8 @@ return [
         ]
     ],
     // 'not_active_account' => 'Your account is not active',
-    'not_active_account' => "Your account is under review",
+    // 'not_active_account' => "Your account is under review",
+    'not_active_account' => "Your account is currently under review. You will be notified once it's approved.",
     'weight' => 'Weight',
     'height' => 'Height',
     'blood_type' => 'Blood type',
@@ -592,4 +593,5 @@ return [
     "manage_equipment-categories"=> "Manage Equipment Categories",
     "equipment-categories"       => "Equipment Categories",
     "add_equipment-category"     => "Add Equipment Category",
+    'patient_can_not_reschedule_consultation' => 'The consultation cannot be rescheduled because you are outside the permitted time',
 ];

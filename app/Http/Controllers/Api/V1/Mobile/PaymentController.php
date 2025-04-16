@@ -8,6 +8,7 @@ use App\Models\GeneralSettings;
 use App\Models\Payment;
 use App\Repositories\Contracts\PaymentContract;
 use Exception;
+use Mpdf\Mpdf;
 
 class PaymentController extends BaseApiController
 {
@@ -24,7 +25,7 @@ class PaymentController extends BaseApiController
     public function __construct(PaymentContract $paymentContract)
     {
         parent::__construct($paymentContract, PaymentResource::class);
-        $this->relations = ['payer', 'beneficiary', 'currency', 'payable'];
+        $this->relations = ['payer', 'beneficiary', 'currency', 'payable', 'beneficiary.doctor.medicalSpecialities'];
     }
 
     /**
@@ -79,5 +80,73 @@ class PaymentController extends BaseApiController
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
+    }
+
+    public function exportPaymentInvoice(Payment $payment)
+    {
+        $html = view('invoice.show', compact('payment'))->render();
+
+        $mpdf = new Mpdf([
+            'mode'         => 'utf-8',
+            'format'       => 'A4',
+            'default_font' => 'dejavusans',
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="transactions.pdf"');
+    }
+
+    public function exportPaymentAllInvoice()
+    {
+        // $user = auth()->user();
+        $user_id = request()->get('user_id');
+
+        $transactions = \App\Models\Payment::ofPatient($user_id)
+            ->latest()
+            ->get();
+
+        $html = view('invoice.all', compact('transactions'))->render();
+
+        $mpdf = new \Mpdf\Mpdf([
+            'mode'         => 'utf-8',
+            'format'       => 'A4',
+            'default_font' => 'dejavusans',
+            'tempDir'      => storage_path('app/tmp'),
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="all.pdf"');
+    }
+
+    public function exportDoctorPaymentAllInvoice()
+    {
+        // $user = auth()->user();
+
+        $user_id = request()->get('user_id');
+
+        $transactions = \App\Models\Payment::ofBeneficiary($user_id)
+            ->latest()
+            ->get();
+
+        $html = view('invoice.all', compact('transactions'))->render();
+
+        $mpdf = new \Mpdf\Mpdf([
+            'mode'         => 'utf-8',
+            'format'       => 'A4',
+            'default_font' => 'dejavusans',
+            'tempDir'      => storage_path('app/tmp'),
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="all.pdf"');
     }
 }

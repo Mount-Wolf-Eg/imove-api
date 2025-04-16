@@ -21,7 +21,6 @@ class MyFatoorahController extends Controller
 {
     use BaseApiResponseTrait;
 
-
     private ConsultationNotificationService $notificationService;
 
     /**
