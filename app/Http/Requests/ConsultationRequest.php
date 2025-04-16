@@ -62,7 +62,7 @@ class ConsultationRequest extends FormRequest
                 unset($validated['reminder_before']);
             }
 
-            $validated['is_active'] = false;
+            // $validated['is_active'] = false;
         }
 
         if (! isset($validated['contact_type']) || $validated['contact_type'] == null) {
