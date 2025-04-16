@@ -55,7 +55,7 @@ class MedicalEquipmentRepository extends BaseRepository implements MedicalEquipm
     public function getByConsultation(Consultation $consultation, array $relations = []): Collection
     {
         try {
-            return $consultation->medicalEquipments()->with($relations)->get();
+            return $consultation->medicalEquipments()->where('is_active', 1)->with($relations)->get();
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve medical equipment for consultation: ' . $e->getMessage());
             return new Collection();
