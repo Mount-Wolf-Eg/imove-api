@@ -18,10 +18,10 @@ class MedicalEquipment extends Model
     public const ADDITIONAL_PERMISSIONS = [];
     protected $table = "medical_equipment";
     protected $fillable = ['category_id', 'name', 'link', 'is_active'];
-    protected array $filters = ['keyword', 'active'];
+    protected array $filters = ['keyword', 'category', 'active'];
     protected array $searchable = ['name'];
     protected array $dates = [];
-    public array $filterModels = [];
+    public array $filterModels = ['CategoryMedicalEquipment'];
     public array $filterCustom = [];
     public array $translatable = ['name'];
     protected $with = ['photo', 'category'];
@@ -49,7 +49,10 @@ class MedicalEquipment extends Model
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
-
+    public function scopeOfCategory($query, $value)
+    {
+        return $query->where('category_id', $value);
+    }
     //---------------------Scopes-------------------------------------
 
 }

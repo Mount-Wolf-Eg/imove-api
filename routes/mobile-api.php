@@ -31,13 +31,6 @@ Route::group(['middleware' => 'locale'], static function () {
     Route::post('login', [NewAuthController::class, 'login']);
     // Route::get('get_medical_equipment', [MedicalEquipmentController::class, 'index']);
 
-    Route::controller(MedicalEquipmentController::class)->prefix('medical-equipments')->group(function () {
-        Route::get('/', 'index');
-        Route::get('show/{id}', 'show');
-        Route::get('consultation/{consultation}/medical-equipments', 'getByConsultation');
-        Route::post('consultation/{consultation}/assign-medical-equipments', 'assignToConsultation')->withoutMiddleware(['auth:sanctum', 'active_doctor']);
-        Route::post('consultation/{consultation}/remove-medical-equipments', 'removeFromConsultation')->withoutMiddleware(['auth:sanctum', 'active_doctor']);
-    });
 
     // visitors apis (not authenticated)
     Route::get('filters/{model}', FilterController::class);
@@ -48,6 +41,14 @@ Route::group(['middleware' => 'locale'], static function () {
 
     Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
     
+    Route::controller(MedicalEquipmentController::class)->prefix('medical-equipments')->group(function () {
+        Route::get('/', 'index');
+        Route::get('show/{id}', 'show');
+        Route::get('consultation/{consultation}/medical-equipments', 'getByConsultation');
+        Route::post('consultation/{consultation}/assign-medical-equipments', 'assignToConsultation')->withoutMiddleware(['auth:sanctum', 'active_doctor']);
+        Route::post('consultation/{consultation}/remove-medical-equipments', 'removeFromConsultation')->withoutMiddleware(['auth:sanctum', 'active_doctor']);
+    });
+
     Route::group(['middleware' => 'auth:sanctum'], static function () {
         Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // new
         Route::post('register-user-as-doctor', [NewAuthController::class, 'registerUserAsDoctor']); // new
