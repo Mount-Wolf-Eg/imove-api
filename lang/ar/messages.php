@@ -592,5 +592,12 @@ return [
     "add_equipment-category"      => "اضافة قسم",
     'patient_can_not_reschedule_consultation' => 'لا يمكن إعادة جدولة الاستشارة لانك خارج الوقت المسموح',
 
+    'medicalEquipments'    => 'المعدات الطبية',
+    'medical-equipments'   => 'المعدات الطبية',
+    'add_medicalEquipment' => 'اضافة معدات طبية',
+    'link'  => 'لينك',
+    'manage_medicalEquipments' => 'ادارة المعدات الطبية',
+    'edit_medicalEquipment'    => 'تعديل المعدات الطبية',
+    
 
 ];
