@@ -47,6 +47,7 @@ Route::group(['middleware' => 'locale'], static function () {
     Route::apiResource('files', FileController::class)->only('store', 'destroy');
 
     Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
+    Route::get('urgent-reminder-durations', [NewAuthController::class, 'urgentReminderDurations']);
     
     Route::group(['middleware' => 'auth:sanctum'], static function () {
         Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // new
@@ -63,7 +64,9 @@ Route::group(['middleware' => 'locale'], static function () {
 
         Route::group(['prefix' => 'patient', 'middleware' => 'active_patient'], static function () {
             Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
+            Route::get('urgent-reminder-durations', [NewAuthController::class, 'urgentReminderDurations']);
             Route::post('add-reminder-before', [NewAuthController::class, 'updateReminderDurations']);
+            Route::post('add-urgent-reminder-before', [NewAuthController::class, 'updateUrgentReminderDurations']);
 
             Route::get('consultation-files', [FileController::class, 'consultationFiles']);
             
@@ -85,8 +88,12 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('rates', RateController::class)->only('store', 'update', 'destroy');
             Route::apiResource('complaints', ComplaintController::class)->only('store', 'show', 'update', 'destroy');
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('index');
+
             Route::get('payments', [PaymentController::class, 'patientIndex']);
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
+
+            Route::get('payments/{payment}/export-invoice', [PaymentController::class, 'exportPaymentInvoice'])->withoutMiddleware(['auth:sanctum', 'patient', 'active_patient']);
+            Route::get('export-all-invoice', [PaymentController::class, 'exportPaymentAllInvoice'])->withoutMiddleware(['auth:sanctum', 'patient', 'active_patient']);
 
             Route::apiResource('banks', BankController::class);
 
@@ -103,7 +110,9 @@ Route::group(['middleware' => 'locale'], static function () {
 
         Route::group(['prefix' => 'doctor', 'middleware' => 'active_doctor'], static function () {
             Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
+            Route::get('urgent-reminder-durations', [NewAuthController::class, 'urgentReminderDurations']);
             Route::post('add-reminder-before', [NewAuthController::class, 'updateReminderDurations']);
+            Route::post('add-urgent-reminder-before', [NewAuthController::class, 'updateUrgentReminderDurations']);
             
             Route::put('update-main-info', [DoctorProfileController::class, 'updateMainInfo']);
             Route::put('update-professional-status', [DoctorProfileController::class, 'updateProfessionalStatus']);
@@ -129,6 +138,9 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::get('payments', [PaymentController::class, 'doctorIndex']);
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
             Route::resource('payments', PaymentController::class)->only('destroy');
+
+            Route::get('payments/{payment}/export-invoice', [PaymentController::class, 'exportPaymentInvoice'])->withoutMiddleware(['auth:sanctum', 'doctor', 'active_doctor']);
+            Route::get('export-all-invoice', [PaymentController::class, 'exportDoctorPaymentAllInvoice'])->withoutMiddleware(['auth:sanctum', 'doctor', 'active_doctor']);
 
             Route::apiResource('banks', BankController::class);
             

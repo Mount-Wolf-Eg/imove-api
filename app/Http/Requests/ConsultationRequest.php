@@ -41,7 +41,8 @@ class ConsultationRequest extends FormRequest
         }
 
         if (isset($validated['doctor_id']) && isset($validated['type']) && $validated['type'] == ConsultationTypeConstants::WITH_APPOINTMENT->value) {
-            $shiftTaken = resolve(ConsultationContract::class)->findBy('doctor_schedule_day_shift_id', $validated['doctor_schedule_day_shift_id'], false);
+            // $shiftTaken = resolve(ConsultationContract::class)->withFilters(['cancelled' => true])->findBy('doctor_schedule_day_shift_id', $validated['doctor_schedule_day_shift_id'], false);
+            $shiftTaken = resolve(ConsultationContract::class)->findByFilters(['cancelled' => true, 'doctorScheduleDayShiftId' => $validated['doctor_schedule_day_shift_id']]);
 
             if ($shiftTaken) {
                 throw new ValidationException(__('messages.schedule_slot_expired'));
@@ -140,6 +141,8 @@ class ConsultationRequest extends FormRequest
                 'questions' => 'nullable|array',
                 'questions.*.consultation_question_id' => 'required|exists:consultation_questions,id|distinct',
                 'questions.*.answer' => 'required|string',
+
+                'contact_type' => config('validations.integer.null') . '|in:' . implode(',', ConsultationContactTypeConstants::values()),
             ];
 
             if ($this->has('doctor_schedule_day_shift_id') && ! $this->consultation->patientCanReschedule()) {
@@ -148,7 +151,7 @@ class ConsultationRequest extends FormRequest
 
             $doctor_schedule_day_shift_is_required = $this->consultation->status == ConsultationStatusConstants::NEEDS_RESCHEDULE->value ? 'required|' : 'nullable|';
             $rules['doctor_schedule_day_shift_id'] = $doctor_schedule_day_shift_is_required . sprintf(config('validations.model.null'), 'doctor_schedule_day_shifts', 'id');
-            
+
             return $rules;
         }
 

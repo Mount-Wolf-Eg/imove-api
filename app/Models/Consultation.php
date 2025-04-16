@@ -76,7 +76,10 @@ class Consultation extends Model
         'dayShift',
         'onlyApprovedReferral',
         'nextConsultation',
-        'missedConsultation'
+        'missedConsultation',
+        'cancelled',
+        'doctorScheduleDayShiftId',
+        'patient',
     ];
 
     protected array $searchable = ['patient.user.name', 'doctor.user.name', 'id'];
@@ -342,7 +345,7 @@ class Consultation extends Model
 
     public function returnMony(): bool
     {
-        $grace_period = now()->addHours(GeneralSettings::getSettingValue('cancel_grace_period'));
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('normal_grace_period'));
 
         return $this->is_active && $this->payment
             && $this->payment->status->is(PaymentStatusConstants::COMPLETED)

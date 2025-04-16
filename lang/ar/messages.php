@@ -558,7 +558,8 @@ return [
         ],
     ],
     // 'not_active_account' => 'حسابك غير نشط',
-    'not_active_account' => "حسابك تحت المراجعه",
+    // 'not_active_account' => "حسابك تحت المراجعه",
+    'not_active_account' => "حسابك قيد المراجعة حاليًا. سيتم إعلامك فور الموافقة عليه.",
     'weight' => 'الوزن',
     'height' => 'الطول',
     'blood_type' => 'نوع الدم',
@@ -585,11 +586,11 @@ return [
     "shift_time_conflict" => "تعارض في وقت الوردية",
     "contacts" => "الرسائل",
     "manage_contacts" => "إدارة الرسائل",
-
     "manage_equipment-categories" => "اداره اقسام المعدات الطبية",
     "equipment-categories"        => "اقسام المعدات الطبية",
     "edit_equipment-category"     => "تعديل القسم",
     "add_equipment-category"      => "اضافة قسم",
+    'patient_can_not_reschedule_consultation' => 'لا يمكن إعادة جدولة الاستشارة لانك خارج الوقت المسموح',
 
 
 ];
