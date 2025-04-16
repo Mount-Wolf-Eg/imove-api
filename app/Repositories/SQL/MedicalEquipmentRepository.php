@@ -2,6 +2,9 @@
 
 namespace App\Repositories\SQL;
 
+
+use App\Constants\FileConstants;
+use App\Repositories\Contracts\FileContract;
 use App\Models\Consultation;
 use App\Models\MedicalEquipment;
 use App\Repositories\Contracts\MedicalEquipmentContract;
@@ -17,7 +20,6 @@ class MedicalEquipmentRepository extends BaseRepository implements MedicalEquipm
     {
         parent::__construct($model);
     }
-
 
     public function assignToConsultation(Consultation $consultation, array $medicalEquipmentIds, int $doctorId): bool
     {
@@ -49,8 +51,7 @@ class MedicalEquipmentRepository extends BaseRepository implements MedicalEquipm
             return false;
         }
     }
-    
- 
+
     public function getByConsultation(Consultation $consultation, array $relations = []): Collection
     {
         try {
@@ -60,5 +61,21 @@ class MedicalEquipmentRepository extends BaseRepository implements MedicalEquipm
             return new Collection();
         }
     }
-    
+
+
+
+    public function syncRelations($model, $attributes)
+    {
+        if (isset($attributes['photo'])) {
+            if (is_file($attributes['photo'])){
+                $file = resolve(FileContract::class)->create(['file' => $attributes['photo'],
+                    'type' => FileConstants::MEDICAL_EQUIPMENT_PHOTO->value]);
+            }else{
+                $file = resolve(FileContract::class)->find($attributes['photo']);
+            }
+            $model->photo()->save($file);
+        }
+        return $model;
+    }
+
 }
