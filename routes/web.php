@@ -25,6 +25,8 @@ use App\Http\Controllers\Dashboard\FaqSubjectController;
 use App\Http\Controllers\Dashboard\ConsultationController;
 use App\Http\Controllers\Dashboard\VendorServiceController;
 use App\Http\Controllers\Dashboard\AcademicDegreeController;
+use App\Http\Controllers\Dashboard\CategoryMedicalEquipmentController;
+use App\Http\Controllers\Dashboard\MedicalEquipmentController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Dashboard\MedicalSpecialityController;
 use App\Http\Controllers\Auth\Passwords\ResetPasswordController;
@@ -111,6 +113,11 @@ Route::group([
         Route::get('featured-list', [FeaturedListController::class, 'edit'])->name('featured-list.edit');
         Route::put('featured-list', [FeaturedListController::class, 'update'])->name('featured-list.update');
         Route::resource('contact', ContactController::class)->only(['index']);
+        Route::resource('category-medical-equipments', CategoryMedicalEquipmentController::class);
+        Route::put('category-medical-equipments/{categoryMedicalEquipment}/change-activation', [CategoryMedicalEquipmentController::class, 'changeActivation'])->name('category-medical-equipments.active');
+        Route::resource('medical-equipments', MedicalEquipmentController::class);
+        Route::put('medical-equipments/{medicalEquipment}/change-activation', [MedicalEquipmentController::class, 'changeActivation'])->name('medical-equipments.active');
+
 
         Route::prefix('profile')->group(function () {
             Route::get('/', [ProfileController::class, 'profile'])->name('profile');

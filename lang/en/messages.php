@@ -589,4 +589,17 @@ return [
     "shift_time_conflict" => "Shift Time Conflict",
     "contacts" => "Contacts",
     "manage_contacts" => "Manage Contacts",
+    "edit_equipment-category"    => "Edit Equipment Category",
+    "manage_equipment-categories"=> "Manage Equipment Categories",
+    "equipment-categories"       => "Equipment Categories",
+    "add_equipment-category"     => "Add Equipment Category",
+    'patient_can_not_reschedule_consultation' => 'The consultation cannot be rescheduled because you are outside the permitted time',
+
+    'edit_medicalEquipment'  => 'Edit Medical Equipment',
+    'manage_medicalEquipments' => 'Manage Medical Equipments',
+    'manage_medicalEquipments' => 'Medical Equipments',
+    'link'    => 'Link',
+    'add_medicalEquipment' => 'Add Medical Equipment',
+    'medicalEquipments'    => 'Medical Equipments',
+
 ];
