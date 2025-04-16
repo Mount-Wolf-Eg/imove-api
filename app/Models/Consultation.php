@@ -123,6 +123,13 @@ class Consultation extends Model
         return $this->belongsTo(Patient::class);
     }
 
+    public function medicalEquipments(): BelongsToMany
+    {
+        return $this->belongsToMany(MedicalEquipment::class, 'consultation_medical_equipment')
+                    ->withPivot('doctor_id')
+                    ->withTimestamps();
+    }
+
     public function attachments(): MorphMany
     {
         return $this->morphMany(File::class, 'fileable')

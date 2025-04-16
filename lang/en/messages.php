@@ -589,6 +589,9 @@ return [
     "shift_time_conflict" => "Shift Time Conflict",
     "contacts" => "Contacts",
     "manage_contacts" => "Manage Contacts",
+    "edit_equipment-category"    => "Edit Equipment Category",
+    "manage_equipment-categories"=> "Manage Equipment Categories",
+    "equipment-categories"       => "Equipment Categories",
+    "add_equipment-category"     => "Add Equipment Category",
     'patient_can_not_reschedule_consultation' => 'The consultation cannot be rescheduled because you are outside the permitted time',
-
 ];
