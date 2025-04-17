@@ -23,6 +23,9 @@ class DoctorArticleRequest extends FormRequest
     {
         $validated = parent::validated();
         $validated['author_id'] = auth()->id();
+
+        $validated['content']['en'] = $this->get('title')['ar'] ?? null;
+
         return $validated;
     }
 
@@ -38,12 +41,12 @@ class DoctorArticleRequest extends FormRequest
             'title.ar' => config('validations.string.null'),
             'title.en' => config('validations.string.null'),
             'content.ar' => config('validations.long_text.req'),
-            'content.en' => config('validations.long_text.req'),
+            'content.en' => config('validations.long_text.null'),
             'images' => config('validations.array.null'),
             'images.*' => sprintf(config('validations.model.null'), 'files')
         ];
         if ($this->isMethod('post')) {
-            $rules['main_image'] = sprintf(config('validations.model.req'), 'files');
+            $rules['main_image'] = sprintf(config('validations.model.null'), 'files');
         } else {
             $rules['main_image'] = sprintf(config('validations.model.null'), 'files');
         }
