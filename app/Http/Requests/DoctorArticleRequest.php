@@ -34,9 +34,9 @@ class DoctorArticleRequest extends FormRequest
     public function rules(): array
     {
         $rules =  [
-            'medical_speciality_id' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
-            'title.ar' => config('validations.string.req'),
-            'title.en' => config('validations.string.req'),
+            'medical_speciality_id' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
+            'title.ar' => config('validations.string.null'),
+            'title.en' => config('validations.string.null'),
             'content.ar' => config('validations.long_text.req'),
             'content.en' => config('validations.long_text.req'),
             'images' => config('validations.array.null'),
@@ -44,7 +44,7 @@ class DoctorArticleRequest extends FormRequest
         ];
         if ($this->isMethod('post')) {
             $rules['main_image'] = sprintf(config('validations.model.req'), 'files');
-        }else{
+        } else {
             $rules['main_image'] = sprintf(config('validations.model.null'), 'files');
         }
         return $rules;
@@ -54,7 +54,7 @@ class DoctorArticleRequest extends FormRequest
      * Customizing input names displayed for user
      * @return array
      */
-    public function attributes() : array
+    public function attributes(): array
     {
         return [
             'title.ar' => __('messages.title_ar'),
@@ -67,7 +67,7 @@ class DoctorArticleRequest extends FormRequest
     /**
      * @return array
      */
-    public function messages() : array
+    public function messages(): array
     {
         return [];
     }
