@@ -17,7 +17,8 @@
                 <thead>
                 <tr>
                     <th scope="col">#</th>
-                    <th scope="col">{{__('messages.title')}}</th>
+                    <!-- <th scope="col">{{__('messages.title')}}</th> -->
+                    <th scope="col">{{__('messages.content')}}</th>
                     <th scope="col">{{__('messages.author')}}</th>
                     <th scope="col">{{__('messages.publish_date')}}</th>
                     <th scope="col">{{__('messages.likes')}}</th>
@@ -33,7 +34,8 @@
                         <th scope="row">
                             <a href="#" class="fw-semibold">#{{$loop->iteration}}</a>
                         </th>
-                        <td>{{$resource->title}}</td>
+                        <!-- <td>{{$resource->title}}</td> -->
+                        <td>{{$resource->content}}</td>
                         <td>{{$resource->author->name}}</td>
                         <td>{{$resource->publish_date ? $resource->publish_date?->format('Y-m-d') : __('messages.not_published')}}</td>
                         <td>{{count($resource->likes)}}</td>
