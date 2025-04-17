@@ -85,9 +85,8 @@ class Article extends Model
 
     public function scopeOfIsMine($query)
     {
-        return $query->where('author_id', auth()->id());
+        return $query->where('author_id', auth()->id() ?? auth('sanctum')->id());
     }
-    
     //---------------------Scopes-------------------------------------
 
     //---------------------Attributes-------------------------------------
