@@ -24,7 +24,7 @@ class DoctorArticleRequest extends FormRequest
         $validated = parent::validated();
         $validated['author_id'] = auth()->id();
 
-        $validated['content']['en'] = $this->get('title')['ar'] ?? null;
+        $validated['content']['en'] = $validated['content']['ar'] ?? '';
 
         return $validated;
     }
