@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\Mobile\FaqController;
 use App\Http\Controllers\Api\V1\Mobile\NotificationController;
 use App\Http\Controllers\Api\V1\Mobile\PatientConsultationController;
 use App\Http\Controllers\Api\V1\Mobile\DoctorController;
+use App\Http\Controllers\Api\V1\Mobile\DoctorPackageController;
 use App\Http\Controllers\Api\V1\Mobile\DoctorScheduleDayController;
 use App\Http\Controllers\Api\V1\Mobile\FileController;
 use App\Http\Controllers\Api\V1\Mobile\MyFatoorahController;
@@ -148,6 +149,9 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('store', 'update', 'destroy');
             Route::apiResource('doctor-schedule-day-shifts', DoctorScheduleDayShiftController::class)->only( 'store', 'update', 'destroy');
             Route::get('nearest-doctor-schedule-day/{doctor}', [DoctorScheduleDayController::class, 'nearestAvailableDay']);
+
+            Route::apiResource('packages', DoctorPackageController::class)->only('index', 'store', 'update', 'destroy');
+            Route::patch('packages/{package}/change-activation', [DoctorPackageController::class, 'changeActivation'])->name('packages.active');
         });
     });
 });
