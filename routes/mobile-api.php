@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\V1\Mobile\PaymentController;
 use App\Http\Controllers\Api\V1\Mobile\RateController;
 use App\Http\Controllers\Api\V1\Mobile\VendorController;
 use App\Http\Controllers\Api\V1\Mobile\MedicalEquipmentController;
+use App\Http\Controllers\Api\V1\Mobile\StaticPageController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
@@ -42,6 +43,10 @@ Route::group(['middleware' => 'locale'], static function () {
     Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
     Route::get('urgent-reminder-durations', [NewAuthController::class, 'urgentReminderDurations']);
     
+    // terms-and-conditions
+    Route::get('patient/terms-and-conditions', [StaticPageController::class, 'getPatientTermsAndConditions']);
+    Route::get('doctor/terms-and-conditions', [StaticPageController::class, 'getDoctorTermsAndConditions']);
+
     Route::controller(MedicalEquipmentController::class)->prefix('medical-equipments')->group(function () {
         Route::get('/', 'index');
         Route::get('show/{id}', 'show');

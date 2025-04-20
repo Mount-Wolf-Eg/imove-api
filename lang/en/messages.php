@@ -601,5 +601,15 @@ return [
     'link'    => 'Link',
     'add_medicalEquipment' => 'Add Medical Equipment',
     'medicalEquipments'    => 'Medical Equipments',
+    
+    'terms_and_conditions_patient' => 'Terms And Conditions Patient',
+    'terms_and_conditions_doctor'  => 'Terms And Conditions Doctor',
+    'page' => 'Page',
+    'manage_static-pages' => 'Manage Static Pages',
+    'static-pages' => 'Static Pages',
+    'static-page' => 'Static Page',
+    'edit_static-page' => 'Edit Static Page',
+
+    
 
 ];
