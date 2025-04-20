@@ -609,6 +609,7 @@ return [
     'static-pages' => 'Static Pages',
     'static-page' => 'Static Page',
     'edit_static-page' => 'Edit Static Page',
+    'technical_support_added'=> 'A message has been added to technical support successfully',
 
     
 
