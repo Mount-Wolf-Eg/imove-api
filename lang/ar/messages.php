@@ -598,6 +598,13 @@ return [
     'link'  => 'لينك',
     'manage_medicalEquipments' => 'ادارة المعدات الطبية',
     'edit_medicalEquipment'    => 'تعديل المعدات الطبية',
-    
+    'terms_and_conditions_patient' => 'الشروط و الاحكام الخاصة بالدكتور',
+    'terms_and_conditions_doctor'  => 'الشروط و الاحكام الخاصة بالمريض',
+    'page' => 'الصفحة',
+    'static-pages' => 'الصفحات الثابته',
+    'manage_static-pages' => 'اداره الصفحات الثابته',
+    'static-page' => 'الصفحة الثابته',
+    'edit_static-page' => 'تعديل الصفحة الثابته',
+
 
 ];

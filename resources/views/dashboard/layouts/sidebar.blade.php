@@ -231,6 +231,15 @@
 
                 @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
                 <li class="nav-item">
+                    <a href="{{route('static-pages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('static-pages.index', 'static-pages.show', 'static-pages.create', 'static-pages.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.static-pages') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
+                <li class="nav-item">
                     <a href="{{route('settings.edit')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('settings.edit')])>
                         <i class="bi bi-question-octagon"></i>
                         <span data-key="t-dashboard">{{ __('messages.settings') }}</span>
