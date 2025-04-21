@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\V1\Mobile\RateController;
 use App\Http\Controllers\Api\V1\Mobile\VendorController;
 use App\Http\Controllers\Api\V1\Mobile\MedicalEquipmentController;
 use App\Http\Controllers\Api\V1\Mobile\StaticPageController;
+use App\Http\Controllers\Api\V1\Mobile\TechnicalSupportController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
@@ -32,7 +33,6 @@ Route::group(['middleware' => 'locale'], static function () {
     Route::post('send-verification-code', [NewAuthController::class, 'sendVerificationCode']);
     Route::post('login', [NewAuthController::class, 'login']);
     // Route::get('get_medical_equipment', [MedicalEquipmentController::class, 'index']);
-
 
     // visitors apis (not authenticated)
     Route::get('filters/{model}', FilterController::class);
@@ -54,6 +54,8 @@ Route::group(['middleware' => 'locale'], static function () {
         Route::get('consultation/{consultation}/medical-equipments', 'getByConsultation');
     });
 
+
+    
     Route::group(['middleware' => 'auth:sanctum'], static function () {
         Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // new
         Route::post('register-user-as-doctor', [NewAuthController::class, 'registerUserAsDoctor']); // new
@@ -111,6 +113,11 @@ Route::group(['middleware' => 'locale'], static function () {
                 Route::post('/', 'getUrl');
                 Route::get('/callback', 'callback')->name('payment.callback')->withoutMiddleware(['auth:sanctum', 'active_patient']);
             });
+
+            // technical support patient
+            Route::post('technical-support', [TechnicalSupportController::class, 'createForUser']);
+        
+
         });
 
         Route::group(['prefix' => 'doctor', 'middleware' => 'active_doctor'], static function () {
@@ -152,6 +159,10 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('store', 'update', 'destroy');
             Route::apiResource('doctor-schedule-day-shifts', DoctorScheduleDayShiftController::class)->only( 'store', 'update', 'destroy');
             Route::get('nearest-doctor-schedule-day/{doctor}', [DoctorScheduleDayController::class, 'nearestAvailableDay']);
+           
+            // technical support doctor
+            Route::post('technical-support', [TechnicalSupportController::class, 'createForDoctor']);
+
 
             Route::apiResource('packages', DoctorPackageController::class)->only('index', 'store', 'update', 'destroy');
             Route::patch('packages/{package}/change-activation', [DoctorPackageController::class, 'changeActivation'])->name('packages.active');
