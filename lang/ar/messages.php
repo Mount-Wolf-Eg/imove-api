@@ -605,6 +605,7 @@ return [
     'manage_static-pages' => 'اداره الصفحات الثابته',
     'static-page' => 'الصفحة الثابته',
     'edit_static-page' => 'تعديل الصفحة الثابته',
+    'technical_support_added'=> 'تمت إضافة رسالة للدعم الفني بنجاح',
 
 
 ];
