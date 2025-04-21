@@ -20,6 +20,7 @@ class DoctorPackageResource extends BaseResource
             'name' => $this->name,
             'description' => $this->description,
             'num_of_sessions' => $this->num_of_sessions,
+            'duration' => $this->duration,
             'price' => $this->price,
         ];
         $this->mini = [
@@ -34,7 +35,10 @@ class DoctorPackageResource extends BaseResource
         $this->relations = [
             'user' => $this->whenLoaded('user', function () {
                 return new UserResource($this->user);
-            })
+            }),
+            'image' => $this->whenLoaded('image', function () {
+                return new FileResource($this->image);
+            }),
         ];
         return $this->getResource();
     }

@@ -19,12 +19,15 @@ enum FileConstants: string
     case MEDICAL_SPECIALTY_ICON = 'medical_specialty_icon';
     case MEDICAL_EQUIPMENT_PHOTO = 'medical_equipment_photo';
 
+    case FILE_TYPE_PACKAGE_IMAGE = 'package_image';
+
     public static function fileableTypes(): array
     {
         return [
             'User',
             'Doctor',
-            'Consultation'
+            'Consultation',
+            'Package',
         ];
     }
 }

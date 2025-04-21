@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Constants\FileConstants;
 use App\Traits\ModelTrait;
 use App\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
@@ -12,13 +14,18 @@ class Package extends Model
 {
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     public const ADDITIONAL_PERMISSIONS = [];
-    protected $fillable = ['user_id', 'name', 'description', 'num_of_sessions', 'price', 'is_active'];
+    protected $fillable = ['user_id', 'name', 'description', 'num_of_sessions', 'duration', 'price', 'is_active'];
     protected array $filters = ['keyword', 'active', 'owner'];
     protected array $searchable = ['name', 'description'];
     protected array $dates = [];
     public array $filterModels = [];
     public array $filterCustom = [];
     public array $translatable = [];
+
+    public function image(): MorphOne
+    {
+        return $this->morphOne(File::class, 'fileable')->where('type', FileConstants::FILE_TYPE_PACKAGE_IMAGE)->latest();
+    }
 
     //---------------------relations-------------------------------------
     public function user()

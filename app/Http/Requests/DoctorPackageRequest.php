@@ -32,6 +32,8 @@ class DoctorPackageRequest extends FormRequest
             'num_of_sessions' => config('validations.tiny_int.req'),
             'price' => config('validations.double.req'),
             'is_active' => config('validations.boolean.null'),
+            'duration' => config('validations.tiny_int.null'),
+            'image' => 'nullable|'.config('validations.file.image').'|mimes:jpeg,jpg,png|max:2048',
         ];
     }
 
