@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\Mobile\FaqController;
 use App\Http\Controllers\Api\V1\Mobile\NotificationController;
 use App\Http\Controllers\Api\V1\Mobile\PatientConsultationController;
 use App\Http\Controllers\Api\V1\Mobile\DoctorController;
+use App\Http\Controllers\Api\V1\Mobile\DoctorPackageController;
 use App\Http\Controllers\Api\V1\Mobile\DoctorScheduleDayController;
 use App\Http\Controllers\Api\V1\Mobile\FileController;
 use App\Http\Controllers\Api\V1\Mobile\MyFatoorahController;
@@ -51,8 +52,6 @@ Route::group(['middleware' => 'locale'], static function () {
         Route::get('/', 'index');
         Route::get('show/{id}', 'show');
         Route::get('consultation/{consultation}/medical-equipments', 'getByConsultation');
-        Route::post('consultation/{consultation}/assign-medical-equipments', 'assignToConsultation')->withoutMiddleware(['auth:sanctum', 'active_doctor']);
-        Route::post('consultation/{consultation}/remove-medical-equipments', 'removeFromConsultation')->withoutMiddleware(['auth:sanctum', 'active_doctor']);
     });
 
 
@@ -164,6 +163,14 @@ Route::group(['middleware' => 'locale'], static function () {
             // technical support doctor
             Route::post('technical-support', [TechnicalSupportController::class, 'createForDoctor']);
 
+
+            Route::apiResource('packages', DoctorPackageController::class)->only('index', 'store', 'update', 'destroy');
+            Route::patch('packages/{package}/change-activation', [DoctorPackageController::class, 'changeActivation'])->name('packages.active');
+        
+
+            Route::post('consultation/{consultation}/assign-medical-equipments', [MedicalEquipmentController::class, 'assignToConsultation']);
+            Route::post('consultation/{consultation}/remove-medical-equipments', [MedicalEquipmentController::class, 'removeFromConsultation']);
+        
         });
     });
 });
