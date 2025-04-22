@@ -42,7 +42,7 @@ class ConsultationRequest extends FormRequest
 
         if (isset($validated['doctor_id']) && isset($validated['type']) && $validated['type'] == ConsultationTypeConstants::WITH_APPOINTMENT->value) {
             // $shiftTaken = resolve(ConsultationContract::class)->withFilters(['cancelled' => true])->findBy('doctor_schedule_day_shift_id', $validated['doctor_schedule_day_shift_id'], false);
-            $shiftTaken = resolve(ConsultationContract::class)->findByFilters(['cancelled' => true, 'doctorScheduleDayShiftId' => $validated['doctor_schedule_day_shift_id']]);
+            $shiftTaken = resolve(ConsultationContract::class)->findByFilters(['cancelled' => false, 'doctorScheduleDayShiftId' => $validated['doctor_schedule_day_shift_id']]);
 
             if ($shiftTaken) {
                 throw new ValidationException(__('messages.schedule_slot_expired'));
