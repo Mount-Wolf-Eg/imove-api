@@ -28,6 +28,7 @@ use App\Http\Controllers\Dashboard\AcademicDegreeController;
 use App\Http\Controllers\Dashboard\CategoryMedicalEquipmentController;
 use App\Http\Controllers\Dashboard\MedicalEquipmentController;
 use App\Http\Controllers\Dashboard\StaticPageController;
+use App\Http\Controllers\Dashboard\TechnicalSupportController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Dashboard\MedicalSpecialityController;
 use App\Http\Controllers\Auth\Passwords\ResetPasswordController;
@@ -119,6 +120,7 @@ Route::group([
         Route::resource('medical-equipments', MedicalEquipmentController::class);
         Route::put('medical-equipments/{medicalEquipment}/change-activation', [MedicalEquipmentController::class, 'changeActivation'])->name('medical-equipments.active');
         Route::resource('static-pages', StaticPageController::class);
+        Route::resource('technical-support', TechnicalSupportController::class)->only(['index', 'show', 'destroy']);
 
 
         Route::prefix('profile')->group(function () {

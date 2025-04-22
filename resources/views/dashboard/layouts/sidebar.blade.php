@@ -229,6 +229,14 @@
                 </li>
                 @endif
 
+                @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
+                <li class="nav-item">
+                    <a href="{{route('technical-support.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('technical-support.index', 'technical-support.show')])>
+                        <i class="bi bi-telephone"></i>
+                        <span data-key="t-dashboard">{{ __('messages.technical-support') }}</span>
+                    </a>
+                </li>
+                @endif
                 @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
                 <li class="nav-item">
                     <a href="{{route('static-pages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('static-pages.index', 'static-pages.show', 'static-pages.create', 'static-pages.edit')])>
