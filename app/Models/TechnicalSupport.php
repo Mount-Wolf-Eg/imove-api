@@ -16,11 +16,12 @@ class TechnicalSupport extends Model
     protected $table = "technical_supports";
     protected $fillable = ['user_id', 'doctor_id', 'topic', 'email', 'message'];
     protected array $filters = ['keyword'];
-    protected array $searchable = ['content'];
+    protected array $searchable = ['topic', 'email', 'message'];
     protected array $dates = [];
     public array $filterModels = [];
     public array $filterCustom = [];
     public array $translatable = [];
+    protected $with = ['user', 'doctor'];
 
     //---------------------relations-------------------------------------
 
