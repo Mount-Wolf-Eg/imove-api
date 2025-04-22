@@ -107,7 +107,7 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
             'status' => PaymentStatusConstants::REFUNDED->value
         ]);
 
-        $model->patient->user->increment('wallet', $amount);
+        $model->patient->user()->increment('wallet', $amount);
     }
 
     public function afterCreate($model, $attributes): void
