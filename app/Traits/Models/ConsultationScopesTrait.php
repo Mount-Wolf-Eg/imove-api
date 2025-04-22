@@ -106,12 +106,20 @@ trait ConsultationScopesTrait
         return $query->whereNotIn('status', $completedStatuses);
     }
 
-    public function scopeOfCancelled($query)
+    public function scopeOfCancelled($query, $value = true)
     {
-        return $query->whereIn('status', [
+        $value = filter_var($value, FILTER_VALIDATE_BOOLEAN);
+
+        $canceledStatuses = [
             ConsultationStatusConstants::PATIENT_CANCELLED->value,
             ConsultationStatusConstants::DOCTOR_CANCELLED->value
-        ]);
+        ];
+
+        if ($value) {
+            return $query->ofStatus($canceledStatuses);
+        } else {
+            return $query->whereNotIn('status', $canceledStatuses);
+        }
     }
 
     public function scopeOfDoctorScheduleDayShiftId($query, $doctorScheduleDayShiftId)
