@@ -6,6 +6,7 @@ use App\Constants\ConsultationStatusConstants;
 use App\Constants\PaymentStatusConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Consultation;
+use App\Models\GeneralSettings;
 use App\Services\Repositories\ConsultationNotificationService;
 use App\Traits\BaseApiResponseTrait;
 use Illuminate\Http\Request;
@@ -96,7 +97,7 @@ class MyFatoorahController extends Controller
 
         return [
             'CustomerName'      => $order->patient?->user?->name,
-            'InvoiceValue'      => $order->amount + 5, // TODO: handle the extra amount
+            'InvoiceValue'      => $order->amount + ($order->amount * GeneralSettings::getSettingValue('app_payment_percentage')), // TODO: handle the extra amount
             'CallBackUrl'       => $callbackURL . '?status=success',
             'ErrorUrl'          => $callbackURL . '?status=fail',
             'Language'          => 'ar',
@@ -123,13 +124,14 @@ class MyFatoorahController extends Controller
             $status = $this->getStatus($data->InvoiceStatus);
 
             $order  = Consultation::withoutGlobalScope('isActive')->where('id', $data->CustomerReference)->first();
-            $order?->update(['is_active' => true]);
 
             if ($status) {
+                $order?->update(['is_active' => true]);
                 $order?->payment()->update(['transaction_id' => $paymentId, 'status' => PaymentStatusConstants::COMPLETED->value]);
 
-                if ($order->status == ConsultationStatusConstants::URGENT_PATIENT_APPROVE_DOCTOR_OFFER->value)
-                {
+                $order->doctor?->user()->increment('wallet', $order->amount);
+
+                if ($order->status == ConsultationStatusConstants::URGENT_PATIENT_APPROVE_DOCTOR_OFFER->value) {
                     $this->notificationService->patientAcceptDoctorOffer($order);
                 } else {
                     $this->notificationService->newConsultation($order);

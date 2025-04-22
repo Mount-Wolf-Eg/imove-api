@@ -37,7 +37,8 @@ class PaymentController extends BaseApiController
         $this->defaultScopes = ['beneficiary' => auth()->id()];
         $totalAmount = $this->contract->sumWithFilters($this->defaultScopes, 'amount');
         $appAmount = $totalAmount * GeneralSettings::getSettingValue('app_payment_percentage');
-        $doctorAmount = $totalAmount - $appAmount;
+        // $doctorAmount = $totalAmount - $appAmount;
+        $doctorAmount = auth()->user()->wallet;
         return parent::index(['total_amount' => $totalAmount, 'app_amount' => $appAmount, 'doctor_amount' => $doctorAmount]);
     }
 

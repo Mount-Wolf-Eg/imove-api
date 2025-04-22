@@ -6,6 +6,7 @@ use App\Constants\ConsultationPaymentTypeConstants;
 use App\Constants\PaymentMethodConstants;
 use App\Constants\PaymentStatusConstants;
 use App\Models\Consultation;
+use App\Models\GeneralSettings;
 use App\Repositories\Contracts\ConsultationContract;
 use App\Repositories\Contracts\CouponContract;
 use App\Repositories\Contracts\DoctorContract;
@@ -80,7 +81,9 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
                 //     throw new \Exception(__('messages.insufficient_balance'));
                 // }
 
-                $user->update(['wallet' => $user->wallet - $paymentData['amount']]);
+                $user->update(['wallet' => $user->wallet - ($paymentData['amount'] + $paymentData['amount'] * GeneralSettings::getSettingValue('app_payment_percentage'))]);
+
+                $model->doctor?->user()->increment('wallet', $paymentData['amount']);
 
                 $model->update(['is_active' => true]);
             }
@@ -107,7 +110,8 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
             'status' => PaymentStatusConstants::REFUNDED->value
         ]);
 
-        $model->patient->user()->increment('wallet', $amount);
+        $model->patient?->user()->increment('wallet', $amount);
+        $model->doctor?->user()->decrement('wallet', $amount);
     }
 
     public function afterCreate($model, $attributes): void
