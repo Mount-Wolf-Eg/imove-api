@@ -88,11 +88,11 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
             $model->payment()->create($paymentData);
         }
 
-        if ($model->status && $model->isCancelled() && $model->payment) {
-            $model->payment->update([
-                'status' => PaymentStatusConstants::REFUNDED->value
-            ]);
-        }
+        // if ($model->status && $model->isCancelled() && $model->payment) {
+        //     $model->payment->update([
+        //         'status' => PaymentStatusConstants::REFUNDED->value
+        //     ]);
+        // }
     }
 
     public function refundAmount($model, $amount): void

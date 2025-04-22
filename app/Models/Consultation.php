@@ -330,7 +330,7 @@ class Consultation extends Model
 
     public function patientCanCancel(): bool
     {
-        $grace_period = now()->addHours(GeneralSettings::getSettingValue('cancel_grace_period'));
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('normal_grace_period'));
 
         return ($this->status->is(ConsultationStatusConstants::PENDING)
             || $this->status->is(ConsultationStatusConstants::URGENT_HAS_DOCTORS_REPLIES)
