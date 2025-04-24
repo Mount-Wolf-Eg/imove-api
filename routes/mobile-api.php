@@ -26,6 +26,7 @@ use App\Http\Controllers\Api\V1\Mobile\VendorController;
 use App\Http\Controllers\Api\V1\Mobile\MedicalEquipmentController;
 use App\Http\Controllers\Api\V1\Mobile\StaticPageController;
 use App\Http\Controllers\Api\V1\Mobile\TechnicalSupportController;
+use App\Http\Controllers\Api\V1\Mobile\EducationalContentController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
@@ -54,6 +55,15 @@ Route::group(['middleware' => 'locale'], static function () {
         Route::get('consultation/{consultation}/medical-equipments', 'getByConsultation');
     });
 
+    
+    // Educational Content
+    Route::controller(EducationalContentController::class)->group(function () {
+        Route::get('educational-contents', 'getAll');
+        Route::get('educational-contents/show/{id}', 'show');
+        Route::post('doctor/consultation/{consultation}/assign-educational-contents', 'assignToConsultation')->middleware(['auth:sanctum', 'doctor', 'active_doctor']);
+        Route::post('doctor/consultation/{consultation}/remove-educational-contents', 'removeFromConsultation')->middleware(['auth:sanctum', 'doctor', 'active_doctor']);
+        Route::get('educational-contents/consultation/{consultation}/educational-contents', 'getByConsultation');
+    });
 
     
     Route::group(['middleware' => 'auth:sanctum'], static function () {

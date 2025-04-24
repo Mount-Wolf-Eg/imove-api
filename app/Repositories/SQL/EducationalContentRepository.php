@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Repositories\SQL;
+
+use App\Models\Consultation;
+use App\Models\EducationalContent;
+use App\Repositories\Contracts\EducationalContentContract;
+use Illuminate\Database\Eloquent\Collection;
+
+class EducationalContentRepository extends BaseRepository implements EducationalContentContract
+{
+    public function __construct(EducationalContent $model)
+    {
+        parent::__construct($model);
+    }
+
+    public function getAll(array $filters = [], array $relations = []): Collection
+    {
+        try {
+            $query = $this->model->query();
+
+            if (!empty($filters['medical_speciality_id'])) {
+                $query->ofMedicalSpeciality($filters['medical_speciality_id']);
+            }
+
+            if (!empty($filters['title_starts_with']) && !empty($filters['locale'])) {
+                $query->ofTitleStartsWith($filters['title_starts_with'], $filters['locale']);
+            }
+
+            return $query->with($relations)->get();
+        } catch (\Exception $e) {
+            \Log::error('Failed to retrieve educational contents: ' . $e->getMessage());
+            return new Collection();
+        }
+    }
+
+    public function assignToConsultation(Consultation $consultation, array $contentIds, int $doctorId): bool
+    {
+        try {
+            if ($consultation->doctor_id !== $doctorId) {
+                return false;
+            }
+            foreach ($contentIds as $contentId) {
+                $consultation->educationalContents()->syncWithoutDetaching([
+                    $contentId => ['doctor_id' => $doctorId]
+                ]);
+            }
+            return true;
+        } catch (\Exception $e) {
+            \Log::error('Failed to assign educational content: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function removeFromConsultation(Consultation $consultation, array $contentIds, int $doctorId): bool
+    {
+        try {
+            if ($consultation->doctor_id !== $doctorId) {
+                return false;
+            }
+            $consultation->educationalContents()->detach($contentIds);
+            return true;
+        } catch (\Exception $e) {
+            \Log::error('Failed to remove educational content: ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    public function getByConsultation(Consultation $consultation, array $relations = []): Collection
+    {
+        try {
+            return $consultation->educationalContents()
+                ->where('is_active', true)
+                ->with($relations)
+                ->get();
+        } catch (\Exception $e) {
+            \Log::error('Failed to retrieve educational content for consultation: ' . $e->getMessage());
+            return new Collection();
+        }
+    }
+}
