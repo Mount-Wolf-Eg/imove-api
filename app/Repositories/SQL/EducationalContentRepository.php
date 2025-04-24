@@ -61,7 +61,7 @@ class EducationalContentRepository extends BaseRepository implements Educational
 
             return $query->with($relations)->paginate($limit, ['*'], 'page', $page);
         } catch (\Exception $e) {
-            \Log::error('Failed to search educational contents: ' . $e->getMessage());
+            // \Log::error('Failed to search educational contents: ' . $e->getMessage());
             return new LengthAwarePaginator([], 0, 10, 1, [
                 'path' => request()->url(),
                 'query' => request()->query()
