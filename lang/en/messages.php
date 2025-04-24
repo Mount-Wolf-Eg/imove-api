@@ -612,6 +612,15 @@ return [
     'technical_support_added'=> 'A message has been added to technical support successfully',
     'technical-support' => 'Technical Support',
     'manage_technical-support' => 'Manage Technical Support',
+    'create_success' => 'created successfully',
+    'update_success' => 'updated successfully',
+    'delete_success' => 'deleted successfully',
+    'Unauthorized: This consultation is not for you'=> 'Unauthorized: This consultation is not for you',
+    'Educational content not found' => 'Educational content not found',
+
+    'Like added successfully'   => 'Like added successfully',
+    'Like removed successfully' => 'Like removed successfully',
+
     
 
 ];

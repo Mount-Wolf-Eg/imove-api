@@ -75,16 +75,13 @@ class EducationalContentController extends BaseApiController
     {
         try {
             $doctor = auth()->user()->doctor;
-            if (!$doctor) {
-                return $this->respondWithError('غير مصرح: لست دكتورًا', Response::HTTP_FORBIDDEN);
-            }
 
             $success = $this->contract->assignToConsultation($consultation, $request->validated()['content_ids'], $doctor->id);
             if (!$success) {
-                return $this->respondWithError('غير مصرح: هذه الاستشارة لا تخصك', Response::HTTP_FORBIDDEN);
+                return $this->respondWithError( __('messages.Unauthorized: This consultation is not for you'), Response::HTTP_FORBIDDEN);
             }
 
-            return $this->respondWithArray(['message' => 'تم الإضافة بنجاح'], [], Response::HTTP_CREATED);
+            return $this->respondWithArray(['message' => __('messages.create_success')], [], Response::HTTP_CREATED);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
@@ -94,16 +91,13 @@ class EducationalContentController extends BaseApiController
     {
         try {
             $doctor = auth()->user()->doctor;
-            if (!$doctor) {
-                return $this->respondWithError('غير مصرح: لست دكتورًا', Response::HTTP_FORBIDDEN);
-            }
 
             $success = $this->contract->removeFromConsultation($consultation, $request->validated()['content_ids'], $doctor->id);
             if (!$success) {
-                return $this->respondWithError('غير مصرح: هذه الاستشارة لا تخصك', Response::HTTP_FORBIDDEN);
+                return $this->respondWithError( __('messages.Unauthorized: This consultation is not for you'), Response::HTTP_FORBIDDEN);
             }
 
-            return $this->respondWithArray(['message' => 'تم الحذف بنجاح'], [], Response::HTTP_OK);
+            return $this->respondWithArray(['message' => __('messages.delete_success')], [], Response::HTTP_OK);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
@@ -124,13 +118,13 @@ class EducationalContentController extends BaseApiController
     {
         try {
             if (!$content->exists) {
-                return $this->respondWithError('Educational content not found', Response::HTTP_NOT_FOUND);
+                return $this->respondWithError( __('messages.Educational content not found'), Response::HTTP_NOT_FOUND);
             }
 
             $liked = $this->likeContract->toggleRecord($content);
             // return $this->respondWithModel($content);
             return $this->respondWithArray([
-                'message' => $liked ? 'Like added successfully' : 'Like removed successfully',
+                'message' => $liked ?  __('messages.Like added successfully') : __('messages.Like removed successfully'),
                 'data' => ['auth_like_status' => $liked]
             ]);
         } catch (Exception $e) {

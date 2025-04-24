@@ -608,4 +608,13 @@ return [
     'technical_support_added'=> 'تمت إضافة رسالة للدعم الفني بنجاح',
     'technical-support' => 'الدعم الفنى',
     'manage_technical-support' => 'اداره الدعم الفنى',
+    'create_success' => 'تم الإنشاء بنجاح',
+    'update_success' => 'تم التحديث بنجاح',
+    'delete_success' => 'تم الحذف بنجاح',
+
+    'Unauthorized: This consultation is not for you' => 'غير مصرح: هذه الاستشارة لا تخصك',
+    'Like added successfully' => 'تم اضافة الاعجاب بنجاح',
+    'Like removed successfully' => 'تم حذف الاعجاب',
+
+
 ];
