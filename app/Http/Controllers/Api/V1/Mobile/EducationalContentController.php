@@ -6,18 +6,22 @@ use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Requests\AssignEducationalContentRequest;
 use App\Http\Requests\EducationalContentFilterRequest;
 use App\Http\Resources\EducationalContentResource;
-use App\Models\Consultation;
+use App\Models\{Consultation, EducationalContent};
 use App\Repositories\Contracts\EducationalContentContract;
+use App\Repositories\Contracts\LikeContract;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
 class EducationalContentController extends BaseApiController
 {
+    private LikeContract $likeContract;
+
     protected array $relations = ['author', 'medicalSpeciality', 'mainImage'];
 
-    public function __construct(EducationalContentContract $contract)
+    public function __construct(EducationalContentContract $contract, LikeContract $likeContract)
     {
         parent::__construct($contract, EducationalContentResource::class);
+        $this->likeContract = $likeContract;
     }
 
     // public function getAll(EducationalContentFilterRequest $request)
@@ -107,15 +111,19 @@ class EducationalContentController extends BaseApiController
     public function getByConsultation(Consultation $consultation)
     {
         try {
-            // if (!$consultation->isMineAsDoctor() && !$consultation->isMineAsPatient()) {
-            //     return $this->respondWithError('غير مصرح: ليس لديك صلاحية للوصول إلى هذه الاستشارة', Response::HTTP_FORBIDDEN);
-            // }
-
             $contents = $this->contract->getByConsultation($consultation, $this->relations);
             return $this->respondWithCollection($contents);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), Response::HTTP_BAD_REQUEST);
         }
     }
+
+    
+    public function toggleLike(EducationalContent $educationalContent): JsonResponse
+    {
+        $this->likeContract->toggleRecord($educationalContent);
+        return $this->respondWithModel($educationalContent);
+    }
+
 
 }
