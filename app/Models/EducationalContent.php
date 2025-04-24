@@ -66,9 +66,9 @@ class EducationalContent extends Model
         return $query->withCount('likes')->orderBy('likes_count', 'desc');
     }
 
-    public function scopeOfMedicalSpeciality($query, $medicalSpecialityId)
+    public function scopeOfMedicalSpeciality($query, $medicalSpecialityIds)
     {
-        return $query->whereIn('medical_speciality_id', (array)$medicalSpecialityId);
+        return $query->whereIn('medical_speciality_id', (array)$medicalSpecialityIds);
     }
 
     public function scopeOfIsPublished($query)

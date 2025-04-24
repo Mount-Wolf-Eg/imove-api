@@ -20,12 +20,36 @@ class EducationalContentController extends BaseApiController
         parent::__construct($contract, EducationalContentResource::class);
     }
 
+    // public function getAll(EducationalContentFilterRequest $request)
+    // {
+    //     try {
+    //         $filters = $request->validated();
+    //         $filters['locale'] = $request->header('X-localization', config('app.locale', 'en'));
+    //         $contents = $this->contract->getAll($filters, $this->relations);
+    //         return $this->respondWithCollection($contents);
+    //     } catch (Exception $e) {
+    //         return $this->respondWithError($e->getMessage(), Response::HTTP_BAD_REQUEST);
+    //     }
+    // }
+    
     public function getAll(EducationalContentFilterRequest $request)
     {
         try {
+            $page = $request->input('page', 1);
+            $limit = $request->input('limit', 10);
+            $order = $request->input('order', []);
+
             $filters = $request->validated();
-            $filters['locale'] = $request->header('X-localization', config('app.locale', 'en'));
-            $contents = $this->contract->getAll($filters, $this->relations);
+            $filters['locale'] = $request->header('Accept-Language', config('app.locale', 'en'));
+
+            $data = array_merge($filters, [
+                'order' => $order,
+                'limit' => $limit,
+                'page' => $page,
+            ]);
+
+            $contents = $this->contract->search($filters, $this->relations, $data);
+
             return $this->respondWithCollection($contents);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), Response::HTTP_BAD_REQUEST);
@@ -35,13 +59,13 @@ class EducationalContentController extends BaseApiController
     public function show($id)
     {
         try {
-            $medicalEquipment = $this->contract->findOrFail($id, $this->relations);
-            return $this->respondWithModel($medicalEquipment);
+            $educationalContent = $this->contract->findOrFail($id, $this->relations);
+            return $this->respondWithModel($educationalContent);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), Response::HTTP_NOT_FOUND);
         }
     }
-    
+
     public function assignToConsultation(Consultation $consultation, AssignEducationalContentRequest $request)
     {
         try {

@@ -6,6 +6,7 @@ use App\Models\Consultation;
 use App\Models\EducationalContent;
 use App\Repositories\Contracts\EducationalContentContract;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class EducationalContentRepository extends BaseRepository implements EducationalContentContract
 {
@@ -19,8 +20,8 @@ class EducationalContentRepository extends BaseRepository implements Educational
         try {
             $query = $this->model->query();
 
-            if (!empty($filters['medical_speciality_id'])) {
-                $query->ofMedicalSpeciality($filters['medical_speciality_id']);
+            if (!empty($filters['medical_speciality_ids'])) {
+                $query->ofMedicalSpeciality($filters['medical_speciality_ids']);
             }
 
             if (!empty($filters['title_starts_with']) && !empty($filters['locale'])) {
@@ -34,6 +35,35 @@ class EducationalContentRepository extends BaseRepository implements Educational
         }
     }
 
+    public function search(array $filters = [], array $relations = [], array $data = []): LengthAwarePaginator
+    {
+        try {
+            $query = $this->model->query();
+
+            if (!empty($filters['medical_speciality_ids'])) {
+                $query->ofMedicalSpeciality($filters['medical_speciality_ids']);
+            }
+
+            if (!empty($filters['title_starts_with']) && !empty($filters['locale'])) {
+                $query->ofTitleStartsWith($filters['title_starts_with'], $filters['locale']);
+            }
+
+            if (!empty($data['order'])) {
+                foreach ($data['order'] as $column => $direction) {
+                    $query->orderBy($column, $direction);
+                }
+            }
+
+            $limit = $data['limit'] ?? 10;
+            $page = $data['page'] ?? 1;
+
+            return $query->with($relations)->paginate($limit, ['*'], 'page', $page);
+        } catch (\Exception $e) {
+            \Log::error('Failed to search educational contents: ' . $e->getMessage());
+            return new LengthAwarePaginator([], 0, 10);
+        }
+    }
+    
     public function assignToConsultation(Consultation $consultation, array $contentIds, int $doctorId): bool
     {
         try {
