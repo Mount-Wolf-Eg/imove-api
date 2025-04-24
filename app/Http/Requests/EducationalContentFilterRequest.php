@@ -31,9 +31,9 @@ class EducationalContentFilterRequest extends FormRequest
         return [
             'medical_speciality_ids' => 'nullable|array',
             'medical_speciality_ids.*' => 'exists:medical_specialities,id',
-            'title_starts_with' => 'nullable|string|size:1',
-            'locale' => 'nullable|string|in:en,ar',
-            'page' => 'nullable|integer|min:1',
+            'title_starts_with' => 'nullable|string|size:1|regex:/^[\p{L}\p{N}]+$/u',
+            'locale' => 'nullable|in:en,ar',
+            'page'  => 'nullable|integer|min:1',
             'limit' => 'nullable|integer|min:1|max:100',
             'order' => 'nullable|array',
             'order.*' => 'in:asc,desc',

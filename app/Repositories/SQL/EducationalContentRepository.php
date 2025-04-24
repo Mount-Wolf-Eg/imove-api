@@ -6,7 +6,9 @@ use App\Models\Consultation;
 use App\Models\EducationalContent;
 use App\Repositories\Contracts\EducationalContentContract;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+// use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 
 class EducationalContentRepository extends BaseRepository implements EducationalContentContract
 {
@@ -23,8 +25,8 @@ class EducationalContentRepository extends BaseRepository implements Educational
             if (!empty($filters['medical_speciality_ids'])) {
                 $query->ofMedicalSpeciality($filters['medical_speciality_ids']);
             }
-
-            if (!empty($filters['title_starts_with']) && !empty($filters['locale'])) {
+            
+            if (!empty($filters['title_starts_with']) && !empty($filters['locale']) && strlen($filters['title_starts_with']) === 1) {
                 $query->ofTitleStartsWith($filters['title_starts_with'], $filters['locale']);
             }
 
@@ -44,10 +46,10 @@ class EducationalContentRepository extends BaseRepository implements Educational
                 $query->ofMedicalSpeciality($filters['medical_speciality_ids']);
             }
 
-            if (!empty($filters['title_starts_with']) && !empty($filters['locale'])) {
+            if (!empty($filters['title_starts_with']) && !empty($filters['locale']) && strlen($filters['title_starts_with']) === 1) {
                 $query->ofTitleStartsWith($filters['title_starts_with'], $filters['locale']);
             }
-
+          
             if (!empty($data['order'])) {
                 foreach ($data['order'] as $column => $direction) {
                     $query->orderBy($column, $direction);
@@ -60,7 +62,10 @@ class EducationalContentRepository extends BaseRepository implements Educational
             return $query->with($relations)->paginate($limit, ['*'], 'page', $page);
         } catch (\Exception $e) {
             \Log::error('Failed to search educational contents: ' . $e->getMessage());
-            return new LengthAwarePaginator([], 0, 10);
+            return new LengthAwarePaginator([], 0, 10, 1, [
+                'path' => request()->url(),
+                'query' => request()->query()
+            ]);
         }
     }
     

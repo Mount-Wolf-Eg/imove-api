@@ -80,9 +80,10 @@ class EducationalContent extends Model
     {
         return $query->where('author_id', auth()->id() ?? auth('sanctum')->id());
     }
+
     public function scopeOfTitleStartsWith($query, $letter, $locale = 'en')
     {
-        return $query->whereRaw("SUBSTRING(title->>'$locale', 1, 1) = ?", [$letter]);
+        return $query->whereRaw("SUBSTRING(COALESCE(title->>'$locale', ''), 1, 1) = ?", [$letter]);
     }
     //---------------------Scopes-------------------------------------
 
