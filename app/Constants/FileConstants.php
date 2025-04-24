@@ -10,6 +10,7 @@ enum FileConstants: string
     case FILE_TYPE_USER_AVATAR = 'user_avatar';
     case FILE_TYPE_DOCTOR_ATTACHMENTS = 'doctor_attachments';
     case FILE_TYPE_ARTICLE_MAIN_IMAGE = 'article_main_image';
+    case FILE_TYPE_EDUCATIONAL_MAIN_IMAGE = 'educational_content_main_image';
 
     case FILE_TYPE_ARTICLE_IMAGES = 'article_images';
     case FILE_TYPE_CONSULTATION_ATTACHMENTS = 'consultation_attachments';
