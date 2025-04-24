@@ -37,7 +37,8 @@ class EducationalContentResource extends BaseResource
             'published_at' => $this->published_at?->format('Y-m-d H:i:s'),
         ];
         $this->relations = [
-            'main_image' => $this->relationLoaded('mainImage') ? new FileResource($this->mainImage) : null,
+            'main_image' => $this->relationLoaded('mainImage') ? null : null,
+            // 'main_image' => $this->relationLoaded('mainImage') ? new FileResource($this->mainImage) : null,
             'author' => $this->relationLoaded('author') ? new UserResource($this->author) : null,
             'likes_count' => $this->relationLoaded('likes') ? $this->likes->count() : 0,
             'auth_like_status' => $this->relationLoaded('likes') ? $this->auth_like_status : false,
