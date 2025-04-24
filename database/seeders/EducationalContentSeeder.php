@@ -14,9 +14,10 @@ class EducationalContentSeeder extends Seeder
 {
     public function run()
     {
+        // التأكد من وجود بيانات مرتبطة
         $doctor = User::whereHas('doctor')->first();
         if (!$doctor) {
-            $doctor = User::factory()->create(['is_doctor' => true]); 
+            $doctor = User::factory()->create(['is_doctor' => true]); // افتراض وجود حقل is_doctor
         }
 
         $medicalSpeciality = MedicalSpeciality::first();
@@ -36,6 +37,7 @@ class EducationalContentSeeder extends Seeder
             ]);
         }
 
+        // إنشاء سجلات في educational_contents
         $contents = [
             [
                 'author_id' => $doctor->id,
@@ -102,14 +104,18 @@ class EducationalContentSeeder extends Seeder
         foreach ($contents as $index => $content) {
             $educationalContent = EducationalContent::create($content);
             
+            // إضافة صورة رئيسية لكل سجل
             $educationalContent->mainImage()->create([
-                'path' => "https://imove-api.diaamagdi.com/storage/uploads/educational_content_" . ($index + 1) . ".jpg",
+                'url' => "https://imove-api.diaamagdi.com/storage/uploads/educational_content_" . ($index + 1) . ".jpg",
+                'name' => "educational_content_" . ($index + 1) . ".jpg",
+                'ext' => 'jpg',
                 'type' => FileConstants::FILE_TYPE_EDUCATIONAL_MAIN_IMAGE,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
         }
 
-
+    
+        
     }
 }
