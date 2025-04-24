@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Constants\FileConstants;
 use App\Models\Consultation;
 use App\Models\EducationalContent;
 use App\Models\MedicalSpeciality;
@@ -13,7 +14,6 @@ class EducationalContentSeeder extends Seeder
 {
     public function run()
     {
-
         $doctor = User::whereHas('doctor')->first();
         if (!$doctor) {
             $doctor = User::factory()->create(['is_doctor' => true]); 
@@ -36,7 +36,6 @@ class EducationalContentSeeder extends Seeder
             ]);
         }
 
-        // educational_contents
         $contents = [
             [
                 'author_id' => $doctor->id,
@@ -100,10 +99,17 @@ class EducationalContentSeeder extends Seeder
             ],
         ];
 
-        foreach ($contents as $content) {
-            EducationalContent::create($content);
+        foreach ($contents as $index => $content) {
+            $educationalContent = EducationalContent::create($content);
+            
+            $educationalContent->mainImage()->create([
+                'path' => "https://imove-api.diaamagdi.com/storage/uploads/educational_content_" . ($index + 1) . ".jpg",
+                'type' => FileConstants::FILE_TYPE_EDUCATIONAL_MAIN_IMAGE,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
         }
 
- 
+
     }
 }
