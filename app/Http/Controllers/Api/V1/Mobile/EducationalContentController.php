@@ -10,6 +10,7 @@ use App\Models\{Consultation, EducationalContent};
 use App\Repositories\Contracts\EducationalContentContract;
 use App\Repositories\Contracts\LikeContract;
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class EducationalContentController extends BaseApiController
@@ -121,9 +122,21 @@ class EducationalContentController extends BaseApiController
     
     public function toggleLike(EducationalContent $educationalContent): JsonResponse
     {
-        $this->likeContract->toggleRecord($educationalContent);
-        return $this->respondWithModel($educationalContent);
-    }
+        try {
+            if (!$educationalContent->exists) {
+                return $this->respondWithError('Educational content not found', Response::HTTP_NOT_FOUND);
+            }
 
+            $liked = $this->likeContract->toggleRecord($educationalContent);
+            return $this->respondWithModel($educationalContent);
+            // return $this->respondWithArray([
+            //     'message' => $liked ? 'Like added successfully' : 'Like removed successfully',
+            //     'data' => ['liked' => $liked]
+            // ]);
+        } catch (Exception $e) {
+            \Log::error('Failed to toggle like: ' . $e->getMessage());
+            return $this->respondWithError('An error occurred while processing the like', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
