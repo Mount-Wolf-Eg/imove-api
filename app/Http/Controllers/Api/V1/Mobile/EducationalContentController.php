@@ -120,15 +120,15 @@ class EducationalContentController extends BaseApiController
     }
 
     
-    public function toggleLike(EducationalContent $educationalContent): JsonResponse
+    public function toggleLike(EducationalContent $content): JsonResponse
     {
         try {
-            if (!$educationalContent->exists) {
+            if (!$content->exists) {
                 return $this->respondWithError('Educational content not found', Response::HTTP_NOT_FOUND);
             }
 
-            $liked = $this->likeContract->toggleRecord($educationalContent);
-            return $this->respondWithModel($educationalContent);
+            $liked = $this->likeContract->toggleRecord($content);
+            return $this->respondWithModel($content);
             // return $this->respondWithArray([
             //     'message' => $liked ? 'Like added successfully' : 'Like removed successfully',
             //     'data' => ['liked' => $liked]
