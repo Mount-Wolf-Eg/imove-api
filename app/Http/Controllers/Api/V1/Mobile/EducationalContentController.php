@@ -128,11 +128,11 @@ class EducationalContentController extends BaseApiController
             }
 
             $liked = $this->likeContract->toggleRecord($content);
-            return $this->respondWithModel($content);
-            // return $this->respondWithArray([
-            //     'message' => $liked ? 'Like added successfully' : 'Like removed successfully',
-            //     'data' => ['liked' => $liked]
-            // ]);
+            // return $this->respondWithModel($content);
+            return $this->respondWithArray([
+                'message' => $liked ? 'Like added successfully' : 'Like removed successfully',
+                'data' => ['auth_like_status' => $liked]
+            ]);
         } catch (Exception $e) {
             \Log::error('Failed to toggle like: ' . $e->getMessage());
             return $this->respondWithError('An error occurred while processing the like', Response::HTTP_INTERNAL_SERVER_ERROR);
