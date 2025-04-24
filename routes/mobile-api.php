@@ -63,6 +63,7 @@ Route::group(['middleware' => 'locale'], static function () {
         Route::post('doctor/consultation/{consultation}/assign-educational-contents', 'assignToConsultation')->middleware(['auth:sanctum', 'doctor', 'active_doctor']);
         Route::post('doctor/consultation/{consultation}/remove-educational-contents', 'removeFromConsultation')->middleware(['auth:sanctum', 'doctor', 'active_doctor']);
         Route::get('educational-contents/consultation/{consultation}/educational-contents', 'getByConsultation');
+        Route::post('educational-contents/{content}/toggle-like', 'toggleLike')->middleware(['auth:sanctum']);
     });
 
     
