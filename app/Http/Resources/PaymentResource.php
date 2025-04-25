@@ -20,6 +20,10 @@ class PaymentResource extends BaseResource
             'id' => $this->id,
             'transaction_id' => $this->transaction_id,
             'amount' => $this->amount,
+            'coupon_discount' => $this->coupon_discount,
+            'app_amount' => $this->app_amount,
+            'tax_amount' => $this->tax_amount,
+            'total_amount' => $this->total_amount,
         ];
 
         $this->mini = [

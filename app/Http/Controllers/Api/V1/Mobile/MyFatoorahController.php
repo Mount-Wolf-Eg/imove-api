@@ -97,7 +97,7 @@ class MyFatoorahController extends Controller
 
         return [
             'CustomerName'      => $order->patient?->user?->name,
-            'InvoiceValue'      => $order->amount + ($order->amount * GeneralSettings::getSettingValue('app_payment_percentage')), // TODO: handle the extra amount
+            'InvoiceValue'      => $order->total_amount,
             'CallBackUrl'       => $callbackURL . '?status=success',
             'ErrorUrl'          => $callbackURL . '?status=fail',
             'Language'          => 'ar',

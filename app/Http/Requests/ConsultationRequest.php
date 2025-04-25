@@ -12,6 +12,7 @@ use App\Repositories\Contracts\ConsultationContract;
 use App\Repositories\Contracts\DoctorContract;
 use App\Repositories\Contracts\DoctorScheduleDayShiftContract;
 use App\Rules\ValidCouponRule;
+use App\Services\Repositories\PaymentCalculator;
 use Carbon\Carbon;
 use Dotenv\Exception\ValidationException;
 use Illuminate\Foundation\Http\FormRequest;
@@ -103,6 +104,16 @@ class ConsultationRequest extends FormRequest
 
         if ((int) request(('payment_type')) === ConsultationPaymentTypeConstants::WALLET->value && request('doctor_id')) {
             $amount = Doctor::find(request('doctor_id'))->with_appointment_consultation_price;
+
+            if (request('coupon_code')) {
+                $coupon = resolve(ConsultationContract::class)->findBy('code', request('coupon_code'), false);
+                if ($coupon?->isValidForUser(auth()->user()->patient->id, request('medical_speciality_id'))) {
+                    $amount = $coupon->applyDiscount($amount);
+                }
+            }
+
+            $amount = app(PaymentCalculator::class)->calc($amount)['total_amount'];
+
             if ($amount > auth()->user()->wallet) {
                 abort(422, __('messages.insufficient_wallet_balance'));
             }

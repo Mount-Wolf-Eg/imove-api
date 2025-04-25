@@ -129,7 +129,7 @@ class PatientConsultationController extends BaseApiController
         try {
             $consultation = $this->contract->update($consultation, ['status' => ConsultationStatusConstants::PATIENT_CANCELLED->value]);
 
-            if ($consultation->returnMony()) $this->contract->refundAmount($consultation, $consultation->amount);
+            if ($consultation->returnMony()) $this->contract->refundAmount($consultation, $consultation->total_amount);
 
             $this->notificationService->patientCancel($consultation);
             return $this->respondWithModel($consultation);

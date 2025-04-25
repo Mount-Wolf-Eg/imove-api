@@ -13,6 +13,7 @@ use App\Repositories\Contracts\DoctorContract;
 use App\Repositories\Contracts\FileContract;
 use App\Repositories\Contracts\NotificationContract;
 use App\Services\Repositories\ConsultationNotificationService;
+use App\Services\Repositories\PaymentCalculator;
 
 class ConsultationRepository extends BaseRepository implements ConsultationContract
 {
@@ -37,7 +38,7 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
                 $model->attachments()->save($fileModel);
             }
         }
-        
+
         if (!empty($relations['vendors']))
             $model->vendors()->sync($relations['vendors']);
 
@@ -54,40 +55,57 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
 
         // this is temporary, till payment gateway is implemented
         if ($model->amount && !$model->payment) {
+            $userId     = $model->patient->user_id;
+            $doctorId   = $model->doctor?->user_id;
+            $baseAmount = $model->amount;
+
+            // Default values before coupon
             $paymentData = [
-                'payer_id' => $model->patient->user_id,
-                'beneficiary_id' => $model->doctor?->user_id,
-                'amount' => $model->amount,
+                'payer_id'       => $userId,
+                'beneficiary_id' => $doctorId,
+                'amount'         => $baseAmount,
                 'transaction_id' => rand(1000000000, 9999999999),
-                'currency_id' => 1,
+                'currency_id'    => 1,
                 'payment_method' => PaymentMethodConstants::CREDIT_CARD->value,
             ];
 
+            $finalAmount = $baseAmount;
+
             if (!empty($relations['coupon_code'])) {
                 $coupon = resolve(CouponContract::class)->findBy('code', $relations['coupon_code'], false);
-                if ($coupon?->isValidForUser($model->patient->user_id, $model->medical_speciality_id)) {
-                    $paymentData['coupon_id'] = $coupon->id;
-                    $paymentData['amount'] = $coupon->applyDiscount($model->amount);
-                    $model->update(['amount' => $paymentData['amount']]);
+
+                if ($coupon?->isValidForUser($userId, $model->medical_speciality_id)) {
+                    $finalAmount                    = $coupon->applyDiscount($baseAmount);
+                    $paymentData['coupon_id']       = $coupon->id;
+                    $paymentData['coupon_discount'] = $baseAmount - $finalAmount;
                 }
             }
+            $calculated = app(PaymentCalculator::class)->calc($finalAmount);
 
-            if ((int) request()->payment_type == ConsultationPaymentTypeConstants::WALLET->value) {
-                $user = auth()->user();
+            // Append calculated values to both paymentData and model
+            $paymentData = array_merge($paymentData, $calculated);
 
+            $model->update([
+                'coupon_id'       => $paymentData['coupon_id'] ?? null,
+                'coupon_discount' => $paymentData['coupon_discount'] ?? 0,
+                'doctor_amount'   => $baseAmount - ($paymentData['coupon_discount'] ?? 0),
+                'app_amount'      => $calculated['app_amount'],
+                'tax_amount'      => $calculated['tax_amount'],
+                'total_amount'    => $calculated['total_amount'],
+            ]);
+
+            // If paying by wallet
+            if ((int) request()->payment_type === ConsultationPaymentTypeConstants::WALLET->value) {
                 $paymentData['status'] = PaymentStatusConstants::COMPLETED->value;
 
-                // if ($user->wallet < $paymentData['amount']) {
-                //     throw new \Exception(__('messages.insufficient_balance'));
-                // }
-
-                $user->update(['wallet' => $user->wallet - ($paymentData['amount'] + $paymentData['amount'] * GeneralSettings::getSettingValue('app_payment_percentage'))]);
-
-                $model->doctor?->user()->increment('wallet', $paymentData['amount']);
+                // Deduct from patient's wallet and add to doctor's wallet
+                $model->patient?->user()->decrement('wallet', $calculated['total_amount']);
+                $model->doctor?->user()->increment('wallet', $calculated['total_amount']);
 
                 $model->update(['is_active' => true]);
             }
 
+            // Finally, create the payment record
             $model->payment()->create($paymentData);
         }
 
@@ -98,20 +116,32 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
         // }
     }
 
-    public function refundAmount($model, $amount): void
+    protected function updateModelWithDefaultAmount($model): void
+    {
+        $calculated = app(PaymentCalculator::class)->calc($model->amount);
+
+        $model->update([
+            'doctor_amount' => $model->amount,
+            'app_amount'    => $calculated['app_amount'],
+            'tax_amount'    => $calculated['tax_amount'],
+            'total_amount'  => $calculated['total_amount'],
+        ]);
+    }
+
+    public function refundAmount($model): void
     {
         $model->payment()->create([
-            'payer_id' => $model->doctor?->user_id,
+            'payer_id'       => $model->doctor?->user_id,
             'beneficiary_id' => $model->patient->user_id,
-            'amount' => $amount,
+            'amount'         => $model->total_amount,
             'transaction_id' => rand(1000000000, 9999999999),
-            'currency_id' => 1,
+            'currency_id'    => 1,
             'payment_method' => PaymentMethodConstants::WALLET->value,
-            'status' => PaymentStatusConstants::REFUNDED->value
+            'status'         => PaymentStatusConstants::REFUNDED->value
         ]);
 
-        $model->patient?->user()->increment('wallet', $amount);
-        $model->doctor?->user()->decrement('wallet', $amount);
+        $model->patient?->user()->increment('wallet', $model->total_amount);
+        $model->doctor?->user()->decrement('wallet', $model->doctor_amount);
     }
 
     public function afterCreate($model, $attributes): void
