@@ -100,7 +100,7 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
 
                 // Deduct from patient's wallet and add to doctor's wallet
                 $model->patient?->user()->decrement('wallet', $calculated['total_amount']);
-                $model->doctor?->user()->increment('wallet', $calculated['total_amount']);
+                $model->doctor?->user()->increment('wallet', $calculated['doctor_amount']);
 
                 $model->update(['is_active' => true]);
             }
