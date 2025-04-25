@@ -50,6 +50,12 @@ class Consultation extends Model
         'transfer_case_rate',
         'payment_type',
         'amount',
+        'doctor_amount',
+        'app_amount',
+        'tax_amount',
+        'total_amount',
+        'coupon_discount',
+        'coupon_id',
         'is_active'
     ];
 
