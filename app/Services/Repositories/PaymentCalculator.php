@@ -12,7 +12,7 @@ class PaymentCalculator
         $taxPercentage = GeneralSettings::getSettingValue('tax_percentage') / 100;
 
         $appAmount   = $amount * $appPercentage;
-        $taxAmount   = $amount * $taxPercentage;
+        $taxAmount   = ($amount + $appAmount) * $taxPercentage;
         $totalAmount = $amount + $appAmount + $taxAmount;
 
         return [
