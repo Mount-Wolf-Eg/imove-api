@@ -85,10 +85,12 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
             // Append calculated values to both paymentData and model
             $paymentData = array_merge($paymentData, $calculated);
 
+            $doctor_amount = $baseAmount - ($paymentData['coupon_discount'] ?? 0);
+
             $model->update([
                 'coupon_id'       => $paymentData['coupon_id'] ?? null,
                 'coupon_discount' => $paymentData['coupon_discount'] ?? 0,
-                'doctor_amount'   => $baseAmount - ($paymentData['coupon_discount'] ?? 0),
+                'doctor_amount'   => $doctor_amount,
                 'app_amount'      => $calculated['app_amount'],
                 'tax_amount'      => $calculated['tax_amount'],
                 'total_amount'    => $calculated['total_amount'],
@@ -100,7 +102,7 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
 
                 // Deduct from patient's wallet and add to doctor's wallet
                 $model->patient?->user()->decrement('wallet', $calculated['total_amount']);
-                $model->doctor?->user()->increment('wallet', $calculated['doctor_amount']);
+                $model->doctor?->user()->increment('wallet', $doctor_amount);
 
                 $model->update(['is_active' => true]);
             }
