@@ -42,7 +42,6 @@ class HomeCareRequestController extends BaseApiController
             $filters = $request->validated();
             $filters['page'] = $request->input('page', 1);
             $filters['limit'] = $request->input('limit', 10);
-            $filters['order'] = $request->input('order', []);
 
             $homeCareRequests = $this->contract->getAll($filters, $this->relations);
 

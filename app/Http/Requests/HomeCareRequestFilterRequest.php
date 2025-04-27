@@ -32,7 +32,7 @@ class HomeCareRequestFilterRequest extends FormRequest
             'city_id' => 'nullable|exists:cities,id',
             'medical_speciality_id' => 'nullable|exists:medical_specialities,id',
             'page' => 'nullable|integer|min:1',
-            'limit' => 'nullable|integer|min:1|max:100',
+            'limit' => 'nullable|integer|min:1',
         ];
     }
 
