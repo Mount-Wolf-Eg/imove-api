@@ -9,10 +9,16 @@ use Illuminate\Database\Eloquent\Collection;
 
 class HomeCareRequestRepository extends BaseRepository implements HomeCareRequestContract
 {
+    
+    /**
+     * HomeCareRequestRepository constructor.
+     * @param HomeCareRequest $model
+     */
     public function __construct(HomeCareRequest $model)
     {
         parent::__construct($model);
     }
+
 
     public function store(array $data): HomeCareRequest
     {
@@ -55,7 +61,7 @@ class HomeCareRequestRepository extends BaseRepository implements HomeCareReques
         }
     }
 
-    public function findOrFail(int $id, array $relations = []): HomeCareRequest
+    public function findOne(int $id, array $relations = []): HomeCareRequest
     {
         try {
             return $this->model->where('patient_id', auth()->user()->patient->id)

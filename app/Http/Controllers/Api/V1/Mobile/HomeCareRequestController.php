@@ -7,6 +7,7 @@ use App\Http\Requests\HomeCareRequestFilterRequest;
 use App\Http\Requests\StoreHomeCareRequest;
 use App\Http\Resources\HomeCareRequestResource;
 use App\Repositories\Contracts\HomeCareRequestContract;
+use App\Models\HomeCareRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +56,7 @@ class HomeCareRequestController extends BaseApiController
     public function show(int $id): JsonResponse
     {
         try {
-            $homeCareRequest = $this->contract->findOrFail($id, $this->relations);
+            $homeCareRequest = $this->contract->findOne($id, $this->relations);
             return $this->respondWithModel($homeCareRequest);
         } catch (Exception $e) {
             \Log::error('Failed to retrieve home care request: ' . $e->getMessage());
