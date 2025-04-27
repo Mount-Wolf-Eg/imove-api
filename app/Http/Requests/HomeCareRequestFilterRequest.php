@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Traits\JsonValidationTrait;
 
-class EducationalContentFilterRequest extends FormRequest
+class HomeCareRequestFilterRequest extends FormRequest
 {
     use JsonValidationTrait;
 
@@ -17,9 +17,8 @@ class EducationalContentFilterRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+        // return auth()->check() && auth()->user()->patient;
     }
-
-  
 
     /**
      * Get the validation rules that apply to the request.
@@ -29,14 +28,11 @@ class EducationalContentFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'medical_speciality_ids' => 'nullable|array',
-            'medical_speciality_ids.*' => 'exists:medical_specialities,id',
-            'title_starts_with' => 'nullable|string|size:1|regex:/^[\p{L}\p{N}]+$/u',
-            'locale' => 'nullable|in:en,ar',
-            'page'  => 'nullable|integer|min:1',
+            'status' => 'nullable|in:1,2,3', // 1: Pending, 2: Visited, 3: Rejected
+            'city_id' => 'nullable|exists:cities,id',
+            'medical_speciality_id' => 'nullable|exists:medical_specialities,id',
+            'page' => 'nullable|integer|min:1',
             'limit' => 'nullable|integer|min:1',
-            'order' => 'nullable|array',
-            'order.*' => 'in:asc,desc',
         ];
     }
 

@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\V1\Mobile\MedicalEquipmentController;
 use App\Http\Controllers\Api\V1\Mobile\StaticPageController;
 use App\Http\Controllers\Api\V1\Mobile\TechnicalSupportController;
 use App\Http\Controllers\Api\V1\Mobile\EducationalContentController;
+use App\Http\Controllers\Api\V1\Mobile\HomeCareRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
@@ -44,7 +45,7 @@ Route::group(['middleware' => 'locale'], static function () {
 
     Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
     Route::get('urgent-reminder-durations', [NewAuthController::class, 'urgentReminderDurations']);
-    
+
     // terms-and-conditions
     Route::get('patient/terms-and-conditions', [StaticPageController::class, 'getPatientTermsAndConditions']);
     Route::get('doctor/terms-and-conditions', [StaticPageController::class, 'getDoctorTermsAndConditions']);
@@ -55,7 +56,7 @@ Route::group(['middleware' => 'locale'], static function () {
         Route::get('consultation/{consultation}/medical-equipments', 'getByConsultation');
     });
 
-    
+
     // Educational Content
     Route::controller(EducationalContentController::class)->group(function () {
         Route::get('educational-contents', 'getAll');
@@ -66,7 +67,6 @@ Route::group(['middleware' => 'locale'], static function () {
         Route::post('educational-contents/{content}/toggle-like', 'toggleLike')->middleware(['auth:sanctum']);
     });
 
-    
     Route::group(['middleware' => 'auth:sanctum'], static function () {
         Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // new
         Route::post('register-user-as-doctor', [NewAuthController::class, 'registerUserAsDoctor']); // new
@@ -87,7 +87,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::post('add-urgent-reminder-before', [NewAuthController::class, 'updateUrgentReminderDurations']);
 
             Route::get('consultation-files', [FileController::class, 'consultationFiles']);
-            
+
             Route::put('update-main-info', [PatientProfileController::class, 'updateMainInfo']);
             Route::put('update-medical-records', [PatientProfileController::class, 'updateMedicalRecords']);
             Route::put('deactivate', [PatientProfileController::class, 'deactivate']);
@@ -128,7 +128,13 @@ Route::group(['middleware' => 'locale'], static function () {
 
             // technical support patient
             Route::post('technical-support', [TechnicalSupportController::class, 'createForUser']);
-        
+            
+            // HomeCareRequest
+            Route::controller(HomeCareRequestController::class)->group(function () {
+                Route::post('home-care-request/store', 'store');
+                Route::get('home-care-requests', 'patientHomeCare');
+                Route::get('home-care-requests/{id}', 'show')->whereNumber('id');
+            });
 
         });
 
@@ -137,7 +143,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::get('urgent-reminder-durations', [NewAuthController::class, 'urgentReminderDurations']);
             Route::post('add-reminder-before', [NewAuthController::class, 'updateReminderDurations']);
             Route::post('add-urgent-reminder-before', [NewAuthController::class, 'updateUrgentReminderDurations']);
-            
+
             Route::put('update-main-info', [DoctorProfileController::class, 'updateMainInfo']);
             Route::put('update-professional-status', [DoctorProfileController::class, 'updateProfessionalStatus']);
             Route::put('update-schedule', [DoctorProfileController::class, 'updateSchedule']);
@@ -167,22 +173,22 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::get('export-all-invoice', [PaymentController::class, 'exportDoctorPaymentAllInvoice'])->withoutMiddleware(['auth:sanctum', 'doctor', 'active_doctor']);
 
             Route::apiResource('banks', BankController::class);
-            
+
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('store', 'update', 'destroy');
             Route::apiResource('doctor-schedule-day-shifts', DoctorScheduleDayShiftController::class)->only( 'store', 'update', 'destroy');
             Route::get('nearest-doctor-schedule-day/{doctor}', [DoctorScheduleDayController::class, 'nearestAvailableDay']);
-           
+
             // technical support doctor
             Route::post('technical-support', [TechnicalSupportController::class, 'createForDoctor']);
 
 
             Route::apiResource('packages', DoctorPackageController::class)->only('index', 'store', 'update', 'destroy');
             Route::patch('packages/{package}/change-activation', [DoctorPackageController::class, 'changeActivation'])->name('packages.active');
-        
+
 
             Route::post('consultation/{consultation}/assign-medical-equipments', [MedicalEquipmentController::class, 'assignToConsultation']);
             Route::post('consultation/{consultation}/remove-medical-equipments', [MedicalEquipmentController::class, 'removeFromConsultation']);
-        
+
         });
     });
 });

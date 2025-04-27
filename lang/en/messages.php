@@ -620,7 +620,14 @@ return [
 
     'Like added successfully'   => 'Like added successfully',
     'Like removed successfully' => 'Like removed successfully',
+    'educational-contents'=> 'Educational Contents',
+    'manage_educational-contents'=> 'Manage Educational Contents',
+    'educational-contents_details' => 'Educational Contents Details',
+    'add_educational-contents'=> 'Add Educational Contents',
+    'edit_educational-contents' => 'Edit Educational Contents',
+    
 
     
+
 
 ];

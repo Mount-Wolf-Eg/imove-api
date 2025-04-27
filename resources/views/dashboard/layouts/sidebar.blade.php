@@ -219,6 +219,15 @@
                     </a>
                 </li>
                 @endif
+                
+                @if(auth()->user()->can('read-article') || auth()->user()->can('view-all-article'))
+                <li class="nav-item">
+                    <a href="{{route('educational-contents.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('educational-contents.index', 'educational-contents.show', 'educational-contents.create', 'educational-contents.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.educational-contents') }}</span>
+                    </a>
+                </li>
+                @endif
 
                 @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
                 <li class="nav-item">
