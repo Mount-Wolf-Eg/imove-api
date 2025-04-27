@@ -4,6 +4,8 @@ namespace App\Repositories\SQL;
 
 use App\Models\Consultation;
 use App\Models\EducationalContent;
+use App\Repositories\Contracts\FileContract;
+use App\Constants\FileConstants;
 use App\Repositories\Contracts\EducationalContentContract;
 use Illuminate\Database\Eloquent\Collection;
 // use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -42,6 +44,7 @@ class EducationalContentRepository extends BaseRepository implements Educational
         try {
             $query = $this->model->query();
 
+            
             if (!empty($filters['medical_speciality_ids'])) {
                 $query->ofMedicalSpeciality($filters['medical_speciality_ids']);
             }
@@ -113,4 +116,30 @@ class EducationalContentRepository extends BaseRepository implements Educational
             return new Collection();
         }
     }
+    
+    public function syncRelations($model, $attributes)
+    {
+        self::syncMainImage($model, $attributes);
+        return $model;
+    }
+
+    public static function syncMainImage($model, $attributes)
+    {
+        if (isset($attributes['main_image'])) {
+            if ($model->mainImage && $model->mainImage->id != $attributes['main_image'])
+                resolve(FileContract::class)->remove($model->mainImage);
+            if (is_file($attributes['main_image'])) {
+                $file = resolve(FileContract::class)->create([
+                    'file' => $attributes['main_image'],
+                    'type' => FileConstants::FILE_TYPE_EDUCATIONAL_MAIN_IMAGE->value
+                ]);
+            } else {
+                $file = resolve(FileContract::class)->find($attributes['main_image']);
+            }
+            $model->mainImage()->save($file);
+        }
+        return $model;
+    }
+
+
 }

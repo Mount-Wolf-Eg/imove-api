@@ -615,6 +615,11 @@ return [
     'Unauthorized: This consultation is not for you' => 'غير مصرح: هذه الاستشارة لا تخصك',
     'Like added successfully' => 'تم اضافة الاعجاب بنجاح',
     'Like removed successfully' => 'تم حذف الاعجاب',
-
+    
+    'educational-contents'        => 'المحتوى التعليمى',
+    'manage_educational-contents' => 'اداره المحتوى التعليمى',
+    'educational-contents_details' => 'تفاصيل المحتوى التعليمى',
+    'add_educational-contents'    => 'اضافة المحتوى التعليمى',
+    'edit_educational-contents'   => 'تعديل المحتوى التعليمى',
 
 ];
