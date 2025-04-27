@@ -34,7 +34,7 @@ class EducationalContentFilterRequest extends FormRequest
             'title_starts_with' => 'nullable|string|size:1|regex:/^[\p{L}\p{N}]+$/u',
             'locale' => 'nullable|in:en,ar',
             'page'  => 'nullable|integer|min:1',
-            'limit' => 'nullable|integer|min:1|max:100',
+            'limit' => 'nullable|integer|min:1',
             'order' => 'nullable|array',
             'order.*' => 'in:asc,desc',
         ];
