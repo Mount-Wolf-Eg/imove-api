@@ -2,17 +2,21 @@
 
 namespace App\Models;
 
+use App\Constants\FileConstants;
 use App\Traits\ModelTrait;
 use App\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
-class HameCareRequest extends Model
-{
-    use ModelTrait, SearchTrait, HasTranslations;
+class HomeCareRequest extends Model
+{  
+    use ModelTrait, SearchTrait, HasTranslations; // SoftDeletes
     public const ADDITIONAL_PERMISSIONS = [];    
-    protected $table = "hame_care_requests";
+    protected $table = "home_care_requests";
     protected $fillable = [
         'status','patient_id','city_id','medical_speciality_id','address','description',
     ];
@@ -42,7 +46,7 @@ class HameCareRequest extends Model
     }
 
     //---------------------relations-------------------------------------
-
+  
     //---------------------Scopes-------------------------------------
 
     //---------------------Scopes-------------------------------------

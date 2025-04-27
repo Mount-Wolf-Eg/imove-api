@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\Contracts\HomeCareRequestContract;
+use App\Repositories\SQL\HomeCareRequestRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
