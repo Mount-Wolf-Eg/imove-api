@@ -28,6 +28,7 @@ class EducationalContent extends Model
     public array $filterModels = ['MedicalSpeciality'];
     public array $filterCustom = [];
     public array $translatable = ['title', 'content'];
+    public $with = ['author', 'mainImage', 'medicalSpeciality', 'likes'];
 
     //---------------------relations-------------------------------------
     public function author(): BelongsTo
@@ -70,6 +71,7 @@ class EducationalContent extends Model
     {
         return $query->whereIn('medical_speciality_id', (array)$medicalSpecialityIds);
     }
+
 
     public function scopeOfIsPublished($query)
     {
