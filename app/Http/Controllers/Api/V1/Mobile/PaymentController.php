@@ -6,7 +6,9 @@ use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Resources\PaymentResource;
 use App\Models\GeneralSettings;
 use App\Models\Payment;
+use App\Repositories\Contracts\CouponContract;
 use App\Repositories\Contracts\PaymentContract;
+use App\Services\Repositories\PaymentCalculator;
 use Exception;
 use Mpdf\Mpdf;
 
@@ -30,21 +32,36 @@ class PaymentController extends BaseApiController
 
     public function getAppAndTaxAmount()
     {
-        $amount        = request()->get('amount');
-        if ($amount <= 0) {
+        $amount             = request()->get('amount');
+        $coupon             = request()->get('coupon_code');
+        $user               = auth()->user();
+        $userId             = $user->id;
+        $medicalSpecialtyId = request()->get('medical_specialty_id');
+
+        if (! $amount || $amount <= 0) {
             return $this->respondWithError(__('Amount must be greater than 0'), 422);
         }
-        $appPercentage = GeneralSettings::getSettingValue('app_payment_percentage') / 100;
-        $taxPercentage = GeneralSettings::getSettingValue('tax_percentage') / 100;
 
-        $appAmount   = $amount * $appPercentage;
-        $taxAmount   = $amount * $taxPercentage;
-        $totalAmount = $amount + $appAmount + $taxAmount;
+        if ($coupon) {
+            $coupon = resolve(CouponContract::class)->findBy('code', $coupon, false);
+
+            if ($coupon?->isValidForUser($userId, $medicalSpecialtyId)) {
+                $amount = $coupon->applyDiscount($amount);
+            } else {
+                return $this->respondWithError(__('messages.invalid_coupon'));
+            }
+        }
+
+        $calculated = app(PaymentCalculator::class)->calc($amount);
+
+        $appAmount    = $calculated['app_amount'];
+        $taxAmount    = $calculated['tax_amount'];
+        $totalAmount  = $calculated['total_amount'];
 
         return [
-            'app_amount'   => round($appAmount, 2),
-            'tax_amount'   => round($taxAmount, 2),
-            'total_amount' => round($totalAmount, 2),
+            'app_amount'   => $appAmount,
+            'tax_amount'   => $taxAmount,
+            'total_amount' => $totalAmount,
         ];
     }
 

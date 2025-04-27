@@ -107,6 +107,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('complaints', ComplaintController::class)->only('store', 'show', 'update', 'destroy');
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('index');
 
+            Route::get('calc-amount', [PaymentController::class, 'getAppAndTaxAmount']);
             Route::get('payments', [PaymentController::class, 'patientIndex']);
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
 
