@@ -20,10 +20,10 @@ class HomeCareRequest extends Model
     protected $fillable = [
         'status','patient_id','city_id','medical_speciality_id','address','description',
     ];
-    protected array $filters = ['keyword'];
+    protected array $filters = ['keyword', 'medicalSpeciality', 'city', 'status'];
     protected array $searchable = [];
     protected array $dates = [];
-    public array $filterModels = [];
+    public array $filterModels = ['MedicalSpeciality', 'City'];
     public array $filterCustom = [];
     public array $translatable = [];
     protected $with = ['patient', 'city', 'medicalSpeciality'];
@@ -48,6 +48,15 @@ class HomeCareRequest extends Model
     //---------------------relations-------------------------------------
   
     //---------------------Scopes-------------------------------------
+
+    public function scopeOfMedicalSpeciality($query, $medicalSpecialityId)
+    {
+        return $query->where('medical_speciality_id', $medicalSpecialityId);
+    }
+    public function scopeOfCity($query, $cityId)
+    {
+        return $query->where('city_id', $cityId);
+    }
 
     //---------------------Scopes-------------------------------------
 

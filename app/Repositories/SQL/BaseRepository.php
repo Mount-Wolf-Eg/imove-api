@@ -949,6 +949,8 @@ abstract class BaseRepository implements BaseContract
         return $this->update($model, [$field => $newVal]);
     }
 
+
+
     public function restoreDeletedRecord($id): void
     {
         $this->model->withTrashed()->find($id)->restore();
