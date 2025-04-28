@@ -72,12 +72,13 @@ class EducationalContentRepository extends BaseRepository implements Educational
         }
     }
     
-    public function assignToConsultation(Consultation $consultation, array $contentIds, int $doctorId): bool
+    public function assignToConsultation(Consultation $consultation, array $contentIds, int $doctorId)
     {
         try {
             // if ($consultation->doctor_id !== $doctorId) {
             //     return false;
             // }
+
             foreach ($contentIds as $contentId) {
                 $consultation->educationalContents()->syncWithoutDetaching([
                     $contentId => ['doctor_id' => $doctorId]

@@ -136,6 +136,13 @@ class Consultation extends Model
                     ->withTimestamps();
     }
 
+    public function educationalContents(): BelongsToMany
+    {
+        return $this->belongsToMany(EducationalContent::class, 'consultation_educational_content')
+            ->withPivot('doctor_id')
+            ->withTimestamps();
+    }
+    
     public function attachments(): MorphMany
     {
         return $this->morphMany(File::class, 'fileable')
