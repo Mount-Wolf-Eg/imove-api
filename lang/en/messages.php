@@ -633,8 +633,14 @@ return [
     'manage_home-care-requests'  => 'Manage Home Care Requests',
     'home-care-requests_details' => 'Home Care Requests Details',
     
-
-    
+    'confirm_reject' => 'Confirm Reject ?',
+    'confirm_visited' => 'Confirm Visited ?',
+    'actions_messages' => [
+        'reject_success' => 'The request was successfully rejected.',
+        'visited_success' => 'The visit has been confirmed successfully.',
+        'update_success' => 'The request has been updated successfully.',
+        'delete_success' => 'The request has been successfully deleted.',
+    ],
 
 
 ];
