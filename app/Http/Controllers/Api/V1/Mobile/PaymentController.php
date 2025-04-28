@@ -32,11 +32,12 @@ class PaymentController extends BaseApiController
 
     public function getAppAndTaxAmount()
     {
-        $amount             = request()->get('amount');
-        $coupon             = request()->get('coupon_code');
-        $user               = auth()->user();
-        $userId             = $user->id;
-        $medicalSpecialtyId = request()->get('medical_specialty_id');
+        $amount              = request()->get('amount');
+        $amountAfterDiscount = $amount;
+        $coupon              = request()->get('coupon_code');
+        $user                = auth()->user();
+        $userId              = $user->id;
+        $medicalSpecialtyId  = request()->get('medical_specialty_id');
 
         if (! $amount || $amount <= 0) {
             return $this->respondWithError(__('Amount must be greater than 0'), 422);
@@ -46,22 +47,24 @@ class PaymentController extends BaseApiController
             $coupon = resolve(CouponContract::class)->findBy('code', $coupon, false);
 
             if ($coupon?->isValidForUser($userId, $medicalSpecialtyId)) {
-                $amount = $coupon->applyDiscount($amount);
+                $amountAfterDiscount = $coupon->applyDiscount($amount);
             } else {
                 return $this->respondWithError(__('messages.invalid_coupon'));
             }
         }
 
-        $calculated = app(PaymentCalculator::class)->calc($amount);
+        $calculated   = app(PaymentCalculator::class)->calc($amountAfterDiscount);
 
         $appAmount    = $calculated['app_amount'];
         $taxAmount    = $calculated['tax_amount'];
         $totalAmount  = $calculated['total_amount'];
 
         return [
-            'app_amount'   => $appAmount,
-            'tax_amount'   => $taxAmount,
-            'total_amount' => $totalAmount,
+            'amount'        => $amount,
+            'coupon_amount' => $amount - $amountAfterDiscount,
+            'app_amount'    => $appAmount,
+            'tax_amount'    => $taxAmount,
+            'total_amount'  => $totalAmount,
         ];
     }
 
