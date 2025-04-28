@@ -75,7 +75,7 @@ class EducationalContentController extends BaseApiController
     {
         try {
             $doctor = auth()->user()->doctor;
-
+            // return $doctor;
             $success = $this->contract->assignToConsultation($consultation, $request->validated()['content_ids'], $doctor->id);
             if (!$success) {
                 return $this->respondWithError( __('messages.Unauthorized: This consultation is not for you'), Response::HTTP_FORBIDDEN);
