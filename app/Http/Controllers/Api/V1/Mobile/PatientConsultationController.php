@@ -75,9 +75,10 @@ class PatientConsultationController extends BaseApiController
      * @param Consultation $consultation
      * @return JsonResponse
      */
-    public function update(ConsultationRequest $request, Consultation $consultation): JsonResponse
+    public function update(ConsultationRequest $request, $consultation_id): JsonResponse
     {
         try {
+            $consultation = Consultation::withoutGlobalScopes()->findOrFail($consultation_id);
             $consultation = $this->contract->update($consultation, $request->validated());
             return $this->respondWithModel($consultation);
         } catch (Exception $e) {

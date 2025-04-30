@@ -63,7 +63,21 @@ class ConsultationRequest extends FormRequest
                 unset($validated['reminder_before']);
             }
 
-            // $validated['is_active'] = false;
+            $validated['is_active'] = false;
+
+            if ($couponCode = request('coupon_code')) {
+                $coupon = resolve(ConsultationContract::class)->findBy('code', $couponCode, false);
+
+                if (
+                    $coupon &&
+                    $coupon->isValidForUser(auth()->user()->patient->id, request('medical_speciality_id'))
+                ) {
+                    $discountedAmount = $coupon->applyDiscount($validated['amount']);
+
+                    // Set is_active based on whether the amount is fully covered
+                    $validated['is_active'] = $discountedAmount <= 0;
+                }
+            }
         }
 
         if (! isset($validated['contact_type']) || $validated['contact_type'] == null) {
