@@ -57,7 +57,6 @@ class Consultation extends Model
         'total_amount',
         'coupon_discount',
         'coupon_id',
-        'confirm_program',
         'is_active'
     ];
 
