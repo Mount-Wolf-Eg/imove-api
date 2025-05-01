@@ -159,6 +159,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::controller(DoctorConsultationController::class)->prefix('consultations')->group(static function () {
                 Route::post('/{consultation}/vendor-referral','vendorReferral');
                 Route::post('/{consultation}/doctor-referral','doctorReferral');
+                Route::get('/{consultation}/get-prescription', 'getPrescription');
                 Route::post('/{consultation}/prescription', 'prescription');
                 Route::post('/{consultation}/approve-medical-report', 'approveMedicalReport');
                 Route::post('/{consultation}/accept-urgent-case', 'acceptUrgentCase');

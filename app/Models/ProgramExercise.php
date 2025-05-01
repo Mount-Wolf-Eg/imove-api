@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
-class ExerciseMedicalSpeciality extends Model
+class ProgramExercise extends Model
 {
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     public const ADDITIONAL_PERMISSIONS = [];
-    protected $table = "exercise_medical_specialities";
-    protected $fillable = ['exercise_id', 'medical_speciality_id'];
+    protected $table = "program_exercises";
+    protected $fillable = [];
     protected array $filters = ['keyword'];
     protected array $searchable = [];
     protected array $dates = [];

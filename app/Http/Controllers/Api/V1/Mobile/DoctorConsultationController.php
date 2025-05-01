@@ -11,6 +11,7 @@ use App\Http\Requests\ConsultationVendorReferralRequest;
 use App\Http\Requests\DoctorAcceptUrgentConsultationRequest;
 use App\Http\Requests\DoctorRescheduleConsultationRequest;
 use App\Http\Resources\ConsultationResource;
+use App\Http\Resources\PrescriptionConsultationResource;
 use App\Models\Consultation;
 use App\Repositories\Contracts\ConsultationContract;
 use App\Services\Repositories\ConsultationDoctorReferralService;
@@ -116,6 +117,20 @@ class DoctorConsultationController extends BaseApiController
         }
     }
 
+    /**
+     * Get prescription for the consultation.
+     * @param Consultation $consultation
+     * @return JsonResponse
+     */
+    public function getPrescription(Consultation $consultation): JsonResponse
+    {
+        try {
+            $this->relations = [];
+            return $this->respondWithResource(new PrescriptionConsultationResource($consultation->load($this->relations)));
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage());
+        }
+    }
     /**
      * Approve medical report for the consultation.
      * @param Consultation $consultation
