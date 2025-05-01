@@ -31,6 +31,12 @@ class Program extends Model
     {
         return $this->belongsTo(Consultation::class, 'consultation_id');
     }
+
+    public function exercises(): BelongsToMany
+    {
+        return $this->belongsToMany(Exercise::class, 'program_exercises');
+    }
+
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
