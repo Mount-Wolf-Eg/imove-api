@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
@@ -189,6 +190,10 @@ class Consultation extends Model
     public function consultationQuestions(): BelongsToMany
     {
         return $this->belongsToMany(ConsultationQuestion::class, 'consultation_question')->withPivot('answer');
+    }
+    public function program(): HasOne
+    {
+        return $this->hasOne(Program::class);
     }
 
     //---------------------relations-------------------------------------
