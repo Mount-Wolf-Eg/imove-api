@@ -18,10 +18,12 @@ return new class extends Migration
             $table->unsignedBigInteger('exercise_id')->nullable();
             $table->foreign('exercise_id')->references('id')->on('exercises')->cascadeOnUpdate()->nullOnDelete();
 
-            $table->integer('num_of_sets')->nullable();
+            $table->integer('sets')->nullable();
             $table->integer('break_between_sets')->nullable();
             $table->integer('weight')->nullable();
-            $table->integer('num_of_weeks')->nullable();
+            $table->integer('rep')->nullable();
+            $table->integer('hold_duration')->nullable();
+            $table->string('comments')->nullable();
 
             $table->timestamps();
         });

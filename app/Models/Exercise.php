@@ -41,7 +41,10 @@ class Exercise extends Model
         return $this->belongsToMany(MedicalSpeciality::class, 'exercise_medical_specialities');
     }
 
-
+    public function programs(): BelongsToMany
+    {
+        return $this->belongsToMany(Program::class, 'program_exercises');
+    }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
