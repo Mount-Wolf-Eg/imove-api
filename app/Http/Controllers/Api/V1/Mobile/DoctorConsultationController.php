@@ -126,11 +126,13 @@ class DoctorConsultationController extends BaseApiController
     {
         try {
             $this->relations = [];
-            return $this->respondWithResource(new PrescriptionConsultationResource($consultation->load($this->relations)));
+            $resource = new PrescriptionConsultationResource($consultation->load($this->relations));
+            return $this->respondWithResource($resource);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }
+    
     /**
      * Approve medical report for the consultation.
      * @param Consultation $consultation
