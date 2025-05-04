@@ -9,6 +9,7 @@ use App\Repositories\Contracts\ExerciseContract;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\ExerciseFilterRequest;
 
 class ExerciseController extends BaseApiController
 {
@@ -30,18 +31,14 @@ class ExerciseController extends BaseApiController
      * @param Request $request
      * @return mixed
      */
-    public function allExercises(Request $request): mixed
+    public function allExercises(ExerciseFilterRequest $request): mixed
     {
         try {
             $filters = array_merge($request->all(), $this->defaultScopes);
 
             // Apply medical_speciality_ids filter
             if ($request->has('medical_speciality_ids')) {
-                $medicalSpecialityIds = is_array($request->input('medical_speciality_ids'))
-                    ? $request->input('medical_speciality_ids')
-                    : explode(',', $request->input('medical_speciality_ids'));
-
-                $filters['medical_speciality_ids'] = array_filter($medicalSpecialityIds, 'is_numeric');
+                $filters['medical_speciality_ids'] = $request->input('medical_speciality_ids');
             }
 
             // Apply keyword filter (already supported by SearchTrait)
