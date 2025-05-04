@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\V1\Mobile\StaticPageController;
 use App\Http\Controllers\Api\V1\Mobile\TechnicalSupportController;
 use App\Http\Controllers\Api\V1\Mobile\EducationalContentController;
 use App\Http\Controllers\Api\V1\Mobile\HomeCareRequestController;
+use App\Http\Controllers\Api\V1\Mobile\ExerciseController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
@@ -66,6 +67,10 @@ Route::group(['middleware' => 'locale'], static function () {
         Route::get('educational-contents/consultation/{consultation}/educational-contents', 'getByConsultation');
         Route::post('educational-contents/{content}/toggle-like', 'toggleLike')->middleware(['auth:sanctum']);
     });
+
+    // Exercises
+    Route::get('/exercises', [ExerciseController::class, 'allExercises'])->name('exercises.index');
+
 
     Route::group(['middleware' => 'auth:sanctum'], static function () {
         Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // new
@@ -165,6 +170,7 @@ Route::group(['middleware' => 'locale'], static function () {
                 Route::post('/{consultation}/accept-urgent-case', 'acceptUrgentCase');
                 Route::post('/{consultation}/cancel', 'cancel');
                 Route::post('/{consultation}/reschedule', 'reschedule');
+                Route::post('/{consultation}/program', 'createProgram');
             });
             Route::get('payments', [PaymentController::class, 'doctorIndex']);
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);

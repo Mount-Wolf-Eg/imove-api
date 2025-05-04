@@ -4,22 +4,22 @@ namespace App\Models;
 
 use App\Traits\ModelTrait;
 use App\Traits\SearchTrait;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+
 
 class PatientSession extends Model
 {
-    use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
+    use ModelTrait, SearchTrait, HasTranslations; //SoftDeletes
     public const ADDITIONAL_PERMISSIONS = [];
     protected $table = "patient_sessions";
-    protected $fillable = ['program_id', 'consultation_id', 'sets', 'break_between_sets',
-                    'weight', 'rep', 'hold_duration', 'comments'];
+    protected $fillable = ['program_id', 'consultation_id', 'week', 'day',
+                    'degree_of_pain', 'extent_of_improvement', 'comments', 'end_date'];
     protected $fillable = [];
     protected array $filters = ['keyword'];
     protected array $searchable = [];
@@ -27,9 +27,21 @@ class PatientSession extends Model
     public array $filterModels = [];
     public array $filterCustom = [];
     public array $translatable = [];
+    protected $with = ['program', 'consultation'];
 
     //---------------------relations-------------------------------------
-
+    public function program(): BelongsTo
+    {
+        return $this->belongsTo(Program::class, 'program_id');
+    }
+    public function consultation(): BelongsTo
+    {
+        return $this->belongsTo(Consultation::class, 'consultation_id');
+    }
+    public function sessionExercises(): HasMany
+    {
+        return $this->hasMany(PatientSessionExercise::class, 'session_id');
+    }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------

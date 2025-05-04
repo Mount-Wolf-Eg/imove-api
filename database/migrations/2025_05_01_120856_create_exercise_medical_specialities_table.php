@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('exercise_medical_specialities', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('exercise_id')->nullable();
-            $table->foreign('exercise_id')->references('id')->on('exercises')->cascadeOnUpdate()->nullOnDelete();
+            $table->foreign('exercise_id')->references('id')->on('exercises')->cascadeOnUpdate()->cascadeOnDelete();
             $table->unsignedBigInteger('medical_speciality_id')->nullable()->index();
             $table->foreign('medical_speciality_id')->references('id')->on('medical_specialities')->cascadeOnUpdate()->nullOnDelete();
 

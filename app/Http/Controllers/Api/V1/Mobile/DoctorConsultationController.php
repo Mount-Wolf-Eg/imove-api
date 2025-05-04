@@ -10,8 +10,10 @@ use App\Http\Requests\ConsultationPrescriptionRequest;
 use App\Http\Requests\ConsultationVendorReferralRequest;
 use App\Http\Requests\DoctorAcceptUrgentConsultationRequest;
 use App\Http\Requests\DoctorRescheduleConsultationRequest;
+use App\Http\Requests\CreateProgramRequest;
 use App\Http\Resources\ConsultationResource;
 use App\Http\Resources\PrescriptionConsultationResource;
+use App\Http\Resources\ProgramResource;
 use App\Models\Consultation;
 use App\Repositories\Contracts\ConsultationContract;
 use App\Services\Repositories\ConsultationDoctorReferralService;
@@ -237,4 +239,72 @@ class DoctorConsultationController extends BaseApiController
             return $this->respondWithError($e->getMessage());
         }
     }
+
+    
+    // public function createProgram(CreateProgramRequest $request, Consultation $consultation): JsonResponse
+    // {
+    //     try {
+    //         return DB::transaction(function () use ($request, $consultation) {
+    //             // Create the program
+    //             $programData = $request->only([
+    //                 'consultation_id',
+    //                 'diagnosis',
+    //                 'num_of_sessions_per_day',
+    //                 'num_of_days_of_week',
+    //                 'num_of_weeks',
+    //                 'break_between_exercises',
+    //             ]);
+
+    //             $program = Program::create(array_merge($programData, ['consultation_id' => $consultation->id]));
+
+    //             // Create program exercises
+    //             $exercises = $request->input('exercises', []);
+    //             foreach ($exercises as $exercise) {
+    //                 $program->exercises()->attach($exercise['exercise_id'], [
+    //                     'sets' => $exercise['sets'] ?? null,
+    //                     'break_between_sets' => $exercise['break_between_sets'] ?? null,
+    //                     'weight' => $exercise['weight'] ?? null,
+    //                     'rep' => $exercise['rep'] ?? null,
+    //                     'hold_duration' => $exercise['hold_duration'] ?? null,
+    //                     'comments' => $exercise['comments'] ?? null,
+    //                 ]);
+    //             }
+
+    //             return $this->respondWithResource(new ProgramResource($program->load(['exercises'])), 201);
+    //         });
+    //     } catch (Exception $e) {
+    //         return $this->respondWithError($e->getMessage(), 422);
+    //     }
+    // }
+
+    
+    /**
+     * Create a new program with associated exercises for a consultation.
+     *
+     * @param CreateProgramRequest $request
+     * @param Consultation $consultation
+     * @return JsonResponse
+     */
+    public function createProgram(CreateProgramRequest $request, Consultation $consultation): JsonResponse
+    {
+        try {
+            $programData = $request->only([
+                'diagnosis','num_of_sessions_per_day',
+                'num_of_days_of_week','num_of_weeks',
+                'break_between_exercises',
+            ]);
+
+            $relations = ['consultation', 'exercises', 'sessions'];
+
+            $program = $this->contract->createProgram(
+                $consultation, $programData,
+                $request->input('exercises', []), $relations
+            );
+
+            return $this->respondWithResource(new ProgramResource($program), 201);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
+
 }

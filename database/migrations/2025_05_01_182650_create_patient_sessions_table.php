@@ -13,6 +13,16 @@ return new class extends Migration
     {
         Schema::create('patient_sessions', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('program_id')->nullable();
+            $table->foreign('program_id')->references('id')->on('programs')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->unsignedBigInteger('consultation_id')->nullable();
+            $table->foreign('consultation_id')->references('id')->on('consultations')->onDelete('cascade');
+            $table->integer('week')->nullable();
+            $table->integer('day')->nullable();
+            $table->integer('degree_of_pain')->default(0)->nullable()->comment('From 1 to 10');
+            $table->integer('extent_of_improvement')->default(0)->nullable()->comment('From 1 to 10');
+            $table->string('comments')->nullable();
+            $table->timestamps('end_date');
             $table->timestamps();
         });
     }
