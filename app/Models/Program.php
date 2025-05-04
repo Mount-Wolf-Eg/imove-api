@@ -10,6 +10,7 @@ use Spatie\Translatable\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Program extends Model
@@ -24,7 +25,7 @@ class Program extends Model
     public array $filterModels = [];
     public array $filterCustom = [];
     public array $translatable = [];
-    public $with = [];
+    public $with = ['consultation', 'exercises', 'sessions'];
 
     //---------------------relations-------------------------------------
     public function consultation(): BelongsTo
@@ -36,7 +37,11 @@ class Program extends Model
     {
         return $this->belongsToMany(Exercise::class, 'program_exercises');
     }
-
+    
+    public function sessions(): HasMany
+    {
+        return $this->hasMany(PatientSession::class);
+    }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
