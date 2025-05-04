@@ -51,7 +51,7 @@ class EducationalContentController extends BaseApiController
                 'order' => $order,
                 'limit' => $limit,
                 'page' => $page,
-            ]);
+            ]); 
 
             $contents = $this->contract->search($filters, $this->relations, $data);
 
