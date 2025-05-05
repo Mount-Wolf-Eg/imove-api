@@ -28,6 +28,7 @@ class ProgramExercise extends Model
     public array $translatable = [];
     public $with = ['program', 'exercise'];
 
+    
     //---------------------relations-------------------------------------
     public function program(): BelongsTo
     {
