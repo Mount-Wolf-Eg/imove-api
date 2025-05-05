@@ -35,4 +35,19 @@ class PackageRepository extends BaseRepository implements PackageContract
         }
         return $model;
     }
+
+    public function subscribe($package)
+    {
+        $attributes                         = request()->validated();
+        $attributes['doctor_id']            = $package->user_id;
+        $attributes['package_id']           = $package->id;
+        $attributes['is_active']            = true;
+        $attributes['start_date']           = now();
+        $attributes['end_date']             = now()->addDays($package->duration);
+        $attributes['price']                = $package->price;
+        $attributes['num_of_sessions']      = $package->num_of_sessions;
+        $attributes['used_num_of_sessions'] = 1;
+
+        return resolve(SubscriptionRepository::class)->create($attributes);
+    }
 }

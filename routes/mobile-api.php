@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\V1\Mobile\StaticPageController;
 use App\Http\Controllers\Api\V1\Mobile\TechnicalSupportController;
 use App\Http\Controllers\Api\V1\Mobile\EducationalContentController;
 use App\Http\Controllers\Api\V1\Mobile\HomeCareRequestController;
+use App\Http\Controllers\Api\V1\Mobile\PatientPackageController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
@@ -136,6 +137,8 @@ Route::group(['middleware' => 'locale'], static function () {
                 Route::get('home-care-requests/{id}', 'show')->whereNumber('id');
             });
 
+            Route::apiResource('packages', PatientPackageController::class)->only('index', 'show');
+            Route::post('packages/{package}/subscribe', [PatientPackageController::class, 'subscribe'])->name('packages.subscribe');
         });
 
         Route::group(['prefix' => 'doctor', 'middleware' => 'active_doctor'], static function () {

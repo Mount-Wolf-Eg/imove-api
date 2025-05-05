@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Http\Requests;
+
+use App\Constants\ConsultationPaymentTypeConstants;
+use App\Models\Package;
+use App\Repositories\Contracts\CouponContract;
+use App\Rules\ValidCouponRule;
+use App\Services\Repositories\PaymentCalculator;
+use Illuminate\Foundation\Http\FormRequest;
+
+class PackageSubscribeRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return (bool) auth()->user()->patient;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function rules(): array
+    {
+        $rules = [
+            'package_id'   => 'required|exists:packages,id',
+            'coupon_code'  => ['nullable', 'exists:coupons,code', new ValidCouponRule()],
+            'payment_type' => [
+                'required',
+                'integer',
+                'in:' . implode(',', array_column(ConsultationPaymentTypeConstants::cases(), 'value')),
+            ],
+        ];
+
+        return array_merge($rules, (new DoctorScheduleRequest())->rules());
+    }
+
+    public function prepareForValidation(): void
+    {
+        if ((int) request(('payment_type')) === ConsultationPaymentTypeConstants::WALLET->value) {
+            $amount = Package::find(request('package_id'))->price;
+
+            if (request('coupon_code')) {
+                $coupon = resolve(CouponContract::class)->findBy('code', request('coupon_code'), false);
+                if ($coupon?->isValidForUser(auth()->user()->patient->id, request('medical_speciality_id'))) {
+                    $amount = $coupon->applyDiscount($amount);
+                }
+            }
+
+            $amount = app(PaymentCalculator::class)->calc($amount)['total_amount'];
+
+            if ($amount > auth()->user()->wallet) {
+                abort(422, __('messages.insufficient_wallet_balance'));
+            }
+        }
+    }
+
+    public function validated($key = null, $default = null)
+    {
+        $validated                    = parent::validated($key, $default);
+        $validated['patient_id']      = auth()->id();
+
+        $validated['doctor_id']       = $this->route('package')->user_id;
+        $validated['package_id']      = $this->route('package')->id;
+        $validated['is_active']       = true;
+        $validated['start_date']      = now();
+        $validated['end_date']        = now()->addDays($this->route('package')->duration);
+        $validated['price']           = $this->route('package')->price;
+        $validated['num_of_sessions'] = $this->route('package')->num_of_sessions;
+        
+        return array_merge($validated, DoctorScheduleRequest::afterValidation($validated));
+    }
+}

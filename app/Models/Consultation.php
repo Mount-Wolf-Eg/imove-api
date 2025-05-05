@@ -184,6 +184,11 @@ class Consultation extends Model
         return $this->belongsToMany(ConsultationQuestion::class, 'consultation_question')->withPivot('answer');
     }
 
+    public function subscribe(): BelongsTo
+    {
+        return $this->belongsTo(Subscription::class);
+    }
+
     //---------------------relations-------------------------------------
     //---------------------constants-------------------------------------
     public static function types(): array
