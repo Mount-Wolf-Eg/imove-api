@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('degree_of_pain')->default(0)->nullable()->comment('From 1 to 10');
             $table->integer('extent_of_improvement')->default(0)->nullable()->comment('From 1 to 10');
             $table->string('comments')->nullable();
-            $table->timestamps('end_date');
+            $table->timestamp('end_date');
             $table->timestamps();
         });
     }
