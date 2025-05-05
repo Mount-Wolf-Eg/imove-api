@@ -9,8 +9,10 @@ use App\Constants\ConsultationTypeConstants;
 use App\Constants\ReminderConstants;
 use App\Models\Doctor;
 use App\Repositories\Contracts\ConsultationContract;
+use App\Repositories\Contracts\CouponContract;
 use App\Repositories\Contracts\DoctorContract;
 use App\Repositories\Contracts\DoctorScheduleDayShiftContract;
+use App\Repositories\Contracts\PackageContract;
 use App\Rules\ValidCouponRule;
 use App\Services\Repositories\PaymentCalculator;
 use Carbon\Carbon;
@@ -63,7 +65,35 @@ class ConsultationRequest extends FormRequest
                 unset($validated['reminder_before']);
             }
 
-            // $validated['is_active'] = false;
+            $validated['is_active'] = request(('payment_type')) == ConsultationPaymentTypeConstants::WALLET->value;
+
+            if (isset($validated['package_id']) && $validated['package_id'] != null) {
+                $package = resolve(PackageContract::class)->find($validated['package_id']);
+    
+                if ($package && $package->isValidForUser($validated['patient_id'])) {
+                    if (isset($validated['doctor_id']) && $validated['doctor_id'] != null && $validated['doctor_id'] != $package->doctor_id) {
+                        $validated['is_active'] = true;
+                    } else {
+                        throw new ValidationException(__('messages.package_not_valid'));
+                    }
+                } else {
+                    throw new ValidationException(__('messages.package_not_valid'));
+                }
+            }
+
+            if ($couponCode = request('coupon_code') && (! isset($validated['package_id']) || $validated['package_id'] == null)) {
+                $coupon = resolve(ConsultationContract::class)->findBy('code', $couponCode, false);
+
+                if (
+                    $coupon &&
+                    $coupon->isValidForUser(auth()->user()->patient->id, request('medical_speciality_id'))
+                ) {
+                    $discountedAmount = $coupon->applyDiscount($validated['amount']);
+
+                    // Set is_active based on whether the amount is fully covered
+                    $validated['is_active'] = $discountedAmount <= 0;
+                }
+            }
         }
 
         if (! isset($validated['contact_type']) || $validated['contact_type'] == null) {
@@ -106,7 +136,7 @@ class ConsultationRequest extends FormRequest
             $amount = Doctor::find(request('doctor_id'))->with_appointment_consultation_price;
 
             if (request('coupon_code')) {
-                $coupon = resolve(ConsultationContract::class)->findBy('code', request('coupon_code'), false);
+                $coupon = resolve(CouponContract::class)->findBy('code', request('coupon_code'), false);
                 if ($coupon?->isValidForUser(auth()->user()->patient->id, request('medical_speciality_id'))) {
                     $amount = $coupon->applyDiscount($amount);
                 }

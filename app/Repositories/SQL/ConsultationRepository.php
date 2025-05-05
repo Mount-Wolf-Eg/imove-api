@@ -7,13 +7,16 @@ use App\Constants\PaymentMethodConstants;
 use App\Constants\PaymentStatusConstants;
 use App\Models\{Consultation, Program};
 use App\Models\GeneralSettings;
+use App\Models\Package;
 use App\Repositories\Contracts\ConsultationContract;
 use App\Repositories\Contracts\CouponContract;
 use App\Repositories\Contracts\DoctorContract;
 use App\Repositories\Contracts\FileContract;
 use App\Repositories\Contracts\NotificationContract;
+use App\Repositories\Contracts\SubscriptionContract;
 use App\Services\Repositories\ConsultationNotificationService;
 use App\Services\Repositories\PaymentCalculator;
+use Mpdf\Tag\Sub;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -99,13 +102,19 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
             ]);
 
             // If paying by wallet
-            if ((int) request()->payment_type === ConsultationPaymentTypeConstants::WALLET->value) {
+            if ((int) request()->payment_type === ConsultationPaymentTypeConstants::WALLET->value && request()->package_id == null) {
                 $paymentData['status'] = PaymentStatusConstants::COMPLETED->value;
 
                 // Deduct from patient's wallet and add to doctor's wallet
                 $model->patient?->user()->decrement('wallet', $calculated['total_amount']);
                 $model->doctor?->user()->increment('wallet', $calculated['doctor_amount'],);
 
+                $model->update(['is_active' => true]);
+            }
+
+            if ($model->package_id) {
+                $package = resolve(SubscriptionContract::class)->findBy('package_id', $model->package_id);
+                $package->increment('used_num_of_sessions', 1);
                 $model->update(['is_active' => true]);
             }
 

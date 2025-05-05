@@ -7,6 +7,7 @@ use App\Constants\PaymentStatusConstants;
 use App\Http\Controllers\Controller;
 use App\Models\Consultation;
 use App\Models\GeneralSettings;
+use App\Models\Subscription;
 use App\Services\Repositories\ConsultationNotificationService;
 use App\Traits\BaseApiResponseTrait;
 use Illuminate\Http\Request;
@@ -52,8 +53,18 @@ class MyFatoorahController extends Controller
     public function getUrl()
     {
         $validatedData = request()->validate([
-            'oid' => 'required|exists:consultations,id',
+            'oid'  => 'required|integer',
+            'type' => 'required|in:consultation,subscription',
         ]);
+
+        $orderId = $validatedData['oid'];
+        $type    = $validatedData['type'];
+
+        $model   = $type === 'consultation' ? Consultation::class : Subscription::class;
+
+        if (!$model::where('id', $orderId)->exists()) {
+            return $this->respondWithErrors('Order not found.', 404, [], 'Order not found.');
+        }
 
         try {
             //For example: pmid=0 for MyFatoorah invoice or pmid=1 for Knet in test mode
@@ -62,7 +73,7 @@ class MyFatoorahController extends Controller
             $paymentId = request('pmid') ?: 2;
             $sessionId = request('sid') ?: null;
 
-            $curlData  = $this->getPayLoadData($orderId);
+            $curlData  = $this->getPayLoadData($orderId, $validatedData['type']);
 
             $mfObj     = new MyFatoorahPayment($this->mfConfig);
             $payment   = $mfObj->getInvoiceURL($curlData, $paymentId, $orderId, $sessionId);
@@ -83,23 +94,27 @@ class MyFatoorahController extends Controller
      * 
      * @return array
      */
-    private function getPayLoadData($orderId)
+    private function getPayLoadData($orderId, $type)
     {
-        $callbackURL = route('payment.callback');
-        $order       = Consultation::withoutGlobalScope('isActive')->findOrFail($orderId); // ->where(['patient_id' => auth()->user()->patient?->id])
+        $callbackURL = route('payment.callback') . "?type={$type}";
 
-        $phone = $order->patient?->user?->phone;
+        if ($type === 'consultation') {
+            $order = Consultation::withoutGlobalScope('isActive')->findOrFail($orderId);
+        } else {
+            $order = Subscription::findOrFail($orderId); // Assuming you have a Subscription model
+        }
+
+        $phone = $order->user?->phone ?? $order->patient?->user?->phone;
 
         if ($phone && str_starts_with($phone, '966')) {
-            // Remove the '966' prefix
             $phone = substr($phone, 3);
         }
 
         return [
-            'CustomerName'      => $order->patient?->user?->name,
+            'CustomerName'      => $order->user?->name ?? $order->patient?->user?->name,
             'InvoiceValue'      => $order->total_amount,
-            'CallBackUrl'       => $callbackURL . '?status=success',
-            'ErrorUrl'          => $callbackURL . '?status=fail',
+            'CallBackUrl'       => $callbackURL . '&status=success',
+            'ErrorUrl'          => $callbackURL . '&status=fail',
             'Language'          => 'ar',
             'MobileCountryCode' => '+966',
             'CustomerMobile'    => $phone,
@@ -117,32 +132,40 @@ class MyFatoorahController extends Controller
     {
         try {
             $paymentId = request('paymentId');
+            $type      = request('type', 'consultation');
 
-            $mfObj  = new MyFatoorahPaymentStatus($this->mfConfig);
-            $data   = $mfObj->getPaymentStatus($paymentId, 'PaymentId');
+            $mfObj     = new MyFatoorahPaymentStatus($this->mfConfig);
+            $data      = $mfObj->getPaymentStatus($paymentId, 'PaymentId');
 
-            $status = $this->getStatus($data->InvoiceStatus);
+            $status    = $this->getStatus($data->InvoiceStatus);
 
-            $order  = Consultation::withoutGlobalScope('isActive')->where('id', $data->CustomerReference)->first();
-
-            if ($status) {
-                $order?->update(['is_active' => true]);
-                $order?->payment()->update(['transaction_id' => $paymentId, 'status' => PaymentStatusConstants::COMPLETED->value]);
-
-                $order->doctor?->user()->increment('wallet', $order->amount);
-
-                if ($order->status == ConsultationStatusConstants::URGENT_PATIENT_APPROVE_DOCTOR_OFFER->value) {
-                    $this->notificationService->patientAcceptDoctorOffer($order);
+            if ($type === 'consultation') {
+                $order = Consultation::withoutGlobalScope('isActive')->findOrFail($data->CustomerReference);
+                if ($status) {
+                    $order->update(['is_active' => true]);
+                    $order->payment()->update(['transaction_id' => $paymentId, 'status' => PaymentStatusConstants::COMPLETED->value]);
+                    $order->doctor?->user()?->increment('wallet', $order->amount);
+                    $order->status === ConsultationStatusConstants::URGENT_PATIENT_APPROVE_DOCTOR_OFFER->value
+                        ? $this->notificationService->patientAcceptDoctorOffer($order)
+                        : $this->notificationService->newConsultation($order);
                 } else {
-                    $this->notificationService->newConsultation($order);
+                    $order->payment()->update(['transaction_id' => $paymentId, 'status' => PaymentStatusConstants::CANCELLED->value]);
                 }
-            } else {
-                $order?->payment()->update(['transaction_id' => $paymentId, 'status' => PaymentStatusConstants::CANCELLED->value]);
-                info(json_encode($data));
+            } elseif ($type === 'subscription') {
+                $order = Subscription::findOrFail($data->CustomerReference);
+                if ($status) {
+                    $order->update(['is_active' => true, 'is_paid' => true]);
+                    $order->payment()->update(['status' => PaymentStatusConstants::COMPLETED->value, 'transaction_id' => $paymentId]);
+                } else {
+                    $order->update(['is_active' => false, 'is_paid' => false]);
+                    $order->payment()->update(['status' => PaymentStatusConstants::CANCELLED->value, 'transaction_id' => $paymentId]);
+                }
             }
+
+            return response()->json(['IsSuccess' => true]);
         } catch (Exception $ex) {
-            $exMessage = __('myfatoorah.' . $ex->getMessage());
-            info($exMessage);
+            info(__('myfatoorah.' . $ex->getMessage()));
+            return response()->json(['IsSuccess' => false]);
         }
     }
 

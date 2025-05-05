@@ -28,6 +28,7 @@ use App\Http\Controllers\Api\V1\Mobile\StaticPageController;
 use App\Http\Controllers\Api\V1\Mobile\TechnicalSupportController;
 use App\Http\Controllers\Api\V1\Mobile\EducationalContentController;
 use App\Http\Controllers\Api\V1\Mobile\HomeCareRequestController;
+use App\Http\Controllers\Api\V1\Mobile\PatientPackageController;
 use App\Http\Controllers\Api\V1\Mobile\ExerciseController;
 use App\Http\Controllers\Api\V1\Mobile\PatientProgramController;
 use Illuminate\Support\Facades\Route;
@@ -148,6 +149,9 @@ Route::group(['middleware' => 'locale'], static function () {
                 Route::get('/{program}/show', 'show');
                 Route::post('/{program}/create/session', 'createSession');
             });
+
+            Route::apiResource('packages', PatientPackageController::class)->only('index', 'show');
+            Route::post('packages/{package}/subscribe', [PatientPackageController::class, 'subscribe'])->name('packages.subscribe');
 
         });
 

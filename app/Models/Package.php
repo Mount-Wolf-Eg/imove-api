@@ -15,7 +15,7 @@ class Package extends Model
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     public const ADDITIONAL_PERMISSIONS = [];
     protected $fillable = ['user_id', 'name', 'description', 'num_of_sessions', 'duration', 'price', 'is_active'];
-    protected array $filters = ['keyword', 'active', 'owner'];
+    protected array $filters = ['keyword', 'active', 'owner', 'myCurrentSubscription', 'previousSubscriptions'];
     protected array $searchable = ['name', 'description'];
     protected array $dates = [];
     public array $filterModels = [];
@@ -32,6 +32,26 @@ class Package extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
+
+    public function previousSubscriptions()
+    {
+        return $this->hasMany(Subscription::class)->where('is_paid', true)->whereDate('end_date', '<', now());
+    }
+
+    public function myCurrentSubscription()
+    {
+        return $this->hasOne(Subscription::class)->where('patient_id', auth()->user()->id)
+            ->where('is_active', true)
+            ->where('is_paid', true)
+            ->whereRaw('num_of_sessions > used_num_of_sessions')
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now());
+    }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
@@ -43,6 +63,38 @@ class Package extends Model
     public function scopeOfOwner($query)
     {
         return $query->where('user_id', auth()->user()->id);
+    }
+
+    public function scopeOfMyCurrentSubscription($query)
+    {
+        return $query->whereHas('subscriptions', function ($q) {
+            $q->where('patient_id', auth()->user()->id)
+                ->where('is_active', true)
+                ->where('is_paid', true)
+                ->whereRaw('num_of_sessions > used_num_of_sessions')
+                ->whereDate('start_date', '<=', now())
+                ->whereDate('end_date', '>=', now());
+        });
+    }
+
+    public function scopeOfPreviousSubscriptions($query)
+    {
+        return $query->whereHas('subscriptions', function ($q) {
+            $q->where('patient_id', auth()->user()->id)
+                ->where('is_paid', true)
+                ->whereDate('end_date', '<', now());
+        });
+    }
+
+    public function scopeOfIsValidForUser($query, $userId) {
+        return $query->whereHas('subscriptions', function ($q) use ($userId) {
+            $q->where('patient_id', $userId)
+                ->where('is_active', true)
+                ->where('is_paid', true)
+                ->whereRaw('num_of_sessions > used_num_of_sessions')
+                ->whereDate('start_date', '<=', now())
+                ->whereDate('end_date', '>=', now());
+        });
     }
     //---------------------Scopes-------------------------------------
 
