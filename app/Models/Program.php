@@ -18,7 +18,9 @@ class Program extends Model
     use ModelTrait, SearchTrait, HasTranslations; // SoftDeletes
     public const ADDITIONAL_PERMISSIONS = [];
     protected $table = "programs";
-    protected $fillable = ['consultation_id', 'diagnosis', 'num_of_sessions_per_day', 'num_of_days_of_week', 'num_of_weeks', 'break_between_exercises'];
+    protected $fillable = ['consultation_id', 'patient_id', 'diagnosis', 
+        'num_of_sessions_per_day', 'num_of_days_of_week', 'num_of_weeks', 'break_between_exercises'
+    ];
     protected array $filters = ['keyword'];
     protected array $searchable = [];
     protected array $dates = [];
