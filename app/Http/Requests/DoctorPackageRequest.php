@@ -27,7 +27,7 @@ class DoctorPackageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            '' => config('validations.string.req'),
+            'name' => config('validations.string.req'),
             'description' => config('validations.long_text.null'),
             'num_of_sessions' => config('validations.tiny_int.req'),
             'price' => config('validations.double.req'),
