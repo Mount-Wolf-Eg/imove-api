@@ -199,6 +199,15 @@
                     </a>
                 </li>
                 @endif
+                
+                @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
+                <li class="nav-item">
+                    <a href="{{route('home-care-requests.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('home-care-requests.index', 'home-care-requests.show', 'home-care-requests.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.home-care-requests') }}</span>
+                    </a>
+                </li>
+                @endif
 
                 @if(auth()->user()->can('read-academic-degree') || auth()->user()->can('view-all-academic-degree'))
                 <li class="nav-item">

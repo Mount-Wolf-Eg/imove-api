@@ -37,6 +37,7 @@ use App\Http\Controllers\Auth\Passwords\ForgetPasswordController;
 use App\Http\Controllers\Dashboard\FeaturedListController;
 use App\Http\Controllers\Dashboard\GeneralSettingsController;
 use App\Http\Controllers\Dashboard\ReferralController;
+use App\Http\Controllers\Dashboard\HomeCareRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -124,7 +125,8 @@ Route::group([
         Route::resource('technical-support', TechnicalSupportController::class)->only(['index', 'show', 'destroy']);
         Route::resource('educational-contents', EducationalContentController::class);
         Route::put('educational-contents/{educationalContent}/change-activation', [EducationalContentController::class, 'changeActivation'])->name('educational-contents.active');
-
+        Route::resource('home-care-requests', HomeCareRequestController::class)->only(['index', 'show', 'destroy']);
+        Route::patch('home-care-requests/{homeCareRequest}/status', [HomeCareRequestController::class, 'updateStatus'])->name('home-care-requests.update-status');
 
         Route::prefix('profile')->group(function () {
             Route::get('/', [ProfileController::class, 'profile'])->name('profile');

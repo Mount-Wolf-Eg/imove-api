@@ -64,6 +64,7 @@ return [
     'permissions' => 'الأذونات',
     'joined' => 'انضم فى',
     'created' => 'أنشئت في',
+    'updated' => 'حدث في',
     'title' => 'العنوان',
     'author' => 'الكاتب',
     'publish_date' => 'تاريخ النشر',
@@ -616,10 +617,26 @@ return [
     'Like added successfully' => 'تم اضافة الاعجاب بنجاح',
     'Like removed successfully' => 'تم حذف الاعجاب',
     
-    'educational-contents'        => 'المحتوى التعليمى',
-    'manage_educational-contents' => 'اداره المحتوى التعليمى',
-    'educational-contents_details' => 'تفاصيل المحتوى التعليمى',
-    'add_educational-contents'    => 'اضافة المحتوى التعليمى',
-    'edit_educational-contents'   => 'تعديل المحتوى التعليمى',
+    'educational-contents'          => 'المحتوى التعليمى',
+    'manage_educational-contents'   => 'اداره المحتوى التعليمى',
+    'educational-contents_details'  => 'تفاصيل المحتوى التعليمى',
+    'add_educational-contents'      => 'اضافة المحتوى التعليمى',
+    'edit_educational-contents'     => 'تعديل المحتوى التعليمى',
+    'The request is being reviewed' => 'الطلب قيد المراجعة',
+    'visited'   => 'تمت الزيارة',
+    'Reject'    => 'رفض',
 
+    'home-care-requests' => 'طلبات الزيارة المنزلية',
+    'manage_home-care-requests'  => 'ادارة طلبات الزيارة المنزلية',
+    'home-care-requests_details' => 'تفاصيل طلب الزيارة المنزلية',
+    'confirm_reject' => 'هل أنت متأكد من رفض الطلب؟',
+    'confirm_visited' => 'هل أنت متأكد من تأكيد إتمام الزيارة؟',
+    'actions_messages' => [
+        'reject_success' => 'تم رفض الطلب بنجاح.',
+        'visited_success' => 'تم تأكيد إتمام الزيارة بنجاح.',
+        'update_success' => 'تم تحديث الطلب بنجاح.',
+        'delete_success' => 'تم حذف الطلب بنجاح.',
+    ],
+
+    
 ];

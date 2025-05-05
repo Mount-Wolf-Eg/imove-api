@@ -66,6 +66,7 @@ return [
     'permissions' => 'Permissions',
     'joined' => 'Joined',
     'created' => 'Created at',
+    'updated' => 'Updated at',
     'title' => 'Title',
     'author' => 'Author',
     'publish_date' => 'Publish Date',
@@ -621,13 +622,25 @@ return [
     'Like added successfully'   => 'Like added successfully',
     'Like removed successfully' => 'Like removed successfully',
     'educational-contents'=> 'Educational Contents',
-    'manage_educational-contents'=> 'Manage Educational Contents',
-    'educational-contents_details' => 'Educational Contents Details',
-    'add_educational-contents'=> 'Add Educational Contents',
-    'edit_educational-contents' => 'Edit Educational Contents',
+    'manage_educational-contents'   => 'Manage Educational Contents',
+    'educational-contents_details'  => 'Educational Contents Details',
+    'add_educational-contents'      => 'Add Educational Contents',
+    'edit_educational-contents'     => 'Edit Educational Contents',
+    'The request is being reviewed' => 'The Request Is Being Reviewed',
+    'visited'  => 'Visited',
+    'Reject'   => 'Reject',
+    'home-care-requests' => 'Home Care Requests',
+    'manage_home-care-requests'  => 'Manage Home Care Requests',
+    'home-care-requests_details' => 'Home Care Requests Details',
     
-
-    
+    'confirm_reject' => 'Confirm Reject ?',
+    'confirm_visited' => 'Confirm Visited ?',
+    'actions_messages' => [
+        'reject_success' => 'The request was successfully rejected.',
+        'visited_success' => 'The visit has been confirmed successfully.',
+        'update_success' => 'The request has been updated successfully.',
+        'delete_success' => 'The request has been successfully deleted.',
+    ],
 
 
 ];

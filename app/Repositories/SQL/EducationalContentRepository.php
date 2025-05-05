@@ -72,12 +72,13 @@ class EducationalContentRepository extends BaseRepository implements Educational
         }
     }
     
-    public function assignToConsultation(Consultation $consultation, array $contentIds, int $doctorId): bool
+    public function assignToConsultation(Consultation $consultation, array $contentIds, int $doctorId)
     {
         try {
-            if ($consultation->doctor_id !== $doctorId) {
-                return false;
-            }
+            // if ($consultation->doctor_id !== $doctorId) {
+            //     return false;
+            // }
+
             foreach ($contentIds as $contentId) {
                 $consultation->educationalContents()->syncWithoutDetaching([
                     $contentId => ['doctor_id' => $doctorId]
@@ -93,9 +94,9 @@ class EducationalContentRepository extends BaseRepository implements Educational
     public function removeFromConsultation(Consultation $consultation, array $contentIds, int $doctorId): bool
     {
         try {
-            if ($consultation->doctor_id !== $doctorId) {
-                return false;
-            }
+            // if ($consultation->doctor_id !== $doctorId) {
+            //     return false;
+            // }
             $consultation->educationalContents()->detach($contentIds);
             return true;
         } catch (\Exception $e) {
