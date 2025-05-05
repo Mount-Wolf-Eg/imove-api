@@ -158,7 +158,7 @@ class BaseApiController extends Controller
     protected function respondWithResource($resource, int $statusCode = null, array $headers = []): mixed
     {
         $statusCode = $statusCode ?? Response::HTTP_OK;
-        return $this->setStatusCode($statusCode)->respond($resource, $headers, ['message' => __('messages.success')]);
+        return $this->setStatusCode($statusCode)->respond($resource, $headers, ['message' => __('messages.create_success')]);
     }
 
 }
