@@ -639,4 +639,11 @@ return [
     ],
 
     
+    'unauthorized' => 'غير مصرح لك',
+    'session_active' => 'يوجد جلسة نشطة بالفعل، يرجى إكمالها أولاً',
+    'session_week_exceeded' => 'الأسبوع المحدد يتجاوز الحد الأقصى (:max أسابيع)',
+    'session_day_exceeded' => 'اليوم المحدد يتجاوز الحد الأقصى (:max أيام)',
+    'session_limit_exceeded' => 'تم الوصول إلى الحد الأقصى للجلسات اليومية (:max جلسات)',
+    'no_exercises_in_program' => 'البرنامج لا يحتوي على تمارين',
+    
 ];
