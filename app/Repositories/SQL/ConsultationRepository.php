@@ -167,7 +167,7 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
     {
         return DB::transaction(function () use ($consultation, $programData, $exercises, $relations) {
             // Create the program
-            $program = Program::create(array_merge($programData, ['consultation_id' => $consultation->id]));
+            $program = Program::create(array_merge($programData, ['consultation_id' => $consultation->id, 'patient_id'=> $consultation->patient_id]));
 
             // Create program exercises
             $syncData = [];
