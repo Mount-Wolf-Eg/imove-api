@@ -33,7 +33,7 @@ class Program extends Model
         return $this->belongsTo(Consultation::class, 'consultation_id');
     }
 
-    public function exercises(): BelongsToMany
+    public function exercises()
     {
         return $this->belongsToMany(Exercise::class, 'program_exercises');
     }
