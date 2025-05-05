@@ -26,7 +26,10 @@ class PatientSession extends Model
     public array $filterModels = [];
     public array $filterCustom = [];
     public array $translatable = [];
-    protected $with = ['program', 'consultation'];
+    protected $casts = [
+        'end_date' => 'datetime',
+    ];
+    protected $with = ['program', 'consultation', 'sessionExercises'];
 
     //---------------------relations-------------------------------------
     public function program(): BelongsTo

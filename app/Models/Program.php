@@ -48,6 +48,11 @@ class Program extends Model
     {
         return $this->hasMany(PatientSession::class);
     }
+    
+    public function patient()
+    {
+        return $this->belongsTo(Patient::class);
+    }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------

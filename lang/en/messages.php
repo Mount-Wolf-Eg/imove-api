@@ -642,5 +642,11 @@ return [
         'delete_success' => 'The request has been successfully deleted.',
     ],
 
+    'unauthorized' => 'You are not authorized',
+    'session_active' => 'There is already an active session, please complete it first',
+    'session_week_exceeded' => 'The specified week exceeds the maximum limit (:max weeks)',
+    'session_day_exceeded' => 'The specified day exceeds the maximum limit (:max days)',
+    'session_limit_exceeded' => 'The maximum number of daily sessions (:max sessions) has been reached',
+    'no_exercises_in_program' => 'The program contains no exercises',
 
 ];
