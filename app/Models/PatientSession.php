@@ -20,7 +20,6 @@ class PatientSession extends Model
     protected $table = "patient_sessions";
     protected $fillable = ['program_id', 'consultation_id', 'week', 'day',
                     'degree_of_pain', 'extent_of_improvement', 'comments', 'end_date'];
-    protected $fillable = [];
     protected array $filters = ['keyword'];
     protected array $searchable = [];
     protected array $dates = [];
