@@ -35,7 +35,11 @@ class Program extends Model
 
     public function exercises()
     {
-        return $this->belongsToMany(Exercise::class, 'program_exercises');
+        return $this->belongsToMany(Exercise::class, 'program_exercises')
+                    ->withPivot([
+                        'sets', 'break_between_sets','weight',
+                        'rep', 'hold_duration','comments',
+                    ]);
     }
     
     public function sessions(): HasMany
