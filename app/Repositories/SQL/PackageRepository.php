@@ -28,7 +28,7 @@ class PackageRepository extends BaseRepository implements PackageContract
             } else {
                 $file = resolve(FileContract::class)->create([
                     'file' => $attributes['image'],
-                    'type' => FileConstants::FILE_TYPE_PACKAGE_IMAGE
+                    'type' => FileConstants::FILE_TYPE_PACKAGE_IMAGE->value
                 ]);
             }
             $model->image()->save($file);
