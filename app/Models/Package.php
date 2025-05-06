@@ -60,7 +60,7 @@ class Package extends Model
         return $query->where('is_active', true);
     }
 
-    public function scopeOfDoctor($query, $doctorId)
+    public function scopeOfDoctorId($query, $doctorId)
     {
         return $query->where('user_id', $doctorId);
     }
