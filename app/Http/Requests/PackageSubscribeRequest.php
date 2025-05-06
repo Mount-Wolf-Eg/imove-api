@@ -73,6 +73,6 @@ class PackageSubscribeRequest extends FormRequest
         $validated['price']           = $package->price;
         $validated['num_of_sessions'] = $package->num_of_sessions;
         
-        return array_merge($validated, ConsultationRequest::afterValidation($validated));
+        return array_merge($validated, ConsultationRequest::validated($validated));
     }
 }
