@@ -103,6 +103,9 @@ class DoctorPackageController extends BaseApiController
     {
         try {
             $setting_package = $this->contract->getSettingPackage();
+            if (!$setting_package) {
+                return $this->respondWithError(__('messages.not_found'));
+            }
             return $this->respondWithModel($setting_package);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
