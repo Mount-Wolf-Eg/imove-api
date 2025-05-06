@@ -61,16 +61,17 @@ class PackageSubscribeRequest extends FormRequest
 
     public function validated($key = null, $default = null)
     {
+        $package                      = Package::findOrFail($this->route('package'));
         $validated                    = parent::validated($key, $default);
         $validated['patient_id']      = auth()->id();
 
-        $validated['doctor_id']       = $this->route('package')->user_id;
-        $validated['package_id']      = $this->route('package')->id;
+        $validated['doctor_id']       = $package->user_id;
+        $validated['package_id']      = $package->id;
         $validated['is_active']       = true;
         $validated['start_date']      = now();
-        $validated['end_date']        = now()->addDays($this->route('package')->duration);
-        $validated['price']           = $this->route('package')->price;
-        $validated['num_of_sessions'] = $this->route('package')->num_of_sessions;
+        $validated['end_date']        = now()->addDays($package->duration);
+        $validated['price']           = $package->price;
+        $validated['num_of_sessions'] = $package->num_of_sessions;
         
         return array_merge($validated, ConsultationRequest::afterValidation($validated));
     }
