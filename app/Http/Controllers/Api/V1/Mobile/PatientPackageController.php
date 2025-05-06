@@ -42,8 +42,8 @@ class PatientPackageController extends BaseApiController
     public function subscribe(PackageSubscribeRequest $request): JsonResponse
     {
         try {
-            $this->subscriptionContract->create($request->validated());
-            return $this->respondWithSuccess('Subscribed successfully');
+            $subscription = $this->subscriptionContract->create($request->validated());
+            return $this->respondWithSuccess('Subscribed successfully', ['subscription' => $subscription]);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }

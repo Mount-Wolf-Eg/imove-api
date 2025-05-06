@@ -98,4 +98,14 @@ class DoctorPackageController extends BaseApiController
             return $this->respondWithError($e->getMessage());
         }
     }
+
+    public function settingPackage()
+    {
+        try {
+            $setting_package = $this->contract->getSettingPackage();
+            return $this->respondWithModel($setting_package);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage());
+        }
+    }
 }

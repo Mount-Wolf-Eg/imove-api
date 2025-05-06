@@ -4,8 +4,10 @@ namespace App\Repositories\SQL;
 
 use App\Constants\FileConstants;
 use App\Models\Package;
+use App\Models\SettingPackage;
 use App\Repositories\Contracts\FileContract;
 use App\Repositories\Contracts\PackageContract;
+use App\Repositories\Contracts\SettingPackageContract;
 
 class PackageRepository extends BaseRepository implements PackageContract
 {
@@ -34,6 +36,11 @@ class PackageRepository extends BaseRepository implements PackageContract
             $model->image()->save($file);
         }
         return $model;
+    }
+
+    public function getSettingPackage()
+    {
+        return resolve(SettingPackageContract::class)->first();
     }
 
     public function subscribe($package)
