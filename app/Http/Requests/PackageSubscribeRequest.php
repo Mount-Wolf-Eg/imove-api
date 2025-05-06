@@ -27,7 +27,7 @@ class PackageSubscribeRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'package_id'   => 'required|exists:packages,id',
+            // 'package_id'   => 'required|exists:packages,id',
             'coupon_code'  => ['nullable', 'exists:coupons,code', new ValidCouponRule()],
             'payment_type' => [
                 'required',
