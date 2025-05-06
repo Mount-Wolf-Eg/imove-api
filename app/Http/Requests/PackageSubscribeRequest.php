@@ -80,7 +80,7 @@ class PackageSubscribeRequest extends FormRequest
             'is_active'       => true,
             'start_date'      => now(),
             'end_date'        => now()->addDays($package->duration),
-            'price'           => $package->price,
+            'amount'          => $package->price,
             'num_of_sessions' => $package->num_of_sessions,
         ]);
     }
