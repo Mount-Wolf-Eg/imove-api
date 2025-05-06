@@ -38,6 +38,8 @@ use App\Http\Controllers\Dashboard\FeaturedListController;
 use App\Http\Controllers\Dashboard\GeneralSettingsController;
 use App\Http\Controllers\Dashboard\ReferralController;
 use App\Http\Controllers\Dashboard\HomeCareRequestController;
+use App\Http\Controllers\Dashboard\PackageController;
+use App\Http\Controllers\Dashboard\SettingPackageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,5 +141,10 @@ Route::group([
 
         Route::get('/settings', [GeneralSettingsController::class, 'edit'])->name('settings.edit');
         Route::post('/settings', [GeneralSettingsController::class, 'update'])->name('settings.update');
+
+        Route::resource('setting-packages', SettingPackageController::class);
+
+        Route::resource('packages', PackageController::class);
+        Route::put('packages/{package}/change-activation', [PackageController::class, 'changeActivation'])->name('packages.active');
     });
 });

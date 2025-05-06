@@ -7,10 +7,10 @@ use App\Models\Package;
 use App\Repositories\Contracts\FileContract;
 use App\Repositories\Contracts\PackageContract;
 
-class PackageRepository extends BaseRepository implements PackageContract
+class SettingPackageRepository extends BaseRepository implements PackageContract
 {
     /**
-     * PackageRepository constructor.
+     * SettingPackageRepository constructor.
      * @param Package $model
      */
     public function __construct(Package $model)
