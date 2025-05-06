@@ -2,12 +2,15 @@
 
 namespace App\Repositories\SQL;
 
-use App\Models\{Program, PatientSession, PatientSessionExercise};
+use App\Models\Program;
+use App\Models\{PatientSession, PatientSessionExercise};
 use App\Repositories\Contracts\ProgramContract;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+// use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
 
 class ProgramRepository extends BaseRepository implements ProgramContract
 {
@@ -32,45 +35,18 @@ class ProgramRepository extends BaseRepository implements ProgramContract
     public function searchPatient(array $filters = [], array $relations = [], array $data = []): LengthAwarePaginator
     {
         $query = $this->model::query();
-
-        // Apply relations
-        if (!empty($relations)) {
-            $query->with($relations);
-        }
-
-        // Apply filters
-        $this->applyFilters($query, $filters);
-
-        // Apply ordering
-        if (!empty($data['order'])) {
-            foreach ((array) $data['order'] as $column => $direction) {
-                $query->orderBy($column, $direction);
-            }
+     
+        if (!empty($filters['patient_id'])) {
+            $query->where('patient_id', $filters['patient_id']);
         }
 
         // Apply pagination
         $limit = $data['limit'] ?? 10;
         $page = $data['page'] ?? 1;
 
-        return $query->paginate($limit, ['*'], 'page', $page);
+        return $query->with($relations)->paginate($limit, ['*'], 'page', $page);
     }
 
-    /**
-     * Apply filters to the query.
-     *
-     * @param Builder $query
-     * @param array $filters
-     * @return Builder
-     */
-    protected function applyFilters(Builder $query, array $filters): Builder
-    {
-        // Filter by patient_id
-        if (!empty($filters['patient_id'])) {
-            $query->where('patient_id', $filters['patient_id']);
-        }
-
-        return $query;
-    }
 
 
     /**
@@ -109,7 +85,6 @@ class ProgramRepository extends BaseRepository implements ProgramContract
                 ->where('day', $data['day'])
                 ->count();
 
-            $sessionsToday += 5;
             if ($sessionsToday >= ($program->num_of_sessions_per_day + 5)) {
                 throw new \Exception(__('messages.session_limit_exceeded', ['max' => ($program->num_of_sessions_per_day + 5)]), 422);
             }
@@ -141,5 +116,6 @@ class ProgramRepository extends BaseRepository implements ProgramContract
             return $session;
         });
     }
+
 
 }    
