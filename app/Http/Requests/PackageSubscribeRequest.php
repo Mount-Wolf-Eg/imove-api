@@ -36,7 +36,7 @@ class PackageSubscribeRequest extends FormRequest
             ],
         ];
 
-        return array_merge($rules, (new DoctorScheduleRequest())->rules());
+        return array_merge($rules, (new ConsultationRequest())->rules());
     }
 
     public function prepareForValidation(): void
@@ -72,6 +72,6 @@ class PackageSubscribeRequest extends FormRequest
         $validated['price']           = $this->route('package')->price;
         $validated['num_of_sessions'] = $this->route('package')->num_of_sessions;
         
-        return array_merge($validated, DoctorScheduleRequest::afterValidation($validated));
+        return array_merge($validated, ConsultationRequest::afterValidation($validated));
     }
 }
