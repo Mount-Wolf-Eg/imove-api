@@ -46,6 +46,7 @@ class PatientPackageController extends BaseApiController
             $subscription = $this->subscriptionContract->create($request->validated());
             return $this->respondWithSuccess('Subscribed successfully', ['subscription' => $subscription]);
         } catch (Exception $e) {
+            info($e);
             return $this->respondWithError($e->getMessage());
         }
     }
