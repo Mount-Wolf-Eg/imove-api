@@ -18,7 +18,7 @@ class DoctorPackageController extends BaseApiController
      */
     public function __construct(PackageContract $contract)
     {
-        $this->relations = ['user'];
+        $this->relations = ['user', 'image'];
         $this->defaultScopes = ['owner'];
         parent::__construct($contract, DoctorPackageResource::class);
     }
