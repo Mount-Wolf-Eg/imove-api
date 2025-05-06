@@ -107,7 +107,7 @@ class DoctorPackageController extends BaseApiController
             if (!$setting_package) {
                 return $this->respondWithError(__('messages.not_found'), 422);
             }
-            return $this->respondWithArray($setting_package);
+            return $this->respondWithArray(['data' => $setting_package, 'status' => 200]);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
