@@ -8,6 +8,7 @@ use App\Repositories\Contracts\CouponContract;
 use App\Rules\ValidCouponRule;
 use App\Services\Repositories\PaymentCalculator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Validator;
 
 class PackageSubscribeRequest extends FormRequest
 {
@@ -61,18 +62,26 @@ class PackageSubscribeRequest extends FormRequest
 
     public function validated($key = null, $default = null)
     {
-        $package                      = Package::findOrFail($this->route('package'));
-        $validated                    = parent::validated($key, $default);
-        $validated['patient_id']      = auth()->id();
+        $package = Package::findOrFail($this->route('package'));
 
-        $validated['doctor_id']       = $package->user_id;
-        $validated['package_id']      = $package->id;
-        $validated['is_active']       = true;
-        $validated['start_date']      = now();
-        $validated['end_date']        = now()->addDays($package->duration);
-        $validated['price']           = $package->price;
-        $validated['num_of_sessions'] = $package->num_of_sessions;
-        
-        return array_merge($validated, ConsultationRequest::validated($validated));
+        $validated = parent::validated($key, $default);
+
+        // Manual validation using ConsultationRequest rules
+        $consultationRules = (new ConsultationRequest())->rules();
+
+        $consultationValidator = Validator::make($this->all(), $consultationRules);
+
+        $consultationValidated = $consultationValidator->validated();
+
+        return array_merge($validated, $consultationValidated, [
+            'patient_id'      => auth()->id(),
+            'doctor_id'       => $package->user_id,
+            'package_id'      => $package->id,
+            'is_active'       => true,
+            'start_date'      => now(),
+            'end_date'        => now()->addDays($package->duration),
+            'price'           => $package->price,
+            'num_of_sessions' => $package->num_of_sessions,
+        ]);
     }
 }
