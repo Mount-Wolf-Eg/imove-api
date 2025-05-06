@@ -24,7 +24,7 @@ class Package extends Model
 
     public function image(): MorphOne
     {
-        return $this->morphOne(File::class, 'fileable')->where('type', FileConstants::FILE_TYPE_PACKAGE_IMAGE)->latest();
+        return $this->morphOne(File::class, 'fileable')->where('type', FileConstants::FILE_TYPE_PACKAGE_IMAGE);
     }
 
     //---------------------relations-------------------------------------
