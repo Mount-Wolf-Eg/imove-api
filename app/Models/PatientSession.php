@@ -10,6 +10,8 @@ use Spatie\Translatable\HasTranslations;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 
@@ -40,10 +42,23 @@ class PatientSession extends Model
     {
         return $this->belongsTo(Consultation::class, 'consultation_id');
     }
-    public function sessionExercises(): HasMany
+    // public function sessionExercises(): HasMany
+    // {
+    //     return $this->hasMany(PatientSessionExercise::class, 'session_id');
+    // }
+
+    public function sessionExercises(): BelongsToMany
     {
-        return $this->hasMany(PatientSessionExercise::class, 'session_id');
+        return $this->belongsToMany(Exercise::class, 'patient_session_exercises', 'session_id', 'exercise_id')
+                    ->withPivot([
+                        'id', 'program_id', 'sets', 'break_between_sets', 'weight',
+                        'rep', 'hold_duration', 'comments', 'ease_of_exercise', 'reason_for_overtaking',
+                     'complete_sets', 'patient_total_sets', 'patient_total_reps', 'patient_exercise_repetitions',
+                     'updated_at', 'created_at',
+                    ]);
     }
+    
+
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------

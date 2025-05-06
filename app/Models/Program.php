@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class Program extends Model
@@ -27,7 +28,7 @@ class Program extends Model
     public array $filterModels = [];
     public array $filterCustom = [];
     public array $translatable = [];
-    public $with = ['consultation', 'exercises', 'sessions'];
+    public $with = ['consultation', 'exercises'];
 
     //---------------------relations-------------------------------------
     public function consultation(): BelongsTo
@@ -35,7 +36,7 @@ class Program extends Model
         return $this->belongsTo(Consultation::class, 'consultation_id');
     }
 
-    public function exercises()
+    public function exercises(): BelongsToMany
     {
         return $this->belongsToMany(Exercise::class, 'program_exercises')
                     ->withPivot([
@@ -44,14 +45,14 @@ class Program extends Model
                     ]);
     }
     
-    public function sessions(): HasMany
+    public function patientSessions()
     {
-        return $this->hasMany(PatientSession::class);
+        return $this->hasMany(PatientSession::class,'program_id');
     }
     
     public function patient()
     {
-        return $this->belongsTo(Patient::class);
+        return $this->belongsTo(Patient::class,'patient_id');
     }
     //---------------------relations-------------------------------------
 
