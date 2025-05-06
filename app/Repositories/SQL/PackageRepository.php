@@ -4,7 +4,6 @@ namespace App\Repositories\SQL;
 
 use App\Constants\FileConstants;
 use App\Models\Package;
-use App\Models\SettingPackage;
 use App\Repositories\Contracts\FileContract;
 use App\Repositories\Contracts\PackageContract;
 use App\Repositories\Contracts\SettingPackageContract;
