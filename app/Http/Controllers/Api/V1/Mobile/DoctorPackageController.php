@@ -99,7 +99,7 @@ class DoctorPackageController extends BaseApiController
         }
     }
 
-    public function settingPackage()
+    public function getSettingPackage()
     {
         try {
             $setting_package = $this->contract->getSettingPackage();
