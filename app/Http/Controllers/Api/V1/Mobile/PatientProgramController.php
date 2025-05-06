@@ -4,16 +4,20 @@ namespace App\Http\Controllers\Api\V1\Mobile;
 
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Requests\CreateSessionRequest;
-use App\Http\Resources\{ProgramResource, ProgramListResource, SessionResource};
+use App\Http\Resources\ProgramResource;
+use App\Http\Resources\ProgramDetailsResource;
+use App\Http\Resources\ProgramListResource;
+use App\Http\Resources\SessionResource;
 use App\Repositories\Contracts\ProgramContract;
 use App\Models\Program;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
 
 class PatientProgramController extends BaseApiController
 {
-    protected array $relations = ['consultation', 'exercises', 'sessions'];
+    protected array $relations = ['consultation', 'exercises', 'patientSessions'];
 
     /**
      * PatientProgramController constructor.
@@ -29,7 +33,7 @@ class PatientProgramController extends BaseApiController
     {
         try {
             $filters = [
-                'patient_id' => auth()->user()->patient->id ?? 0,
+                'patient_id' => auth()->user()->patient->id,
             ];
 
             $programs = $this->contract->searchPatient($filters, $this->relations);
@@ -45,8 +49,8 @@ class PatientProgramController extends BaseApiController
             if ($program->patient_id !== auth()->user()->patient->id) {
                 return $this->respondWithError(__('messages.unauthorized'), 403);
             }
-
-            return $this->respondWithResource(new ProgramResource($program));
+            // return auth()->user()->patient;
+            return $this->respondWithResource(new ProgramDetailsResource($program));
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
         }
@@ -73,8 +77,10 @@ class PatientProgramController extends BaseApiController
             
             return $this->respondWithResource(new SessionResource($session), 201);
         } catch (Exception $e) {
-            return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
+            $statusCode = (int) $e->getCode();
+            $statusCode = in_array($statusCode, [200, 201, 400, 401, 403, 404, 422, 500]) ? $statusCode : 422;
+            return $this->respondWithError($e->getMessage(), $statusCode);
         }
     }
-    
+
 }
