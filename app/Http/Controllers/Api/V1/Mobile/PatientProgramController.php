@@ -9,7 +9,7 @@ use App\Http\Resources\ProgramDetailsResource;
 use App\Http\Resources\ProgramListResource;
 use App\Http\Resources\SessionResource;
 use App\Repositories\Contracts\ProgramContract;
-use App\Models\Program;
+use App\Models\{Program, PatientSession};
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -82,5 +82,6 @@ class PatientProgramController extends BaseApiController
             return $this->respondWithError($e->getMessage(), $statusCode);
         }
     }
+
 
 }
