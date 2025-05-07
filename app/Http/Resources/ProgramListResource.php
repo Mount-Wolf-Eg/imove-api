@@ -32,8 +32,8 @@ class ProgramListResource extends BaseResource
         ];
         $this->full = [];
         $this->relations = [
-            'doctor_medical_specialities' => $this->relationLoaded('consultation.doctor.medicalSpecialities') ? MedicalSpecialityResource::collection($this->consultation->doctor->medicalSpecialities) : [],
-            'doctor_avatar' => $this->relationLoaded('consultation.doctor.user.avatar') ? new FileResource($this->consultation->doctor->user->avatar) : null,
+            'doctor_medical_specialities' => $this->whenLoaded('consultation.doctor.medicalSpecialities') ? MedicalSpecialityResource::collection($this->consultation->doctor->medicalSpecialities) : [],
+            'doctor_avatar' => $this->whenLoaded('consultation.doctor.user.avatar') ? new FileResource($this->consultation->doctor->user->avatar) : null,
             // 'consultation' => $this->whenLoaded('consultation', fn () => [
             //     'id' => $this->consultation->id,
             //     'patient_id' => $this->consultation->patient_id,
