@@ -150,6 +150,7 @@ Route::group(['middleware' => 'locale'], static function () {
                 Route::post('/{program}/create/session', 'createSession');
                 Route::put('/session-exercises/{exerciseId}/progress', 'updateExerciseProgress');
                 Route::put('/session-exercises/{exerciseId}/reason', 'updateReasonForOvertaking');
+                Route::put('/session/{sessionId}/end', 'endSession');
             });
 
             Route::apiResource('packages', PatientPackageController::class)->only('index', 'show');

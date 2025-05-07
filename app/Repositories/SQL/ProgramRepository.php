@@ -11,6 +11,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
+use Carbon\Carbon;
 
 
 class ProgramRepository extends BaseRepository implements ProgramContract
@@ -47,7 +48,6 @@ class ProgramRepository extends BaseRepository implements ProgramContract
 
         return $query->with($relations)->paginate($limit, ['*'], 'page', $page);
     }
-
 
 
     /**
@@ -169,16 +169,42 @@ class ProgramRepository extends BaseRepository implements ProgramContract
     {
         return DB::transaction(function () use ($exerciseId, $reason) {
             $exercise = PatientSessionExercise::where('id', $exerciseId)->firstOrFail();
-                // ->whereHas('program', function ($query) {
-                //     $query->where('patient_id', auth()->user()->patient->id);
-                // })
-                // ->firstOrFail();
 
             $exercise->update([
                 'reason_for_overtaking' => $reason,
             ]);
 
             return $exercise->refresh();
+        });
+    }
+
+    
+    /**
+     * Update/end session details for a specific PatientSession.
+     *
+     * @param int $sessionId
+     * @param array $data
+     * @return PatientSession
+     * @throws \Exception
+     */
+    public function updateSession(int $sessionId, array $data): PatientSession
+    {
+        return DB::transaction(function () use ($sessionId, $data) {
+            $session = PatientSession::where('id', $sessionId)->firstOrFail();
+                // ->whereHas('program', function ($query) {
+                //     $query->where('patient_id', auth()->user()->patient->id);
+                // })
+                // ->firstOrFail();
+
+            // Update the session
+            $session->update([
+                'degree_of_pain' => $data['degree_of_pain'],
+                'extent_of_improvement' => $data['extent_of_improvement'],
+                'comments' => $data['comments'],
+                'end_date' => Carbon::now(),
+            ]);
+
+            return $session->refresh();
         });
     }
 
