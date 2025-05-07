@@ -44,7 +44,6 @@ class ProgramResource extends BaseResource
                 });
             }),
             'patient_sessions' => $this->patientSessions  ? new ProgramSessionsResource($this->patientSessions) : null,
-            // 'patient_sessions' => $this->whenLoaded('patientSessions', fn () => new ProgramSessionsResource($this->patientSessions)),
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
         ];
         $this->full = [];
