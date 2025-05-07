@@ -201,7 +201,7 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
 
             // Load requested relations
             if (!empty($relations)) {
-                $program->load(array_intersect($relations, ['consultation', 'exercises', 'sessions']));
+                $program->load(array_intersect($relations, ['consultation', 'exercises', 'patientSessions']));
             }
 
             return $program;

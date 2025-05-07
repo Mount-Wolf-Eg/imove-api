@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Database\Eloquent\Collection;
 
+
 class ProgramRepository extends BaseRepository implements ProgramContract
 {
     /**
@@ -118,4 +119,67 @@ class ProgramRepository extends BaseRepository implements ProgramContract
     }
 
 
-}    
+    /**
+     * Update exercise in session in progres for a specific PatientSessionExercise.
+     *
+     * @param int $exerciseId
+     * @param array $data
+     * @return PatientSessionExercise
+     * @throws \Exception
+     */
+    public function updateExerciseProgress(int $exerciseId, array $data): PatientSessionExercise
+    {
+        return DB::transaction(function () use ($exerciseId, $data) {
+            $exercise = PatientSessionExercise::where('id', $exerciseId)->firstOrFail();
+                // ->whereHas('program', function ($query) {
+                //     $query->where('patient_id', auth()->user()->patient->id);
+                // })
+                // ->firstOrFail();
+
+            // Calculate patient_total_sets and patient_total_reps
+            $patientTotalSets = count($data['patient_exercise_repetitions']);
+            $patientTotalReps = array_sum(array_column($data['patient_exercise_repetitions'], 'rep_number'));
+
+            // Determine if complete_sets should be true
+            $completeSets = $patientTotalSets >= $exercise->sets;
+
+            // Update the exercise
+            $exercise->update([
+                'ease_of_exercise' => $data['ease_of_exercise'],
+                'patient_exercise_repetitions' => $data['patient_exercise_repetitions'],
+                'patient_total_sets' => $patientTotalSets,
+                'patient_total_reps' => $patientTotalReps,
+                'complete_sets' => $completeSets,
+            ]);
+
+            return $exercise->refresh();
+        });
+    }
+
+    
+    /**
+     * Update/add exercise reason for overtaking for a specific PatientSessionExercise.
+     *
+     * @param int $exerciseId
+     * @param string $reason
+     * @return PatientSessionExercise
+     * @throws \Exception
+     */
+    public function updateReasonForOvertaking(int $exerciseId, string $reason): PatientSessionExercise
+    {
+        return DB::transaction(function () use ($exerciseId, $reason) {
+            $exercise = PatientSessionExercise::where('id', $exerciseId)->firstOrFail();
+                // ->whereHas('program', function ($query) {
+                //     $query->where('patient_id', auth()->user()->patient->id);
+                // })
+                // ->firstOrFail();
+
+            $exercise->update([
+                'reason_for_overtaking' => $reason,
+            ]);
+
+            return $exercise->refresh();
+        });
+    }
+
+}

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api\V1\Mobile;
 
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Requests\CreateSessionRequest;
+use App\Http\Requests\UpdateExerciseProgressRequest;
+use App\Http\Requests\UpdateReasonForOvertakingRequest;
 use App\Http\Resources\ProgramResource;
 use App\Http\Resources\ProgramDetailsResource;
 use App\Http\Resources\ProgramListResource;
@@ -76,6 +78,47 @@ class PatientProgramController extends BaseApiController
             $session->load(array_intersect($relations));
             
             return $this->respondWithResource(new SessionResource($session), 201);
+        } catch (Exception $e) {
+            $statusCode = (int) $e->getCode();
+            $statusCode = in_array($statusCode, [200, 201, 400, 401, 403, 404, 422, 500]) ? $statusCode : 422;
+            return $this->respondWithError($e->getMessage(), $statusCode);
+        }
+    }
+
+
+    /**
+     * Update exercise progress for a specific PatientSessionExercise.
+     *
+     * @param UpdateExerciseProgressRequest $request
+     * @param int $exerciseId
+     * @return JsonResponse
+     */
+    public function updateExerciseProgress(UpdateExerciseProgressRequest $request, int $exerciseId): JsonResponse
+    {
+        try {
+            $exercise = $this->contract->updateExerciseProgress($exerciseId, $request->validated());
+            $exercise->load(['program', 'session', 'exercise.media']);
+            return $this->respondWithResource(new SessionResource($exercise->session));
+        } catch (Exception $e) {
+            $statusCode = (int) $e->getCode();
+            $statusCode = in_array($statusCode, [200, 201, 400, 401, 403, 404, 422, 500]) ? $statusCode : 422;
+            return $this->respondWithError($e->getMessage(), $statusCode);
+        }
+    }
+
+    /**
+     * Update/add Exercise reason for overtaking for a specific PatientSessionExercise.
+     *
+     * @param UpdateReasonForOvertakingRequest $request
+     * @param int $exerciseId
+     * @return JsonResponse
+     */
+    public function updateReasonForOvertaking(UpdateReasonForOvertakingRequest $request, int $exerciseId): JsonResponse
+    {
+        try {
+            $exercise = $this->contract->updateReasonForOvertaking($exerciseId, $request->validated()['reason_for_overtaking']);
+            $exercise->load(['program', 'session', 'exercise.media']);
+            return $this->respondWithResource(new SessionResource($exercise->session));
         } catch (Exception $e) {
             $statusCode = (int) $e->getCode();
             $statusCode = in_array($statusCode, [200, 201, 400, 401, 403, 404, 422, 500]) ? $statusCode : 422;
