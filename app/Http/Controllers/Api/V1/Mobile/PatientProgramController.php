@@ -19,7 +19,7 @@ use Illuminate\Http\JsonResponse;
 
 class PatientProgramController extends BaseApiController
 {
-    protected array $relations = ['consultation', 'exercises', 'patientSessions'];
+    protected array $relations = ['consultation.doctor.medicalSpecialities', 'exercises', 'patientSessions'];
 
     /**
      * PatientProgramController constructor.
