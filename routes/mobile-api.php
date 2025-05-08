@@ -146,9 +146,11 @@ Route::group(['middleware' => 'locale'], static function () {
             // programs
             Route::controller(PatientProgramController::class)->prefix('programs')->group(function () {
                 Route::get('/', 'AllProgramsPatient');
-                // Route::get('/show', 'show');
                 Route::get('/{program}/show', 'show');
                 Route::post('/{program}/create/session', 'createSession');
+                Route::put('/session-exercises/{exerciseId}/progress', 'updateExerciseProgress');
+                Route::put('/session-exercises/{exerciseId}/reason', 'updateReasonForOvertaking');
+                Route::put('/session/{sessionId}/end', 'endSession');
             });
 
             Route::apiResource('packages', PatientPackageController::class)->only('index', 'show');

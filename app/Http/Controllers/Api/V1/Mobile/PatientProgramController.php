@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Api\V1\Mobile;
 
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Requests\CreateSessionRequest;
+use App\Http\Requests\UpdateExerciseProgressRequest;
+use App\Http\Requests\UpdateReasonForOvertakingRequest;
+use App\Http\Requests\UpdateSessionRequest;
 use App\Http\Resources\ProgramResource;
 use App\Http\Resources\ProgramDetailsResource;
 use App\Http\Resources\ProgramListResource;
 use App\Http\Resources\SessionResource;
 use App\Repositories\Contracts\ProgramContract;
-use App\Models\Program;
+use App\Models\{Program, PatientSession};
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -17,7 +20,7 @@ use Illuminate\Http\JsonResponse;
 
 class PatientProgramController extends BaseApiController
 {
-    protected array $relations = ['consultation', 'exercises', 'patientSessions'];
+    protected array $relations = ['consultation.doctor.medicalSpecialities', 'exercises', 'patientSessions'];
 
     /**
      * PatientProgramController constructor.
@@ -82,5 +85,69 @@ class PatientProgramController extends BaseApiController
             return $this->respondWithError($e->getMessage(), $statusCode);
         }
     }
+
+
+    /**
+     * Update exercise progress for a specific PatientSessionExercise.
+     *
+     * @param UpdateExerciseProgressRequest $request
+     * @param int $exerciseId
+     * @return JsonResponse
+     */
+    public function updateExerciseProgress(UpdateExerciseProgressRequest $request, int $exerciseId): JsonResponse
+    {
+        try {
+            $exercise = $this->contract->updateExerciseProgress($exerciseId, $request->validated());
+            $exercise->load(['program', 'session', 'exercise.media']);
+            return $this->respondWithResource(new SessionResource($exercise->session));
+        } catch (Exception $e) {
+            $statusCode = (int) $e->getCode();
+            $statusCode = in_array($statusCode, [200, 201, 400, 401, 403, 404, 422, 500]) ? $statusCode : 422;
+            return $this->respondWithError($e->getMessage(), $statusCode);
+        }
+    }
+
+    /**
+     * Update/add Exercise reason for overtaking for a specific PatientSessionExercise.
+     *
+     * @param UpdateReasonForOvertakingRequest $request
+     * @param int $exerciseId
+     * @return JsonResponse
+     */
+    public function updateReasonForOvertaking(UpdateReasonForOvertakingRequest $request, int $exerciseId): JsonResponse
+    {
+        try {
+            $exercise = $this->contract->updateReasonForOvertaking($exerciseId, $request->validated()['reason_for_overtaking']);
+            $exercise->load(['program', 'session', 'exercise.media']);
+            return $this->respondWithResource(new SessionResource($exercise->session));
+        } catch (Exception $e) {
+            $statusCode = (int) $e->getCode();
+            $statusCode = in_array($statusCode, [200, 201, 400, 401, 403, 404, 422, 500]) ? $statusCode : 422;
+            return $this->respondWithError($e->getMessage(), $statusCode);
+        }
+    }
+
+
+    /**
+     * Update session details for a specific PatientSession.
+     *
+     * @param UpdateSessionRequest $request
+     * @param int $sessionId
+     * @return JsonResponse
+     */
+    public function endSession(UpdateSessionRequest $request, int $sessionId): JsonResponse
+    {
+        try {
+            $session = $this->contract->updateSession($sessionId, $request->validated());
+            $program = $session->program;
+            $program->load(['consultation', 'exercises', 'patientSessions']);
+            return $this->respondWithResource(new ProgramDetailsResource($program));
+        } catch (Exception $e) {
+            $statusCode = (int) $e->getCode();
+            $statusCode = in_array($statusCode, [200, 201, 400, 401, 403, 404, 422, 500]) ? $statusCode : 422;
+            return $this->respondWithError($e->getMessage(), $statusCode);
+        }
+    }
+
 
 }

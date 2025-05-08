@@ -42,10 +42,7 @@ class PatientSession extends Model
     {
         return $this->belongsTo(Consultation::class, 'consultation_id');
     }
-    // public function sessionExercises(): HasMany
-    // {
-    //     return $this->hasMany(PatientSessionExercise::class, 'session_id');
-    // }
+
 
     public function sessionExercises(): BelongsToMany
     {
