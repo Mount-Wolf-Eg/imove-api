@@ -47,6 +47,7 @@ class PatientPackageController extends BaseApiController
         try {
             $subscription = $this->subscriptionContract->create($request->validated());
             resolve(ConsultationContract::class)->create($request->validated(), [
+                'doctor_id' => $subscription->package->user?->doctor?->id,
                 'package_id' => $subscription->package_id,
                 'subscription_id' => $subscription->id,
             ]);
