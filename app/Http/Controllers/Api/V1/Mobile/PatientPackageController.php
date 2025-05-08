@@ -12,6 +12,7 @@ use App\Repositories\Contracts\PackageContract;
 use App\Repositories\Contracts\SubscriptionContract;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 
 class PatientPackageController extends BaseApiController
 {
@@ -46,7 +47,7 @@ class PatientPackageController extends BaseApiController
     {
         try {
             $package      = Package::findOrFail(request('package'));
-            $subscription = $this->subscriptionContract->create($request->validated() + ['doctor_id' => $package->user_id]);
+            $subscription = $this->subscriptionContract->create(Arr::except($request->validated(), ['doctor_id']) + ['doctor_id' => $package->user_id]);
             resolve(ConsultationContract::class)->create($request->validated(), [
                 'package_id' => $subscription->package_id,
                 'subscription_id' => $subscription->id,
