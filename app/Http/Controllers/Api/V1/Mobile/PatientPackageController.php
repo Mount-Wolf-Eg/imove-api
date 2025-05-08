@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Api\V1\Mobile;
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Requests\PackageSubscribeRequest;
 use App\Http\Resources\DoctorPackageResource;
+use App\Models\Consultation;
 use App\Models\Package;
+use App\Repositories\Contracts\ConsultationContract;
 use App\Repositories\Contracts\PackageContract;
 use App\Repositories\Contracts\SubscriptionContract;
 use Exception;
@@ -44,6 +46,10 @@ class PatientPackageController extends BaseApiController
     {
         try {
             $subscription = $this->subscriptionContract->create($request->validated());
+            resolve(ConsultationContract::class)->create($request->validated(), [
+                'package_id' => $subscription->package_id,
+                'subscription_id' => $subscription->id,
+            ]);
             return $this->respondWithSuccess('Subscribed successfully', ['subscription' => $subscription, 'consultations' => $subscription->package?->consultations]);
         } catch (Exception $e) {
             info($e);
