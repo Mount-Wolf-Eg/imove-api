@@ -75,7 +75,8 @@ class PackageSubscribeRequest extends FormRequest
 
         return array_merge($validated, $consultationValidated, [
             'patient_id'      => auth()->id(),
-            'doctor_id'       => $package->user_id,
+            'doctor_id'       => $package->user->doctor->id,
+            'user_id'         => $package->user->id,
             'package_id'      => $package->id,
             'is_active'       => true,
             'start_date'      => now(),

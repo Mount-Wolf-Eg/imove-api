@@ -45,9 +45,9 @@ class PatientPackageController extends BaseApiController
     public function subscribe(PackageSubscribeRequest $request): JsonResponse
     {
         try {
-            $subscription = $this->subscriptionContract->create($request->validated());
+            $subscription = $this->subscriptionContract->create($request->validated() + ['doctor_id' => $request->validated(['user_id'])]);
             resolve(ConsultationContract::class)->create($request->validated(), [
-                'doctor_id' => $subscription->package->user?->doctor?->id,
+                'doctor_id' => $request->validated(['doctor_id']),
                 'package_id' => $subscription->package_id,
                 'subscription_id' => $subscription->id,
             ]);
