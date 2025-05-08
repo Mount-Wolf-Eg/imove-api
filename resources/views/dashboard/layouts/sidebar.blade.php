@@ -255,6 +255,16 @@
                     </a>
                 </li>
                 @endif
+
+                @if(auth()->user()->can('read-package') || auth()->user()->can('view-all-package'))
+                <li class="nav-item">
+                    <a href="{{route('packages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('packages.index', 'packages.show', 'packages.create', 'packages.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.packages') }}</span>
+                    </a>
+                </li>
+                @endif
+
                 @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
                 <li class="nav-item">
                     <a href="{{route('static-pages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('static-pages.index', 'static-pages.show', 'static-pages.create', 'static-pages.edit')])>

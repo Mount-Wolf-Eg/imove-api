@@ -21,7 +21,7 @@ class PatientPackageController extends BaseApiController
         $this->subscriptionContract = $subscriptionContract;
 
         $this->defaultScopes        = ['active' => true];
-        $this->relations            = ['image', 'user'];
+        $this->relations            = ['image', 'user', 'subscriptions', 'consultations', 'consultations.doctor', 'consultations.doctor.image', 'consultations.doctor.specializations'];
 
         parent::__construct($contract, DoctorPackageResource::class);
     }
@@ -44,7 +44,7 @@ class PatientPackageController extends BaseApiController
     {
         try {
             $subscription = $this->subscriptionContract->create($request->validated());
-            return $this->respondWithSuccess('Subscribed successfully', ['subscription' => $subscription]);
+            return $this->respondWithSuccess('Subscribed successfully', ['subscription' => $subscription, 'consultations' => $subscription->package?->consultations]);
         } catch (Exception $e) {
             info($e);
             return $this->respondWithError($e->getMessage());

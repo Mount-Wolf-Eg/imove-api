@@ -39,6 +39,12 @@ class DoctorPackageResource extends BaseResource
             'image' => $this->whenLoaded('image', function () {
                 return new FileResource($this->image);
             }),
+            'consultations' => $this->whenLoaded('consultations', function () {
+                return ConsultationResource::collection($this->consultations);
+            }),
+            'subscriptions' => $this->whenLoaded('subscriptions', function () {
+                return SubscriptionResource::collection($this->subscriptions);
+            }),
         ];
         return $this->getResource();
     }

@@ -1,6 +1,16 @@
 <?php
 
 return [
+    'add_package' => 'إضافة باقة جديدة',
+    'edit_package' => 'تعديل الباقة',
+    'package_details' => 'تفاصيل الباقة',
+    'packages' => 'الباقات',
+    'manage_packages' => 'إدارة الباقات',
+    'created_at' => 'تاريخ الإنشاء',
+    'num_of_sessions' => 'عدد الجلسات',
+    'duration' => 'المدة',
+    'price' => 'السعر',
+    'is_active' => 'مفعل',
     'site_name' => 'اسم الموقع',
     'app_payment_percentage' => 'نسبة العمولة (%)',
     'reschedule_grace_period' => 'فترة السماح لإعادة الجدولة (بالساعات)',

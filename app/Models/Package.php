@@ -38,6 +38,11 @@ class Package extends Model
         return $this->hasMany(Subscription::class);
     }
 
+    public function consultations()
+    {
+        return $this->hasMany(Consultation::class);
+    }
+
     public function previousSubscriptions()
     {
         return $this->hasMany(Subscription::class)->where('is_paid', true)->whereDate('end_date', '<', now());

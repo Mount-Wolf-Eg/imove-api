@@ -8,6 +8,7 @@ use App\Repositories\Contracts\PackageContract;
 use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\BaseWebController;
+use App\Repositories\Contracts\UserContract;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -43,8 +44,7 @@ class PackageController extends BaseWebController
      */
     public function create(): View|Factory|Application
     {
-        $package = $this->contract->search([], ['user', 'image'], ['limit' => 0, 'page' => 0]);
-        return $this->createBlade(['package' => $package]);
+        return $this->createBlade(['doctors' => resolve(UserContract::class)->search([], ['doctor'], ['limit' => 0, 'page' => 0])]);
     }
 
     /**
@@ -81,8 +81,7 @@ class PackageController extends BaseWebController
      */
     public function edit(Package $package): View|Factory|Application
     {
-        $package = $this->contract->search([], ['user', 'image'], ['limit' => 0, 'page' => 0]);
-        return $this->editBlade(['package' => $package]);
+        return $this->editBlade(['package' => $package, 'doctors' => resolve(UserContract::class)->search([], ['doctor'], ['limit' => 0, 'page' => 0])]);
     }
 
     /**

@@ -1,6 +1,16 @@
 <?php
 
 return [
+    'add_package' => 'Add New Package',
+    'edit_package' => 'Edit Package',
+    'package_details' => 'Package Details',
+    'created_at' => 'Created At',
+    'packages' => 'Packages',
+    'manage_packages' => 'Manage Packages',
+    'num_of_sessions' => 'Number of sessions',
+    'duration' => 'Duration',
+    'price' => 'Price',
+    'is_active' => 'Active',
     'site_name' => 'Site Name',
     'app_payment_percentage' => 'Commission Percentage (%)',
     'featured_list_title' => 'Featured List Title',
