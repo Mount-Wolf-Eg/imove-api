@@ -24,7 +24,7 @@ class PatientPackageController extends BaseApiController
         $this->subscriptionContract = $subscriptionContract;
 
         $this->defaultScopes        = ['active' => true];
-        $this->relations            = ['image', 'user', 'subscriptions', 'consultations', 'consultations.doctor', 'consultations.doctor.image', 'consultations.doctor.specializations'];
+        $this->relations            = ['image', 'user', 'subscriptions', 'consultations', 'consultations.doctor', 'consultations.doctor.specializations'];
 
         parent::__construct($contract, DoctorPackageResource::class);
     }
