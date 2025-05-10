@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <img src="{{$package->mainImage->asset_url ?? asset('assets/images/logo-sm.png')}}" alt="Package Image" id="modalImage" class="img-fluid rounded g-modal-image w-auto">
+                <img src="{{$package->image->asset_url ?? asset('assets/images/logo-sm.png')}}" alt="Package Image" id="modalImage" class="img-fluid rounded g-modal-image w-auto">
             </div>
         </div>
     </div>
