@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'package' => 'الباقة',
     'add_package' => 'إضافة باقة جديدة',
     'edit_package' => 'تعديل الباقة',
     'package_details' => 'تفاصيل الباقة',

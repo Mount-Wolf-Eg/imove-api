@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'package' => 'Package',
     'add_package' => 'Add New Package',
     'edit_package' => 'Edit Package',
     'package_details' => 'Package Details',
