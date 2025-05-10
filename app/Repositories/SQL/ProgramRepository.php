@@ -208,4 +208,181 @@ class ProgramRepository extends BaseRepository implements ProgramContract
         });
     }
 
+   
+    /**
+     * Get analytical report for a specific program.
+     *
+     * @param int $programId
+     * @return array
+     * @throws \Exception
+     */
+    public function patientAnalyzeProgram(Program $program): array
+    {
+        $programId = $program->id;
+        // 1. Commitment Days
+        $totalProgramDays = $program->num_of_days_of_week * $program->num_of_weeks;
+        $completedDays = PatientSession::where('program_id', $programId)
+            ->whereNotNull('end_date')
+            ->distinct('week', 'day')
+            ->count();
+
+        // 2. Session Commitment
+        $totalSessions = $program->num_of_sessions_per_day * $program->num_of_days_of_week * $program->num_of_weeks;
+        $completedSessions = PatientSession::where('program_id', $programId)
+            ->whereNotNull('end_date')
+            ->count();
+
+        // 3. Last 10 Sessions
+        $lastSessions = PatientSession::where('program_id', $programId)
+            ->whereNotNull('end_date')
+            ->orderBy('end_date', 'desc')
+            ->take(10)
+            ->get(['degree_of_pain', 'extent_of_improvement']);
+
+        $degreeOfPain = $lastSessions->pluck('degree_of_pain')->toArray();
+        $extentOfImprovement = $lastSessions->pluck('extent_of_improvement')->toArray();
+
+        // 4. Top 3 Difficult Exercises
+        // We fetched the exercises with the average ease_of_exercise using AVG(ease_of_exercise).
+        // We sorted them in descending order and took the highest
+        $difficultExercises = PatientSessionExercise::where('program_id', $programId)
+            ->groupBy('exercise_id')
+            ->select('exercise_id', DB::raw('AVG(ease_of_exercise) as avg_ease'))
+            ->orderBy('avg_ease', 'desc')
+            ->take(3)
+            ->with(['exercise' => fn ($query) => $query->select('id', 'name')])
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'exercise_id' => $item->exercise_id,
+                    'exercise_name' => $item->exercise->name,
+                    'average_ease_of_exercise' => round($item->avg_ease, 2),
+                ];
+            })->toArray();
+        
+        // 5. Overperformed Exercises (Top 3 where patient_total_sets > sets)
+        $overratedExercises = PatientSessionExercise::where('program_id', $programId)
+        ->whereRaw('patient_total_sets > sets')
+        ->groupBy('exercise_id')
+        ->select('exercise_id', DB::raw('COUNT(*) as excess_sets_count'))
+        ->orderByDesc('excess_sets_count')
+        ->take(3)
+        ->with(['exercise' => fn ($query) => $query->select('id', 'name')])
+        ->get()
+        ->map(function ($item) {
+            return [
+                'exercise_id' => $item->exercise_id,
+                'exercise_name' => $item->exercise->name,
+                'excess_sets_count'=> $item->excess_sets_count,
+            ];
+        })->toArray();
+
+        // 6. Top 3 Incomplete Exercises
+        $incompleteExercises = PatientSessionExercise::where('program_id', $programId)
+            ->where('complete_sets', 0)
+            ->whereNull('reason_for_overtaking')
+            ->groupBy('exercise_id')
+            ->select('exercise_id', DB::raw('AVG(patient_total_sets) as avg_sets'))
+            ->orderBy('avg_sets', 'asc')
+            ->take(3)
+            ->with(['exercise' => fn ($query) => $query->select('id', 'name')])
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'exercise_id' => $item->exercise_id,
+                    'exercise_name' => $item->exercise->name,
+                    'average_patient_total_sets' => round($item->avg_sets, 2),
+                ];
+            })->toArray();
+
+        // 7. Top 3 Skipped Exercises
+        $skippedExercises = PatientSessionExercise::where('program_id', $programId)
+            ->whereNotNull('reason_for_overtaking')
+            ->groupBy('exercise_id')
+            ->select('exercise_id', DB::raw('COUNT(*) as count'))
+            ->orderBy('count', 'desc')
+            ->take(3)
+            ->with(['exercise' => fn ($query) => $query->select('id', 'name')])
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'exercise_id' => $item->exercise_id,
+                    'exercise_name' => $item->exercise->name,
+                    'skip_count' => $item->count,
+                ];
+            })->toArray();
+
+        return [
+            'commitment_days' => [
+                'total_days' => $totalProgramDays,
+                'completed_days' => $completedDays,
+            ],
+            'session_commitment' => [
+                'total_sessions' => $totalSessions,
+                'completed_sessions' => $completedSessions,
+            ],
+            'last_10_sessions' => [
+                'degree_of_pain' => $degreeOfPain,
+                'extent_of_improvement' => $extentOfImprovement,
+            ],
+            'top_difficult_exercises' => $difficultExercises,
+            'top_overrated_exercises' => $overratedExercises,
+            'top_incomplete_exercises' => $incompleteExercises,
+            'top_skipped_exercises' => $skippedExercises,
+        ];
+    }
+ 
+    /**
+     * Get analytical report for a specific session.
+     *
+     * @param int $sessionId
+     * @return array
+     * @throws \Exception
+     */
+    public function patientSessionAnalytics(int $sessionId): array
+    {
+        $session = PatientSession::where('id', $sessionId)->firstOrFail();
+
+        // 1. Exercise Commitment
+        $totalExercises = PatientSessionExercise::where('session_id', $sessionId)->count();
+        $completedExercises = PatientSessionExercise::where('session_id', $sessionId)
+            ->where('complete_sets', true)
+            ->count();
+
+        // 2. Session Details
+        $sessionDetails = [
+            'degree_of_pain' => $session->degree_of_pain,
+            'extent_of_improvement' => $session->extent_of_improvement,
+            'comments' => $session->comments,
+        ];
+
+        // 3. Exercises by Difficulty (ordered by ease_of_exercise descending)
+        $exercisesByDifficulty = PatientSessionExercise::where('session_id', $sessionId)
+            ->whereNotNull('ease_of_exercise')
+            ->orderBy('ease_of_exercise', 'desc')
+            ->with(['exercise' => fn ($query) => $query->select('id', 'name')])
+            ->get(['exercise_id', 'ease_of_exercise']);
+
+        // 4. Skipped Exercises (with non-null reason_for_overtaking)
+        $skippedExercises = PatientSessionExercise::where('session_id', $sessionId)
+            ->whereNotNull('reason_for_overtaking')
+            ->with(['exercise' => fn ($query) => $query->select('id', 'name')])
+            ->get(['exercise_id', 'reason_for_overtaking']);
+
+        // 5. Exercises with half or less completed sets (patient_total_sets <= sets / 2)
+        $halfOrLessCompletedSets = PatientSessionExercise::where('session_id', $sessionId)
+            ->whereRaw('patient_total_sets <= sets / 2')
+            ->with(['exercise' => fn ($query) => $query->select('id', 'name')])
+            ->get(['exercise_id', 'sets', 'patient_total_sets']);
+
+        return [
+            'total_exercises' => $totalExercises,
+            'completed_exercises' => $completedExercises,
+            'session_details' => $sessionDetails,
+            'exercises_by_difficulty' => $exercisesByDifficulty,
+            'skipped_exercises' => $skippedExercises,
+            'half_or_less_completed_sets' => $halfOrLessCompletedSets,
+        ];
+    }
+
 }
