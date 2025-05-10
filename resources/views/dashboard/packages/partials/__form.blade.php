@@ -69,12 +69,12 @@
                                 @error("image")
                                 <span class="text-danger">{{$message}}</span>
                                 @enderror
-                                @if(isset($package) && $package->mainImage)
+                                @if(isset($package) && $package->image)
                                     <div class="col-6 position-relative mt-3">
-                                        <a class="btn btn-flat-light remove-image-resource position-absolute top-0 {{app()->getLocale() == 'ar' ? 'start' : 'end'}}-0" data-id="{{$package->mainImage->id}}">
+                                        <a class="btn btn-flat-light remove-image-resource position-absolute top-0 {{app()->getLocale() == 'ar' ? 'start' : 'end'}}-0" data-id="{{$package->image->id}}">
                                             <i class="bi bi-x-lg"></i>
                                         </a>
-                                        <img src="{{$package->mainImage->asset_url}}" title="{{$package->mainImage->name}}" class="img-fluid" alt="{{__('messages.image')}}" style="max-height: 200px">
+                                        <img src="{{$package->image->url}}" title="{{$package->image->name}}" class="img-fluid" alt="{{__('messages.image')}}" style="max-height: 200px">
                                     </div>
                                 @endif
                             </div>
