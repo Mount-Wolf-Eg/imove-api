@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\Contracts\HomeCareRequestContract;
+use App\Repositories\SQL\HomeCareRequestRepository;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -44,7 +46,9 @@ class AppServiceProvider extends ServiceProvider
                 "$model" => "$modelClass"
             ]);
         }
-        Model::preventLazyLoading(!$this->app->isProduction());
+
+        // Model::preventLazyLoading(!$this->app->isProduction());
+
         $this->app->bind(ConsultationVendorService::class, function ($app) {
             return new ConsultationVendorService();
         });

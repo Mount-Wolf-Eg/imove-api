@@ -24,6 +24,7 @@
         "spatie/laravel-permission": "^6.3",
         "spatie/laravel-settings": "^3.2",
         "spatie/laravel-translatable": "^6.5",
+        "mpdf/mpdf": "^8.2",
         "taqnyat/php": "^1.0"
     },
     "require-dev": {

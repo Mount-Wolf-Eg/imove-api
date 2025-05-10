@@ -6,12 +6,12 @@
     <x-breadcrumb title="{{__('messages.manage_medical_specialities')}}"
                   pagetitle="{{__('messages.medical_specialities')}}"
                   route="{{route('medical-specialities.index')}}"/>
-    <div class="d-flex justify-content-sm-end">
+    {{-- <div class="d-flex justify-content-sm-end">
         <a href="{{route('medical-specialities.create')}}">
             <i class="bi bi-plus-circle"></i>
             {{__('messages.add_new')}}
         </a>
-    </div>
+    </div> --}}
     <x-filter/>
     <div class="row">
         <div class="col-12">
@@ -31,7 +31,7 @@
                             <a href="#" class="fw-semibold">#{{$loop->iteration}}</a>
                         </th>
                         <td>{{$resource->name}}</td>
-                        @include('dashboard.partials.__table-actions', ['resource' => $resource, 'route' => 'medical-specialities', 'showModel' => true])
+                        @include('dashboard.partials.__table-medical-specialities-actions', ['resource' => $resource, 'route' => 'medical-specialities', 'showModel' => true])
                         @include('dashboard.medical-specialities.show', ['resource' => $resource])
                     </tr>
                 @endforeach

@@ -6,8 +6,11 @@ use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Resources\PaymentResource;
 use App\Models\GeneralSettings;
 use App\Models\Payment;
+use App\Repositories\Contracts\CouponContract;
 use App\Repositories\Contracts\PaymentContract;
+use App\Services\Repositories\PaymentCalculator;
 use Exception;
+use Mpdf\Mpdf;
 
 class PaymentController extends BaseApiController
 {
@@ -24,7 +27,45 @@ class PaymentController extends BaseApiController
     public function __construct(PaymentContract $paymentContract)
     {
         parent::__construct($paymentContract, PaymentResource::class);
-        $this->relations = ['payer', 'beneficiary', 'currency', 'payable'];
+        $this->relations = ['payer', 'beneficiary', 'currency', 'payable', 'beneficiary.doctor.medicalSpecialities'];
+    }
+
+    public function getAppAndTaxAmount()
+    {
+        $amount              = request()->get('amount');
+        $amountAfterDiscount = $amount;
+        $coupon              = request()->get('coupon_code');
+        $user                = auth()->user();
+        $userId              = $user->id;
+        $medicalSpecialtyId  = request()->get('medical_specialty_id');
+
+        if (! $amount || $amount <= 0) {
+            return $this->respondWithError(__('Amount must be greater than 0'), 422);
+        }
+
+        if ($coupon) {
+            $coupon = resolve(CouponContract::class)->findBy('code', $coupon, false);
+
+            if ($coupon?->isValidForUser($userId, $medicalSpecialtyId)) {
+                $amountAfterDiscount = $coupon->applyDiscount($amount);
+            } else {
+                return $this->respondWithError(__('messages.invalid_coupon'));
+            }
+        }
+
+        $calculated   = app(PaymentCalculator::class)->calc($amountAfterDiscount);
+
+        $appAmount    = $calculated['app_amount'];
+        $taxAmount    = $calculated['tax_amount'];
+        $totalAmount  = $calculated['total_amount'];
+
+        return [
+            'amount'        => $amount,
+            'coupon_amount' => $amount - $amountAfterDiscount,
+            'app_amount'    => $appAmount,
+            'tax_amount'    => $taxAmount,
+            'total_amount'  => $totalAmount,
+        ];
     }
 
     /**
@@ -36,7 +77,8 @@ class PaymentController extends BaseApiController
         $this->defaultScopes = ['beneficiary' => auth()->id()];
         $totalAmount = $this->contract->sumWithFilters($this->defaultScopes, 'amount');
         $appAmount = $totalAmount * GeneralSettings::getSettingValue('app_payment_percentage');
-        $doctorAmount = $totalAmount - $appAmount;
+        // $doctorAmount = $totalAmount - $appAmount;
+        $doctorAmount = auth()->user()->wallet;
         return parent::index(['total_amount' => $totalAmount, 'app_amount' => $appAmount, 'doctor_amount' => $doctorAmount]);
     }
 
@@ -47,17 +89,105 @@ class PaymentController extends BaseApiController
     public function patientIndex()
     {
         $user = auth()->user();
-        $this->defaultScopes = ['payer' => $user->id];
+        // $this->defaultScopes = ['payer' => $user->id];
+        $this->defaultScopes = ['patient' => $user->id];
         return parent::index(['available_balance' => $user->wallet]);
+    }
+
+    public function refundRequest()
+    {
+        if (auth()->user()->wallet <= 0) {
+            return $this->respondWithError(__('You have no available balance'), 422);
+        }
+
+        if (auth()->user()->bank === null) {
+            return $this->respondWithError(__('You have no bank account'), 422);
+        }
+
+        $user = auth()->user();
+
+        $model = $this->contract->refundRequest($user, $user->bank->id);
+
+        $user->update(['wallet' => 0]);
+
+        return $model;
     }
 
     public function destroy(Payment $payment)
     {
-        try{
+        try {
             $this->contract->remove($payment);
             return $this->respondWithSuccess(__('Deleted Successfully'));
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
+    }
+
+    public function exportPaymentInvoice(Payment $payment)
+    {
+        $html = view('invoice.show', compact('payment'))->render();
+
+        $mpdf = new Mpdf([
+            'mode'         => 'utf-8',
+            'format'       => 'A4',
+            'default_font' => 'dejavusans',
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="transactions.pdf"');
+    }
+
+    public function exportPaymentAllInvoice()
+    {
+        // $user = auth()->user();
+        $user_id = request()->get('user_id');
+
+        $transactions = \App\Models\Payment::ofPatient($user_id)
+            ->latest()
+            ->get();
+
+        $html = view('invoice.all', compact('transactions'))->render();
+
+        $mpdf = new \Mpdf\Mpdf([
+            'mode'         => 'utf-8',
+            'format'       => 'A4',
+            'default_font' => 'dejavusans',
+            'tempDir'      => storage_path('app/tmp'),
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="all.pdf"');
+    }
+
+    public function exportDoctorPaymentAllInvoice()
+    {
+        // $user = auth()->user();
+
+        $user_id = request()->get('user_id');
+
+        $transactions = \App\Models\Payment::ofBeneficiary($user_id)
+            ->latest()
+            ->get();
+
+        $html = view('invoice.all', compact('transactions'))->render();
+
+        $mpdf = new \Mpdf\Mpdf([
+            'mode'         => 'utf-8',
+            'format'       => 'A4',
+            'default_font' => 'dejavusans',
+            'tempDir'      => storage_path('app/tmp'),
+        ]);
+
+        $mpdf->WriteHTML($html);
+
+        return response($mpdf->Output('', 'S'), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="all.pdf"');
     }
 }

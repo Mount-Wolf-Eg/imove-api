@@ -30,10 +30,12 @@ class ArticleRepository extends BaseRepository implements ArticleContract
         if (isset($attributes['main_image'])) {
             if ($model->mainImage && $model->mainImage->id != $attributes['main_image'])
                 resolve(FileContract::class)->remove($model->mainImage);
-            if (is_file($attributes['main_image'])){
-                $file = resolve(FileContract::class)->create(['file' => $attributes['main_image'],
-                    'type' => FileConstants::FILE_TYPE_ARTICLE_MAIN_IMAGE->value]);
-            }else{
+            if (is_file($attributes['main_image'])) {
+                $file = resolve(FileContract::class)->create([
+                    'file' => $attributes['main_image'],
+                    'type' => FileConstants::FILE_TYPE_ARTICLE_MAIN_IMAGE->value
+                ]);
+            } else {
                 $file = resolve(FileContract::class)->find($attributes['main_image']);
             }
             $model->mainImage()->save($file);
@@ -44,12 +46,12 @@ class ArticleRepository extends BaseRepository implements ArticleContract
     public static function syncImages($model, $attributes)
     {
         if (isset($attributes['images'])) {
-            if(is_file($attributes['images'][0])){
+            if (is_file($attributes['images'][0])) {
                 $images = collect($attributes['images'])->map(function ($image) {
                     return ['file' => $image, 'type' => FileConstants::FILE_TYPE_ARTICLE_IMAGES->value];
                 })->toArray();
                 $files = resolve(FileContract::class)->createMany($images);
-            }else{
+            } else {
                 $files = resolve(FileContract::class)->findIds($attributes['images']);
             }
             foreach ($files as $file)
@@ -57,5 +59,4 @@ class ArticleRepository extends BaseRepository implements ArticleContract
         }
         return $model;
     }
-
 }

@@ -13,21 +13,21 @@
 @endif
 <td>
     @if($showModel)
-        <a class="link-success cursor-pointer px-2" id="resource-details{{$resource->id}}">
+        <a class="link-success cursor-pointer px-2" id="resource-details{{$resource->id}}" style="color: #61c03bb5 !important" >
             {{__('messages.show')}} <i class="bi bi-eye"></i>
         </a>
     @else
-        <a href="{{route("$route.show", $resource->id)}}" class="link-success px-2">
+        <a href="{{route("$route.show", $resource->id)}}" class="link-success px-2" style="color: #61c03bb5 !important" >
             {{__('messages.show')}} <i class="bi bi-eye"></i>
         </a>
     @endif
     @if(!isset($disableEdit) || !$disableEdit)
-        <a href="{{route("$route.edit", $resource->id)}}" class="link-info px-2">
+        <a href="{{route("$route.edit", $resource->id)}}" class="link-info px-2" style="color: #64bfde !important" >
             {{__('messages.edit')}} <i class="bi bi-pencil-fill"></i>
         </a>
     @endif
     @if(!isset($disableDelete) || !$disableDelete)
-        <a class="link-danger delete-resource cursor-pointer px-2" data-id="{{$resource->id}}">
+        <a class="link-danger delete-resource cursor-pointer px-2" style="color: #ff90ab !important"  data-id="{{$resource->id}}">
             {{__('messages.delete')}} <i class="bi bi-trash-fill"></i>
         </a>
         <form action="{{route("$route.destroy", $resource->id)}}" class="d-inline" method="POST" id="deleteResourceForm-{{$resource->id}}">

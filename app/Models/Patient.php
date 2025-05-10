@@ -56,6 +56,11 @@ class Patient extends Model
         return $this->hasMany(Consultation::class);
     }
 
+    public function programs(): HasMany
+    {
+        return $this->hasMany(Program::class);
+    }
+
     public function diseases(): BelongsToMany
     {
         return $this->belongsToMany(Disease::class, 'disease_patient')->withTimestamps();

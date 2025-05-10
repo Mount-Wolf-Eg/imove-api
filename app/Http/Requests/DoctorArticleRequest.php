@@ -23,6 +23,9 @@ class DoctorArticleRequest extends FormRequest
     {
         $validated = parent::validated();
         $validated['author_id'] = auth()->id();
+
+        $validated['content']['en'] = $validated['content']['ar'] ?? '';
+
         return $validated;
     }
 
@@ -34,17 +37,17 @@ class DoctorArticleRequest extends FormRequest
     public function rules(): array
     {
         $rules =  [
-            'medical_speciality_id' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
-            'title.ar' => config('validations.string.req'),
-            'title.en' => config('validations.string.req'),
+            'medical_speciality_id' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
+            'title.ar' => config('validations.string.null'),
+            'title.en' => config('validations.string.null'),
             'content.ar' => config('validations.long_text.req'),
-            'content.en' => config('validations.long_text.req'),
+            'content.en' => config('validations.long_text.null'),
             'images' => config('validations.array.null'),
             'images.*' => sprintf(config('validations.model.null'), 'files')
         ];
         if ($this->isMethod('post')) {
-            $rules['main_image'] = sprintf(config('validations.model.req'), 'files');
-        }else{
+            $rules['main_image'] = sprintf(config('validations.model.null'), 'files');
+        } else {
             $rules['main_image'] = sprintf(config('validations.model.null'), 'files');
         }
         return $rules;
@@ -54,7 +57,7 @@ class DoctorArticleRequest extends FormRequest
      * Customizing input names displayed for user
      * @return array
      */
-    public function attributes() : array
+    public function attributes(): array
     {
         return [
             'title.ar' => __('messages.title_ar'),
@@ -67,7 +70,7 @@ class DoctorArticleRequest extends FormRequest
     /**
      * @return array
      */
-    public function messages() : array
+    public function messages(): array
     {
         return [];
     }

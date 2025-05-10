@@ -3,7 +3,7 @@
 {{__('messages.overview')}}
 @endsection
 @section('content')
-<x-breadcrumb title="{{__('messages.overview')}}" pagetitle="{{__('messages.tabibak')}}" route="{{route('overview')}}" />
+<x-breadcrumb title="{{__('messages.overview')}}" pagetitle="{{__('messages.imove')}}" route="{{route('overview')}}" />
 <div class="d-flex align-items-center justify-content-end gap-5">
     <button type="button" onclick="downloadPDF()" class="my-5" style="background-color: transparent;border:none ;font-size:20px;text-decoration: underline;padding:0 5px;font-weight: 400 ">
         <svg style="margin: 0 5px" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

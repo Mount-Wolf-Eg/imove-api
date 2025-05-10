@@ -198,12 +198,86 @@
                     </a>
                 </li>
                 @endif
+                
+                @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
+                <li class="nav-item">
+                    <a href="{{route('home-care-requests.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('home-care-requests.index', 'home-care-requests.show', 'home-care-requests.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.home-care-requests') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-academic-degree') || auth()->user()->can('view-all-academic-degree'))
+                <li class="nav-item">
+                    <a href="{{route('medical-equipments.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('medical-equipments.index', 'medical-equipments.show', 'medical-equipments.create',
+                        'medical-equipments.edit')])>
+                        <i class="bi bi-book"></i>
+                        <span data-key="t-dashboard">{{ __('messages.medical-equipments') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-academic-degree') || auth()->user()->can('view-all-academic-degree'))
+                <li class="nav-item">
+                    <a href="{{route('category-medical-equipments.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('category-medical-equipments.index', 'category-medical-equipments.show', 'category-medical-equipments.create',
+                        'category-medical-equipments.edit')])>
+                        <i class="bi bi-book"></i>
+                        <span data-key="t-dashboard">{{ __('messages.equipment-categories') }}</span>
+                    </a>
+                </li>
+                @endif
+                
+                @if(auth()->user()->can('read-article') || auth()->user()->can('view-all-article'))
+                <li class="nav-item">
+                    <a href="{{route('educational-contents.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('educational-contents.index', 'educational-contents.show', 'educational-contents.create', 'educational-contents.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.educational-contents') }}</span>
+                    </a>
+                </li>
+                @endif
 
                 @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
                 <li class="nav-item">
                     <a href="{{route('contact.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('contacts.index')])>
                         <i class="bi bi-telephone"></i>
                         <span data-key="t-dashboard">{{ __('messages.contacts') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
+                <li class="nav-item">
+                    <a href="{{route('technical-support.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('technical-support.index', 'technical-support.show')])>
+                        <i class="bi bi-telephone"></i>
+                        <span data-key="t-dashboard">{{ __('messages.technical-support') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-setting-package') || auth()->user()->can('view-all-setting-package'))
+                <li class="nav-item">
+                    <a href="{{route('setting-packages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('setting-packages.index', 'setting-packages.show', 'setting-packages.create', 'setting-packages.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.setting-packages') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-package') || auth()->user()->can('view-all-package'))
+                <li class="nav-item">
+                    <a href="{{route('packages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('packages.index', 'packages.show', 'packages.create', 'packages.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.packages') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
+                <li class="nav-item">
+                    <a href="{{route('static-pages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('static-pages.index', 'static-pages.show', 'static-pages.create', 'static-pages.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.static-pages') }}</span>
                     </a>
                 </li>
                 @endif

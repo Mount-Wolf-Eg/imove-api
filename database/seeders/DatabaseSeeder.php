@@ -14,14 +14,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call([
-            PermissionsTableSeeder::class,
-            RoleTableSeeder::class,
-            UsersTableSeeder::class,
-            VendorTypesTableSeeder::class,
-            RegionsTableSeeder::class,
-            CitiesTableSeeder::class,
-            CurrenciesTableSeeder::class
-        ]);
+        // $this->call([
+        //     PermissionsTableSeeder::class,
+        //     RoleTableSeeder::class,
+        //     UsersTableSeeder::class,
+        //     VendorTypesTableSeeder::class,
+        //     RegionsTableSeeder::class,
+        //     CitiesTableSeeder::class,
+        //     CurrenciesTableSeeder::class
+        // ]);
+        // $this->call(CategoryMedicalEquipmentSeeder::class);
+        // $this->call(MedicalEquipmentSeeder::class);
+        // $this->call(StaticPageSeeder::class);
+        // $this->call(EducationalContentSeeder::class);
+        $this->call(ExerciseSeeder::class);
+
+
     }
 }

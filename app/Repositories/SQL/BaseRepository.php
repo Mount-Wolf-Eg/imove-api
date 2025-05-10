@@ -66,12 +66,14 @@ abstract class BaseRepository implements BaseContract
                 $model,
                 auth()->user(),
                 "$this->modelName #id: $model->id Created",
-                ['action' => 'Creation',
+                [
+                    'action' => 'Creation',
                     'data' => [
                         'user' => auth()->user()?->name,
                         'url' => '',
                         'created_at' => Carbon::now()->format('Y-m-d H:i:s')
-                    ]]
+                    ]
+                ]
             );
             if (method_exists($this, 'afterCreate')) {
                 $this->afterCreate($model, $attributes);
@@ -238,6 +240,21 @@ abstract class BaseRepository implements BaseContract
         return $this->query->updateOrCreate($identifier, $attributes);
     }
 
+    public function customUpdateOrCreate(array $attributes, array $identifier = [])
+    {
+        if (empty($attributes)) {
+            return false;
+        }
+
+        $model = $this->query->where($identifier)->first();
+
+        if ($model) {
+            return $this->update($model, $attributes);
+        } else {
+            return $this->create($attributes);
+        }
+    }
+
     /**
      * @param Model $model
      * @return bool|mixed|null
@@ -255,12 +272,14 @@ abstract class BaseRepository implements BaseContract
             $model,
             auth()->user(),
             "$this->modelName #id: $model->id Removed",
-            ['action' => 'Removing',
+            [
+                'action' => 'Removing',
                 'data' => [
                     'user' => auth()->user()?->name,
                     'url' => '',
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s')
-                ]]
+                ]
+            ]
         );
         return $model->delete();
     }
@@ -676,8 +695,7 @@ abstract class BaseRepository implements BaseContract
         string $orderBy = self::ORDER_BY,
         string $orderDir = self::ORDER_DIR,
         array  $conditions = []
-    ): mixed
-    {
+    ): mixed {
         $query = $this->query;
         if ($applyOrder) {
             $query = $query->orderBy($orderBy, $orderDir);
@@ -709,9 +727,12 @@ abstract class BaseRepository implements BaseContract
      * @param array $data
      * @return mixed
      */
-    public function baseSearch($query, array $filters = [],
-                               array $relations = [], array $data = []): mixed
-    {
+    public function baseSearch(
+        $query,
+        array $filters = [],
+        array $relations = [],
+        array $data = []
+    ): mixed {
         $query = $this->applyRelations($query, $relations);
         if (!empty($filters)) {
             foreach ($this->model->getFilters() as $filter) {
@@ -732,6 +753,18 @@ abstract class BaseRepository implements BaseContract
      * @return mixed
      */
     public function search(array $filters = [], array $relations = [], array $data = []): mixed
+    {
+        $query = $this->baseSearch($this->query, $filters, $relations, $data);
+        return $this->getQueryResult($query, $data);
+    }
+    
+    /**
+     * @param array $filters
+     * @param array $relations
+     * @param array $data
+     * @return mixed
+     */
+    public function searchWeb(array $filters = [], array $relations = [], array $data = []): mixed
     {
         $query = $this->baseSearch($this->query, $filters, $relations, $data);
         return $this->getQueryResult($query, $data);
@@ -779,14 +812,14 @@ abstract class BaseRepository implements BaseContract
          */
         $orderIgnoreNull = $data['orderIgnoreNull'] ?? [];
         if (!empty($orderIgnoreNull)) {
-            $query = $query->orderByRaw("CASE WHEN ".$orderIgnoreNull['nullable_column']." IS NULL THEN 1 ELSE 0 END")
+            $query = $query->orderByRaw("CASE WHEN " . $orderIgnoreNull['nullable_column'] . " IS NULL THEN 1 ELSE 0 END")
                 ->orderBy($orderIgnoreNull['order_column'], $orderIgnoreNull['dir']);
         }
         if (!empty($order)) {
             foreach ($order as $orderBy => $orderDir) {
                 $query = $query->orderBy($orderBy, $orderDir);
             }
-        }else{
+        } else {
             $query = $query->latest();
         }
         if (config('app.query_debug')) {
@@ -838,8 +871,7 @@ abstract class BaseRepository implements BaseContract
         bool $limit = false,
         string $orderBy = self::ORDER_BY,
         string $orderDir = self::ORDER_DIR
-    ): array|\Illuminate\Database\Eloquent\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection
-    {
+    ): array|\Illuminate\Database\Eloquent\Collection|\Illuminate\Contracts\Pagination\LengthAwarePaginator|Collection {
         $query = $this->query;
         $query = $this->applyRelations($query, $relations);
         if (!empty($filters)) {
@@ -911,9 +943,13 @@ abstract class BaseRepository implements BaseContract
     public function toggleField($model, string $field): mixed
     {
         $newVal = 1;
-        if ($model[$field] === 1) {$newVal = 0;}
+        if ($model[$field] === 1) {
+            $newVal = 0;
+        }
         return $this->update($model, [$field => $newVal]);
     }
+
+
 
     public function restoreDeletedRecord($id): void
     {

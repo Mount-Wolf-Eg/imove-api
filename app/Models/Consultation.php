@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
@@ -50,7 +51,14 @@ class Consultation extends Model
         'transfer_case_rate',
         'payment_type',
         'amount',
-        'is_active'
+        'doctor_amount',
+        'app_amount',
+        'tax_amount',
+        'total_amount',
+        'coupon_discount',
+        'coupon_id',
+        'is_active',
+        'package_id',
     ];
 
     protected array $filters = [
@@ -76,7 +84,10 @@ class Consultation extends Model
         'dayShift',
         'onlyApprovedReferral',
         'nextConsultation',
-        'missedConsultation'
+        'missedConsultation',
+        'cancelled',
+        'doctorScheduleDayShiftId',
+        'patient',
     ];
 
     protected array $searchable = ['patient.user.name', 'doctor.user.name', 'id'];
@@ -120,6 +131,20 @@ class Consultation extends Model
         return $this->belongsTo(Patient::class);
     }
 
+    public function medicalEquipments(): BelongsToMany
+    {
+        return $this->belongsToMany(MedicalEquipment::class, 'consultation_medical_equipment')
+                    ->withPivot('doctor_id')
+                    ->withTimestamps();
+    }
+
+    public function educationalContents(): BelongsToMany
+    {
+        return $this->belongsToMany(EducationalContent::class, 'consultation_educational_content')
+            ->withPivot('doctor_id')
+            ->withTimestamps();
+    }
+    
     public function attachments(): MorphMany
     {
         return $this->morphMany(File::class, 'fileable')
@@ -166,6 +191,15 @@ class Consultation extends Model
     public function consultationQuestions(): BelongsToMany
     {
         return $this->belongsToMany(ConsultationQuestion::class, 'consultation_question')->withPivot('answer');
+    }
+    public function program(): HasOne
+    {
+        return $this->hasOne(Program::class);
+    }
+
+    public function subscribe(): BelongsTo
+    {
+        return $this->belongsTo(Subscription::class);
     }
 
     //---------------------relations-------------------------------------
@@ -320,7 +354,7 @@ class Consultation extends Model
 
     public function patientCanCancel(): bool
     {
-        $grace_period = now()->addHours(GeneralSettings::getSettingValue('cancel_grace_period'));
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('normal_grace_period'));
 
         return ($this->status->is(ConsultationStatusConstants::PENDING)
             || $this->status->is(ConsultationStatusConstants::URGENT_HAS_DOCTORS_REPLIES)
@@ -335,7 +369,7 @@ class Consultation extends Model
 
     public function returnMony(): bool
     {
-        $grace_period = now()->addHours(GeneralSettings::getSettingValue('cancel_grace_period'));
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('normal_grace_period'));
 
         return $this->is_active && $this->payment
             && $this->payment->status->is(PaymentStatusConstants::COMPLETED)
@@ -344,7 +378,7 @@ class Consultation extends Model
 
     public function patientCanReschedule(): bool
     {
-        $grace_period = now()->addHours(GeneralSettings::getSettingValue('reschedule_grace_period'));
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('normal_grace_period'));
 
         return $this->type->is(ConsultationTypeConstants::WITH_APPOINTMENT)
             && $this->status->is(ConsultationStatusConstants::PENDING)
@@ -353,7 +387,7 @@ class Consultation extends Model
 
     public function doctorCanReschedule(): bool
     {
-        $grace_period = now()->addHours(GeneralSettings::getSettingValue('reschedule_grace_period'));
+        $grace_period = now()->addHours(GeneralSettings::getSettingValue('normal_grace_period'));
 
         return $this->type->is(ConsultationTypeConstants::WITH_APPOINTMENT)
             && $this->status->is(ConsultationStatusConstants::PENDING)
@@ -376,6 +410,29 @@ class Consultation extends Model
         }
 
         return $shiftDateTime->greaterThan($graceLimit);
+    }
+
+    public function getIsPastConsultationAttribute(): bool
+    {
+        $hasPastShift = $this->doctorScheduleDayShift()
+            ->whereHas('day', function ($dayQuery) {
+                $dayQuery->where('date', '<', now()->format('Y-m-d'));
+            })
+            ->whereRaw("
+            CONCAT(
+                (SELECT `date` FROM doctor_schedule_days WHERE id = doctor_schedule_day_shifts.doctor_schedule_day_id), 
+                ' ', 
+                from_time
+            ) < ?
+        ", [now()->format('Y-m-d H:i')])
+            ->exists();
+
+        $hasPastReply = $this->replies()
+            ->where('consultation_doctor_replies.status', ConsultationPatientStatusConstants::APPROVED->value)
+            ->whereDate('consultation_doctor_replies.doctor_set_consultation_at', '<', now())
+            ->exists();
+
+        return $hasPastShift || $hasPastReply;
     }
 
     //---------------------methods-------------------------------------

@@ -75,9 +75,10 @@ class PatientConsultationController extends BaseApiController
      * @param Consultation $consultation
      * @return JsonResponse
      */
-    public function update(ConsultationRequest $request, Consultation $consultation): JsonResponse
+    public function update(ConsultationRequest $request, $consultation_id): JsonResponse
     {
         try {
+            $consultation = Consultation::withoutGlobalScopes()->findOrFail($consultation_id);
             $consultation = $this->contract->update($consultation, $request->validated());
             return $this->respondWithModel($consultation);
         } catch (Exception $e) {
@@ -129,7 +130,11 @@ class PatientConsultationController extends BaseApiController
         try {
             $consultation = $this->contract->update($consultation, ['status' => ConsultationStatusConstants::PATIENT_CANCELLED->value]);
 
-            if ($consultation->returnMony()) $this->contract->refundAmount($consultation, $consultation->amount);
+            if ($consultation->subscribe && $consultation->subscribe->ofAvailable) {
+                $consultation->subscribe()->decrement('used_num_of_sessions', 1);
+            } else {
+                if ($consultation->returnMony()) $this->contract->refundAmount($consultation, $consultation->total_amount);
+            }
 
             $this->notificationService->patientCancel($consultation);
             return $this->respondWithModel($consultation);

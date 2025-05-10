@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ConsultationStatusConstants;
 use App\Traits\ModelTrait;
 use App\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,7 +58,9 @@ class DoctorScheduleDayShift extends Model
         return $query->where(function ($query) {
             $query->whereDoesntHave('consultation')
                 ->orWhereHas('consultation', function ($q) {
-                    $q->where('is_active', false);
+                    $q->where('is_active', false)
+                        ->orWhere('status', '!=', ConsultationStatusConstants::PATIENT_CANCELLED->value)
+                        ->orWhere('status', '!=', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
                 });
         })
             ->whereNotNull('parent_id')

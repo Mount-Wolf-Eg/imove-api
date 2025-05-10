@@ -25,6 +25,11 @@ use App\Http\Controllers\Dashboard\FaqSubjectController;
 use App\Http\Controllers\Dashboard\ConsultationController;
 use App\Http\Controllers\Dashboard\VendorServiceController;
 use App\Http\Controllers\Dashboard\AcademicDegreeController;
+use App\Http\Controllers\Dashboard\CategoryMedicalEquipmentController;
+use App\Http\Controllers\Dashboard\MedicalEquipmentController;
+use App\Http\Controllers\Dashboard\StaticPageController;
+use App\Http\Controllers\Dashboard\TechnicalSupportController;
+use App\Http\Controllers\Dashboard\EducationalContentController;
 use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 use App\Http\Controllers\Dashboard\MedicalSpecialityController;
 use App\Http\Controllers\Auth\Passwords\ResetPasswordController;
@@ -32,6 +37,9 @@ use App\Http\Controllers\Auth\Passwords\ForgetPasswordController;
 use App\Http\Controllers\Dashboard\FeaturedListController;
 use App\Http\Controllers\Dashboard\GeneralSettingsController;
 use App\Http\Controllers\Dashboard\ReferralController;
+use App\Http\Controllers\Dashboard\HomeCareRequestController;
+use App\Http\Controllers\Dashboard\PackageController;
+use App\Http\Controllers\Dashboard\SettingPackageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,6 +119,16 @@ Route::group([
         Route::get('featured-list', [FeaturedListController::class, 'edit'])->name('featured-list.edit');
         Route::put('featured-list', [FeaturedListController::class, 'update'])->name('featured-list.update');
         Route::resource('contact', ContactController::class)->only(['index']);
+        Route::resource('category-medical-equipments', CategoryMedicalEquipmentController::class);
+        Route::put('category-medical-equipments/{categoryMedicalEquipment}/change-activation', [CategoryMedicalEquipmentController::class, 'changeActivation'])->name('category-medical-equipments.active');
+        Route::resource('medical-equipments', MedicalEquipmentController::class);
+        Route::put('medical-equipments/{medicalEquipment}/change-activation', [MedicalEquipmentController::class, 'changeActivation'])->name('medical-equipments.active');
+        Route::resource('static-pages', StaticPageController::class);
+        Route::resource('technical-support', TechnicalSupportController::class)->only(['index', 'show', 'destroy']);
+        Route::resource('educational-contents', EducationalContentController::class);
+        Route::put('educational-contents/{educationalContent}/change-activation', [EducationalContentController::class, 'changeActivation'])->name('educational-contents.active');
+        Route::resource('home-care-requests', HomeCareRequestController::class)->only(['index', 'show', 'destroy']);
+        Route::patch('home-care-requests/{homeCareRequest}/status', [HomeCareRequestController::class, 'updateStatus'])->name('home-care-requests.update-status');
 
         Route::prefix('profile')->group(function () {
             Route::get('/', [ProfileController::class, 'profile'])->name('profile');
@@ -123,5 +141,13 @@ Route::group([
 
         Route::get('/settings', [GeneralSettingsController::class, 'edit'])->name('settings.edit');
         Route::post('/settings', [GeneralSettingsController::class, 'update'])->name('settings.update');
+
+        Route::resource('setting-packages', SettingPackageController::class);
+
+        Route::resource('packages', PackageController::class);
+        Route::put('packages/{package}/change-activation', [PackageController::class, 'changeActivation'])->name('packages.active');
+
+        Route::resource('setting-packages', SettingPackageController::class);
+        Route::put('setting-packages/{settingPackage}/change-activation', [SettingPackageController::class, 'changeActivation'])->name('setting-packages.active');
     });
 });
