@@ -256,6 +256,15 @@
                 </li>
                 @endif
 
+                @if(auth()->user()->can('read-setting-package') || auth()->user()->can('view-all-setting-package'))
+                <li class="nav-item">
+                    <a href="{{route('setting-packages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('setting-packages.index', 'setting-packages.show', 'setting-packages.create', 'setting-packages.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.setting-packages') }}</span>
+                    </a>
+                </li>
+                @endif
+
                 @if(auth()->user()->can('read-package') || auth()->user()->can('view-all-package'))
                 <li class="nav-item">
                     <a href="{{route('packages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('packages.index', 'packages.show', 'packages.create', 'packages.edit')])>

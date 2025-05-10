@@ -1,6 +1,13 @@
 <?php
 
 return [
+    'setting-package' => 'الباقة',
+    'add_setting-package' => 'إضافة باقة جديدة',
+    'edit_setting-package' => 'تعديل الباقة',
+    'setting-package_details' => 'تفاصيل الباقة',
+    'setting-packages' => 'الباقات',
+    'manage_setting-packages' => 'إدارة الباقات',
+
     'package' => 'الباقة',
     'add_package' => 'إضافة باقة جديدة',
     'edit_package' => 'تعديل الباقة',
