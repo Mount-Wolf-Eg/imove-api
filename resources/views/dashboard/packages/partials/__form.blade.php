@@ -74,7 +74,7 @@
                                         <a class="btn btn-flat-light remove-image-resource position-absolute top-0 {{app()->getLocale() == 'ar' ? 'start' : 'end'}}-0" data-id="{{$package->image->id}}">
                                             <i class="bi bi-x-lg"></i>
                                         </a>
-                                        <img src="{{$package->image->url}}" title="{{$package->image->name}}" class="img-fluid" alt="{{__('messages.image')}}" style="max-height: 200px">
+                                        <img src="{{$package->image->asset_url}}" title="{{$package->image->name}}" class="img-fluid" alt="{{__('messages.image')}}" style="max-height: 200px">
                                     </div>
                                 @endif
                             </div>
