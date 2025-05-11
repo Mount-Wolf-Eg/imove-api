@@ -10,6 +10,7 @@ enum NotificationTypeConstants : int
     case PATIENT = 1;
     case DOCTOR = 2;
     case VENDOR = 3;
+    case PAYMENT = 4;
 
     public function getLabels($value):string
     {
@@ -17,6 +18,7 @@ enum NotificationTypeConstants : int
             self::PATIENT => __('messages.patient'),
             self::DOCTOR => __('messages.doctor'),
             self::VENDOR => __('messages.vendor'),
+            self::PAYMENT => __('messages.payment'),
         };
     }
 

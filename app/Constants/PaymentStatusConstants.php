@@ -12,6 +12,7 @@ enum PaymentStatusConstants : int
     case FAILED = 3;
     case CANCELLED = 4;
     case REFUNDED = 5;
+    case REJECTED = 6;
 
     public function getLabels($value):string
     {
@@ -20,7 +21,8 @@ enum PaymentStatusConstants : int
             self::COMPLETED => __('messages.completed'),
             self::FAILED => __('messages.failed'),
             self::CANCELLED => __('messages.cancelled'),
-            self::REFUNDED => __('messages.refunded')
+            self::REFUNDED => __('messages.refunded'),
+            self::REJECTED => __('messages.rejected'),
         };
     }
 
@@ -36,7 +38,9 @@ enum PaymentStatusConstants : int
             self::COMPLETED => 'success',
             self::FAILED => 'danger',
             self::CANCELLED => 'secondary',
-            self::REFUNDED => 'info'
+            self::REFUNDED => 'info',
+            self::REJECTED => 'dark',
+            default => 'primary',
         };
     }
 

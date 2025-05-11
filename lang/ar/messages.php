@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'refunds' => 'استرداد الأموال',
+    'manage_refund_requests' => 'إدارة طلبات استرداد الأموال',
+    'search_by_name_id' => 'بحث بواسطة الاسم',
+    'iban_number' => 'رقم الايبان',
     'setting-package' => 'الباقة',
     'add_setting-package' => 'إضافة باقة جديدة',
     'edit_setting-package' => 'تعديل الباقة',

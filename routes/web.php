@@ -117,6 +117,11 @@ Route::group([
         Route::put('referrals/{consultation}/vendor-accept', [ReferralController::class, 'vendorAccept'])->name('referrals.vendor-accept');
         Route::put('referrals/{consultation}/vendor-reject', [ReferralController::class, 'vendorReject'])->name('referrals.vendor-reject');
         Route::resource('payments', PaymentController::class)->only(['index', 'destroy']);
+
+        Route::get('refund-request', [PaymentController::class, 'refundRequest'])->name('refund-request');
+        Route::put('refund-request/{payment}/accept', [PaymentController::class, 'accept'])->name('refund-request.accept');
+        Route::put('refund-request/{payment}/reject', [PaymentController::class, 'reject'])->name('refund-request.reject');
+
         Route::get('featured-list', [FeaturedListController::class, 'edit'])->name('featured-list.edit');
         Route::put('featured-list', [FeaturedListController::class, 'update'])->name('featured-list.update');
         Route::resource('contact', ContactController::class)->only(['index']);

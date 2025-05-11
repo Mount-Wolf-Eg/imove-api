@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'refunds' => 'Refunds',
+    'manage_refund_requests' => 'Manage Refund Requests',
+    'search_by_name_id' => 'Search by name',
+    'iban_number' => 'IBAN Number',
     'setting-package' => 'Setting Package',
     'add_setting-package' => 'Add New Setting Package',
     'edit_setting-package' => 'Edit Setting Package',

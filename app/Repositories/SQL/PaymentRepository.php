@@ -8,6 +8,8 @@ use App\Constants\PaymentTypeConstants;
 use App\Models\Bank;
 use App\Models\Payment;
 use App\Repositories\Contracts\PaymentContract;
+use App\Services\Repositories\PaymentNotificationService;
+use Illuminate\Support\Facades\DB;
 
 class PaymentRepository extends BaseRepository implements PaymentContract
 {
@@ -34,5 +36,62 @@ class PaymentRepository extends BaseRepository implements PaymentContract
             'status'         => PaymentStatusConstants::PENDING->value,
             'type'           => PaymentTypeConstants::REFUND->value,
         ]);
+    }
+
+    public function accept(Payment $payment): Payment
+    {
+        if ($payment->status !== PaymentStatusConstants::PENDING->value) {
+            throw new \DomainException('Only pending payments can be accepted.');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Update the payment status
+            $payment->update([
+                'status' => PaymentStatusConstants::COMPLETED->value,
+            ]);
+
+            // Notify the patient about the acceptance
+            app(PaymentNotificationService::class)->paymentAccepted($payment);
+
+            DB::commit();
+
+            return $payment;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \RuntimeException('Failed to accept payment: ' . $e->getMessage());
+        }
+    }
+
+    public function reject(Payment $payment): Payment
+    {
+        if ($payment->status !== PaymentStatusConstants::PENDING->value) {
+            throw new \DomainException('Only pending payments can be rejected.');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            // Update the payment status to rejected
+            $payment->update([
+                'status' => PaymentStatusConstants::REJECTED->value,
+            ]);
+
+            // Refund the amount to the user's wallet
+            $payment->payer->update([
+                'wallet' => $payment->payer->wallet + $payment->amount,
+            ]);
+
+            // Notify the patient about the rejection
+            app(PaymentNotificationService::class)->paymentRejected($payment);
+
+            DB::commit();
+
+            return $payment;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw new \RuntimeException('Failed to reject payment: ' . $e->getMessage());
+        }
     }
 }
