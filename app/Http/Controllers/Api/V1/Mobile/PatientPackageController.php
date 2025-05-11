@@ -47,7 +47,7 @@ class PatientPackageController extends BaseApiController
     {
         try {
             $package      = Package::findOrFail(request('package'));
-            $subscription = $this->subscriptionContract->create(Arr::except($request->validated(), ['doctor_id']) + ['doctor_id' => $package->user_id, 'patient_id' => auth()->id()]);
+            $subscription = $this->subscriptionContract->create(Arr::except($request->validated(), ['doctor_id', 'patient_id']) + ['doctor_id' => $package->user_id, 'patient_id' => auth()->id()]);
             resolve(ConsultationContract::class)->create($request->validated(), [
                 'package_id' => $subscription->package_id,
                 'subscription_id' => $subscription->id,
