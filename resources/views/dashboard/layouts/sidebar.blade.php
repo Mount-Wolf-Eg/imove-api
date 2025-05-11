@@ -238,6 +238,15 @@
                 </li>
                 @endif
 
+                @if(auth()->user()->can('read-article') || auth()->user()->can('view-all-article'))
+                <li class="nav-item">
+                    <a href="{{route('exercises.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('exercises.index', 'exercises.show', 'exercises.create', 'exercises.edit')])>
+                        <i class="bi bi-heart-pulse-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.exercises') }}</span>
+                    </a>
+                </li>
+                @endif
+
                 @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
                 <li class="nav-item">
                     <a href="{{route('contact.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('contacts.index')])>

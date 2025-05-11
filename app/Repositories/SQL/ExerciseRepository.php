@@ -4,6 +4,8 @@ namespace App\Repositories\SQL;
 
 use App\Models\Exercise;
 use App\Repositories\Contracts\ExerciseContract;
+use App\Repositories\Contracts\FileContract;
+use App\Constants\FileConstants;
 use Illuminate\Database\Eloquent\Builder;
 // use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -84,6 +86,35 @@ class ExerciseRepository extends BaseRepository implements ExerciseContract
         }
 
         return $query;
+    }
+
+
+    public function syncRelations($model, $attributes)
+    {
+        self::syncMediaAndSpecialities($model, $attributes);
+        return $model;
+    }
+
+
+    public static function syncMediaAndSpecialities($model, $attributes)
+    {
+        if (isset($attributes['specialities'])){
+            $model->medicalSpecialities()->sync($attributes['specialities']);
+        }
+        if (isset($attributes['media'])) {
+            if ($model->media && $model->media->id != $attributes['media'])
+                resolve(FileContract::class)->remove($model->media);
+            if (is_file($attributes['media'])) {
+                $file = resolve(FileContract::class)->create([
+                    'file' => $attributes['media'],
+                    'type' => FileConstants::FILE_TYPE_EXERCISE_MEDIA->value
+                ]);
+            } else {
+                $file = resolve(FileContract::class)->find($attributes['media']);
+            }
+            $model->media()->save($file);
+        }
+        return $model;
     }
 
 }

@@ -85,9 +85,6 @@ class MedicalEquipmentController extends BaseApiController
     public function getByConsultation(Consultation $consultation)
     {
         try {
-            // if (!$consultation->isMineAsDoctor() && !$consultation->isMineAsPatient()) {
-            //     return $this->respondWithError('Unauthorized: You do not have access to this consultation', Response::HTTP_FORBIDDEN);
-            // }
             // In MedicalEquipmentController::getByConsultation
             // MedicalEquipmentResource::collection($medicalEquipments)->additional(['consultation_id' => $consultation->id]);
 
