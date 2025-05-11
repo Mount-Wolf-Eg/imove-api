@@ -22,6 +22,7 @@ class ProgramSessionsResource extends ResourceCollection
                 'days' => $weekSessions->groupBy('day')->map(function ($daySessions) use ($request) {
                     return [
                         'day' => $daySessions->first()->day,
+                        'created_at' => $daySessions->first()->created_at,
                         'sessions' => SessionResource::collection($daySessions)->toArray($request),
                     ];
                 })->values()->toArray(),
