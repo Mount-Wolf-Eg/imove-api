@@ -159,6 +159,7 @@ class ConsultationRequest extends FormRequest
     {
         if (! $this->consultation) {
             return [
+                'package_id' => 'nullable|exists:packages,id',
                 'patient_id' => sprintf(config('validations.model.active_null'), 'patients'),
                 'doctor_id' => sprintf(config('validations.model.active_null'), 'doctors') . '|required_if:type,==,' . ConsultationTypeConstants::WITH_APPOINTMENT->value,
 
