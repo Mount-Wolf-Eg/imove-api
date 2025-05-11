@@ -667,5 +667,14 @@ return [
     'session_day_exceeded' => 'The specified day exceeds the maximum limit (:max days)',
     'session_limit_exceeded' => 'The maximum number of daily sessions (:max sessions) has been reached',
     'no_exercises_in_program' => 'The program contains no exercises',
+    'exercises' => 'Exercises',
+    'manage_exercises' => 'Manage Exercises',
+    'brief' => 'Brief',
+    'brief_ar' => 'Brief AR',
+    'brief_en' => 'Brief EN',
+    'add_exercise' => 'Add Exercise',
+    'edit_exercises' => 'Edit Exercise',
+    'exercise_details' => 'Exercise Details',
+
 
 ];

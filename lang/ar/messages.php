@@ -664,4 +664,13 @@ return [
     'session_limit_exceeded' => 'تم الوصول إلى الحد الأقصى للجلسات اليومية (:max جلسات)',
     'no_exercises_in_program' => 'البرنامج لا يحتوي على تمارين',
     
+    'exercises' => 'التمارين الطبية',
+    'manage_exercises' => 'اداره التمارين الطبية',
+    'brief' => 'مختصر',
+    'brief_ar' => 'مختصر (بالعربية)',
+    'brief_en' => 'مختصر (بالإنجليزية)',
+    'add_exercise' => 'اضافة تمرين',
+    'edit_exercises' => 'تعديل التمرين',
+    'exercise_details' => 'تفاصيل التمرين',
+
 ];
