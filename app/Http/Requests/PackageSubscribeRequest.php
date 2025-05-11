@@ -74,7 +74,6 @@ class PackageSubscribeRequest extends FormRequest
         $consultationValidated = $consultationValidator->validated();
 
         return array_merge($validated, $consultationValidated, [
-            'patient_id'      => auth()->id(),
             'doctor_id'       => $package->user->doctor->id,
             'user_id'         => $package->user->id,
             'package_id'      => $package->id,
