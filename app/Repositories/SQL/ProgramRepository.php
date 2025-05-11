@@ -260,12 +260,14 @@ class ProgramRepository extends BaseRepository implements ProgramContract
                 ];
             })->toArray();
         
-        // 5. Overperformed Exercises (Top 3 where patient_total_sets > sets)
+        // 5.0 Overperformed Exercises (Top 3 where patient_total_sets > sets)
+           // ->select('exercise_id', DB::raw('COUNT(*) as excess_sets_count'))
+        // 5.1 Overperformed Exercises (Top 3 based on average difference: patient_total_sets - sets)
         $overratedExercises = PatientSessionExercise::where('program_id', $programId)
         ->whereRaw('patient_total_sets > sets')
         ->groupBy('exercise_id')
-        ->select('exercise_id', DB::raw('COUNT(*) as excess_sets_count'))
-        ->orderByDesc('excess_sets_count')
+        ->select('exercise_id', DB::raw('AVG(patient_total_sets - sets) as avg_sets_difference'))
+        ->orderByDesc('avg_sets_difference')
         ->take(3)
         ->with(['exercise' => fn ($query) => $query->select('id', 'name')])
         ->get()
@@ -273,7 +275,7 @@ class ProgramRepository extends BaseRepository implements ProgramContract
             return [
                 'exercise_id' => $item->exercise_id,
                 'exercise_name' => $item->exercise->name,
-                'excess_sets_count'=> $item->excess_sets_count,
+                'average_sets_difference' => round($item->avg_sets_difference, 2),
             ];
         })->toArray();
 
