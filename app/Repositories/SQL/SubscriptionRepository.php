@@ -24,8 +24,8 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionContr
     public function syncRelations($model, $relations)
     {
         if ($model->amount && !$model->payment) {
-            $userId     = $model->patient->user_id;
-            $doctorId   = $model->doctor?->user_id;
+            $userId     = $model->patient_id;
+            $doctorId   = $model->doctor_id;
             $baseAmount = $model->amount;
 
             // Default values before coupon
@@ -71,8 +71,8 @@ class SubscriptionRepository extends BaseRepository implements SubscriptionContr
                 $paymentData['status'] = PaymentStatusConstants::COMPLETED->value;
 
                 // Deduct from patient's wallet and add to doctor's wallet
-                $model->patient?->user()->decrement('wallet', $calculated['total_amount']);
-                $model->doctor?->user()->increment('wallet', $calculated['doctor_amount'],);
+                $model->patient()->decrement('wallet', $calculated['total_amount']);
+                $model->doctor()->increment('wallet', $calculated['doctor_amount'],);
 
                 $model->update(['is_paid' => true]);
             }

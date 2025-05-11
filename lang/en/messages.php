@@ -1,6 +1,25 @@
 <?php
 
 return [
+    'setting-package' => 'Setting Package',
+    'add_setting-package' => 'Add New Setting Package',
+    'edit_setting-package' => 'Edit Setting Package',
+    'setting-package_details' => 'Setting Package Details',
+    'created_at' => 'Created At',
+    'setting-packages' => 'Setting Packages',
+    'manage_setting-packages' => 'Manage Setting Packages',
+
+    'package' => 'Package',
+    'add_package' => 'Add New Package',
+    'edit_package' => 'Edit Package',
+    'package_details' => 'Package Details',
+    'created_at' => 'Created At',
+    'packages' => 'Packages',
+    'manage_packages' => 'Manage Packages',
+    'num_of_sessions' => 'Number of sessions',
+    'duration' => 'Duration',
+    'price' => 'Price',
+    'is_active' => 'Active',
     'site_name' => 'Site Name',
     'app_payment_percentage' => 'Commission Percentage (%)',
     'featured_list_title' => 'Featured List Title',

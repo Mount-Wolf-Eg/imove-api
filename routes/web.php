@@ -146,5 +146,8 @@ Route::group([
 
         Route::resource('packages', PackageController::class);
         Route::put('packages/{package}/change-activation', [PackageController::class, 'changeActivation'])->name('packages.active');
+
+        Route::resource('setting-packages', SettingPackageController::class);
+        Route::put('setting-packages/{settingPackage}/change-activation', [SettingPackageController::class, 'changeActivation'])->name('setting-packages.active');
     });
 });

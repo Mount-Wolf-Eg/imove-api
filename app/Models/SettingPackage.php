@@ -10,7 +10,7 @@ use Spatie\Translatable\HasTranslations;
 
 class SettingPackage extends Model
 {
-    use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
+    use ModelTrait, SearchTrait, HasTranslations; 
     public const ADDITIONAL_PERMISSIONS = [];
     protected $fillable = ['num_of_sessions', 'duration'];
     protected array $filters = ['keyword'];

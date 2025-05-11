@@ -17,7 +17,7 @@ class Permission extends BasePermission
     protected array $filters = [];
 
     public const PERMISSIONS_NOT_APPLIED = true;
-    
+
     public static function defaultPermissions(): array
     {
         self::$permissions = [];
@@ -27,7 +27,7 @@ class Permission extends BasePermission
 
         self::$abilities->map(function ($ability) use ($guardName) {
             $perm = $ability . Str::lower(implode('-', preg_split('/(?=[A-Z])/', 'Referral')));
-            self::$permissions[] = ['name' => $perm, 'action' => $ability, 'model' => 'Referral', 'guard_name'=> $guardName];
+            self::$permissions[] = ['name' => $perm, 'action' => $ability, 'model' => 'Referral', 'guard_name' => $guardName];
         });
 
         $modelFiles = Storage::disk('app')->files('Models');
@@ -40,10 +40,10 @@ class Permission extends BasePermission
             self::$abilities->map(function ($ability) use ($guardName, $model, $modelClass) {
                 $perm = $ability . Str::lower(implode('-', preg_split('/(?=[A-Z])/', $model)));
                 if (!defined("$modelClass::PERMISSIONS_NOT_APPLIED") || !$modelClass::PERMISSIONS_NOT_APPLIED) {
-                    self::$permissions[] = ['name' => $perm, 'action' => $ability, 'model' => $model, 'guard_name'=> $guardName];
-                }else{
-                    if(is_array($modelClass::PERMISSIONS_NOT_APPLIED) && !in_array($ability,$modelClass::PERMISSIONS_NOT_APPLIED)){
-                        self::$permissions[] = ['name' => $perm, 'action' => $ability, 'model' => $model, 'guard_name'=> $guardName];
+                    self::$permissions[] = ['name' => $perm, 'action' => $ability, 'model' => $model, 'guard_name' => $guardName];
+                } else {
+                    if (is_array($modelClass::PERMISSIONS_NOT_APPLIED) && !in_array($ability, $modelClass::PERMISSIONS_NOT_APPLIED)) {
+                        self::$permissions[] = ['name' => $perm, 'action' => $ability, 'model' => $model, 'guard_name' => $guardName];
                     }
                 }
             });

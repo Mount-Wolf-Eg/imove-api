@@ -43,8 +43,7 @@ class SettingPackageController extends BaseWebController
      */
     public function create(): View|Factory|Application
     {
-        $settingPackage = $this->contract->search([], [], ['limit' => 0, 'page' => 0]);
-        return $this->createBlade(['settingPackage' => $settingPackage]);
+        return $this->createBlade();
     }
 
     /**
@@ -81,7 +80,6 @@ class SettingPackageController extends BaseWebController
      */
     public function edit(SettingPackage $settingPackage): View|Factory|Application
     {
-        $settingPackage = $this->contract->search([], [], ['limit' => 0, 'page' => 0]);
         return $this->editBlade(['settingPackage' => $settingPackage]);
     }
 

@@ -8,6 +8,7 @@ use App\Repositories\Contracts\CouponContract;
 use App\Rules\ValidCouponRule;
 use App\Services\Repositories\PaymentCalculator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Validator;
 
 class PackageSubscribeRequest extends FormRequest
 {
@@ -27,7 +28,7 @@ class PackageSubscribeRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'package_id'   => 'required|exists:packages,id',
+            // 'package_id'   => 'required|exists:packages,id',
             'coupon_code'  => ['nullable', 'exists:coupons,code', new ValidCouponRule()],
             'payment_type' => [
                 'required',
@@ -36,7 +37,7 @@ class PackageSubscribeRequest extends FormRequest
             ],
         ];
 
-        return array_merge($rules, (new DoctorScheduleRequest())->rules());
+        return array_merge($rules, (new ConsultationRequest())->rules());
     }
 
     public function prepareForValidation(): void
@@ -61,17 +62,27 @@ class PackageSubscribeRequest extends FormRequest
 
     public function validated($key = null, $default = null)
     {
-        $validated                    = parent::validated($key, $default);
-        $validated['patient_id']      = auth()->id();
+        $package = Package::findOrFail($this->route('package'));
 
-        $validated['doctor_id']       = $this->route('package')->user_id;
-        $validated['package_id']      = $this->route('package')->id;
-        $validated['is_active']       = true;
-        $validated['start_date']      = now();
-        $validated['end_date']        = now()->addDays($this->route('package')->duration);
-        $validated['price']           = $this->route('package')->price;
-        $validated['num_of_sessions'] = $this->route('package')->num_of_sessions;
-        
-        return array_merge($validated, DoctorScheduleRequest::afterValidation($validated));
+        $validated = parent::validated($key, $default);
+
+        // Manual validation using ConsultationRequest rules
+        $consultationRules = (new ConsultationRequest())->rules();
+
+        $consultationValidator = Validator::make($this->all(), $consultationRules);
+
+        $consultationValidated = $consultationValidator->validated();
+
+        return array_merge($validated, $consultationValidated, [
+            'patient_id'      => auth()->id(),
+            'doctor_id'       => $package->user->doctor->id,
+            'user_id'         => $package->user->id,
+            'package_id'      => $package->id,
+            'is_active'       => true,
+            'start_date'      => now(),
+            'end_date'        => now()->addDays($package->duration),
+            'amount'          => $package->price,
+            'num_of_sessions' => $package->num_of_sessions,
+        ]);
     }
 }

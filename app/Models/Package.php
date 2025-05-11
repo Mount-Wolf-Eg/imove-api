@@ -15,7 +15,7 @@ class Package extends Model
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     public const ADDITIONAL_PERMISSIONS = [];
     protected $fillable = ['user_id', 'name', 'description', 'num_of_sessions', 'duration', 'price', 'is_active'];
-    protected array $filters = ['keyword', 'active', 'owner', 'myCurrentSubscription', 'previousSubscriptions'];
+    protected array $filters = ['keyword', 'active', 'owner', 'myCurrentSubscription', 'previousSubscriptions', 'doctorId', 'isValidForUser'];
     protected array $searchable = ['name', 'description'];
     protected array $dates = [];
     public array $filterModels = [];
@@ -24,7 +24,7 @@ class Package extends Model
 
     public function image(): MorphOne
     {
-        return $this->morphOne(File::class, 'fileable')->where('type', FileConstants::FILE_TYPE_PACKAGE_IMAGE)->latest();
+        return $this->morphOne(File::class, 'fileable')->where('type', FileConstants::FILE_TYPE_PACKAGE_IMAGE);
     }
 
     //---------------------relations-------------------------------------
@@ -36,6 +36,11 @@ class Package extends Model
     public function subscriptions()
     {
         return $this->hasMany(Subscription::class);
+    }
+
+    public function consultations()
+    {
+        return $this->hasMany(Consultation::class);
     }
 
     public function previousSubscriptions()
@@ -58,6 +63,11 @@ class Package extends Model
     public function scopeOfActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    public function scopeOfDoctorId($query, $doctorId)
+    {
+        return $query->where('user_id', $doctorId);
     }
 
     public function scopeOfOwner($query)

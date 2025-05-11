@@ -1,6 +1,24 @@
 <?php
 
 return [
+    'setting-package' => 'الباقة',
+    'add_setting-package' => 'إضافة باقة جديدة',
+    'edit_setting-package' => 'تعديل الباقة',
+    'setting-package_details' => 'تفاصيل الباقة',
+    'setting-packages' => 'الباقات',
+    'manage_setting-packages' => 'إدارة الباقات',
+
+    'package' => 'الباقة',
+    'add_package' => 'إضافة باقة جديدة',
+    'edit_package' => 'تعديل الباقة',
+    'package_details' => 'تفاصيل الباقة',
+    'packages' => 'الباقات',
+    'manage_packages' => 'إدارة الباقات',
+    'created_at' => 'تاريخ الإنشاء',
+    'num_of_sessions' => 'عدد الجلسات',
+    'duration' => 'المدة',
+    'price' => 'السعر',
+    'is_active' => 'مفعل',
     'site_name' => 'اسم الموقع',
     'app_payment_percentage' => 'نسبة العمولة (%)',
     'reschedule_grace_period' => 'فترة السماح لإعادة الجدولة (بالساعات)',
