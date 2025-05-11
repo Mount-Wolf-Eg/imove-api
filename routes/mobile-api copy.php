@@ -205,10 +205,9 @@ Route::group(['middleware' => 'locale'], static function () {
             // technical support doctor
             Route::post('technical-support', [TechnicalSupportController::class, 'createForDoctor']);
 
+
             Route::apiResource('packages', DoctorPackageController::class)->only('index', 'store', 'update', 'destroy');
             Route::patch('packages/{package}/change-activation', [DoctorPackageController::class, 'changeActivation'])->name('packages.active');
-
-            
 
             // medical-equipments
             Route::post('consultation/{consultation}/assign-medical-equipments', [MedicalEquipmentController::class, 'assignToConsultation']);
