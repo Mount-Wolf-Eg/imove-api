@@ -25,6 +25,8 @@ class MedicalEquipmentResource extends BaseResource
             'link' => $this->link,
             // 'is_active' => $this->is_active,
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
+            // Add is_assigned_to_consultation based on consultation_id from request
+            'is_assigned_to_consultation' => $this->getIsAssignedToConsultation($request),
         ];
         $this->full = [
         ];
@@ -35,4 +37,23 @@ class MedicalEquipmentResource extends BaseResource
  
         return $this->getResource();
     }
+
+    /**
+     * Determine if the medical equipment is assigned to the consultation provided in the request.
+     *
+     * @param Request $request
+     * @return bool|null
+     */
+    protected function getIsAssignedToConsultation(Request $request): ?bool
+    {
+        $consultationId = $request->query('consultation_id');
+
+        if (!$consultationId) {
+            return null; // Return null if no consultation_id is provided
+        }
+
+        // Check if the medical equipment is assigned to the consultation
+        return $this->consultations()->where('consultation_id', $consultationId)->exists();
+    }
+
 }
