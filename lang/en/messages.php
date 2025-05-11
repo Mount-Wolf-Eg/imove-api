@@ -530,6 +530,20 @@ return [
     'notifications' => 'Notifications',
     'notification' => 'Notification',
     'notification_messages' => [
+        'payment' => [
+            'accepted' => [
+                'title' => 'Payment Accepted',
+                'body' => 'Your payment has been accepted',
+            ],
+            'rejected' => [
+                'title' => 'Payment Rejected',
+                'body' => 'Your payment has been rejected',
+            ],
+            'deducted' => [
+                'title' => 'Payment Deducted',
+                'body' => 'Your payment has been deducted',
+            ]
+        ],
         'article' => [
             'new' => [
                 'title' => 'New Article',

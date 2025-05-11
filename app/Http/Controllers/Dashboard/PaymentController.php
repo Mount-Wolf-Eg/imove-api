@@ -48,7 +48,6 @@ class PaymentController extends BaseWebController
 
     public function refundRequest(Request $request): View|Factory|Application
     {
-        // dd($request->all());
         $resources = $this->contract->search($request->all() + ['type' => PaymentTypeConstants::REFUND->value], ['payer', 'beneficiary', 'currency']);
         $patients = resolve(PatientContract::class)->search([], ['user'], ['limit' => PHP_INT_MAX]);
         $statuses = collect(PaymentStatusConstants::valuesCollection());

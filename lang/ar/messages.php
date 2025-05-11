@@ -527,6 +527,20 @@ return [
     'notifications' => 'الإشعارات',
     'notification' => 'الإشعار',
     'notification_messages' => [
+        'payment' => [
+            'accepted' => [
+                'title' => 'تم قبول الدفع',
+                'body' => 'تم قبول الدفع بنجاح'
+            ],
+            'rejected' => [
+                'title' => 'تم رفض الدفع',
+                'body' => 'تم رفض الدفع'
+            ],
+            'refunded' => [
+                'title' => 'تم استرداد الدفع',
+                'body' => 'تم استرداد الدفع'
+            ],
+        ],
         'article' => [
             'new' => [
                 'title' => 'مقال جديد',
