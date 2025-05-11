@@ -208,6 +208,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('packages', DoctorPackageController::class)->only('index', 'store', 'update', 'destroy');
             Route::patch('packages/{package}/change-activation', [DoctorPackageController::class, 'changeActivation'])->name('packages.active');
 
+            
             // medical-equipments
             Route::post('consultation/{consultation}/assign-medical-equipments', [MedicalEquipmentController::class, 'assignToConsultation']);
             Route::post('consultation/{consultation}/remove-medical-equipments', [MedicalEquipmentController::class, 'removeFromConsultation']);
