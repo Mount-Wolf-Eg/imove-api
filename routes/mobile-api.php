@@ -205,13 +205,19 @@ Route::group(['middleware' => 'locale'], static function () {
             // technical support doctor
             Route::post('technical-support', [TechnicalSupportController::class, 'createForDoctor']);
 
-
             Route::apiResource('packages', DoctorPackageController::class)->only('index', 'store', 'update', 'destroy');
             Route::patch('packages/{package}/change-activation', [DoctorPackageController::class, 'changeActivation'])->name('packages.active');
 
-
+            // medical-equipments
             Route::post('consultation/{consultation}/assign-medical-equipments', [MedicalEquipmentController::class, 'assignToConsultation']);
             Route::post('consultation/{consultation}/remove-medical-equipments', [MedicalEquipmentController::class, 'removeFromConsultation']);
+
+            // programs
+            Route::controller(doctorProgramController::class)->prefix('programs')->group(function () {
+                Route::get('/{program}/program-report', 'getProgramReport');
+                Route::get('/session/{sessionId}/session-analytics', 'getSessionAnalytics');
+            });
+
 
         });
     });
