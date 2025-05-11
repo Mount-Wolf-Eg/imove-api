@@ -40,7 +40,7 @@ class PaymentRepository extends BaseRepository implements PaymentContract
 
     public function accept(Payment $payment): Payment
     {
-        if ($payment->status != PaymentStatusConstants::PENDING->value) {
+        if ($payment->status->value != PaymentStatusConstants::PENDING->value) {
             throw new \DomainException('Only pending payments can be accepted.');
         }
 
@@ -66,7 +66,7 @@ class PaymentRepository extends BaseRepository implements PaymentContract
 
     public function reject(Payment $payment): Payment
     {
-        if ($payment->status != PaymentStatusConstants::PENDING->value) {
+        if ($payment->status->value != PaymentStatusConstants::PENDING->value) {
             throw new \DomainException('Only pending payments can be rejected.');
         }
 
