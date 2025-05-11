@@ -23,7 +23,7 @@ class Exercise extends Model
     protected array $filters = ['keyword'];
     protected array $searchable = ['name', 'brief', 'description'];
     protected array $dates = [];
-    public array $filterModels = [];
+    public array $filterModels = ['MedicalSpecialities'];
     public array $filterCustom = [];
     public array $translatable = ['name', 'brief', 'description'];
     public $with = ['media', 'medicalSpecialities'];
@@ -48,6 +48,22 @@ class Exercise extends Model
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
+    public function scopeOfMedicalSpecialities($query, $medicalSpecialityIds)
+    {
+        return $query->whereHas('medicalSpecialities', function ($q) use ($medicalSpecialityIds) {
+                $q->whereIn('medical_speciality_id',  (array)$medicalSpecialityIds);
+            });
+        // return $query->whereIn('medical_speciality_id', (array)$medicalSpecialityIds);
+    }
+    
+    // public function scopeOfVendorService($query, $value)
+    // {
+    //     return $query->whereHas('vendorServices', function ($q) use ($value) {
+    //         $q->whereIn('vendor_service_id', (array)$value);
+    //         // $q->whereIn('medical_specialities.id',  (array)$medicalSpecialityIds);
+
+    //     });
+    // }
 
     //---------------------Scopes-------------------------------------
 
