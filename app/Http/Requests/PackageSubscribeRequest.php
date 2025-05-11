@@ -76,7 +76,6 @@ class PackageSubscribeRequest extends FormRequest
         $consultationValidated = $consultationRequest->validated();
 
         return array_merge($validated, $consultationValidated, [
-            'patient_id'      => $validated['patient_id'] ?? $this->user()->patient?->id,
             'doctor_id'       => $package->user->doctor->id,
             'user_id'         => $package->user->id,
             'package_id'      => $package->id,
