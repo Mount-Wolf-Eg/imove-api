@@ -35,6 +35,8 @@ class EducationalContentResource extends BaseResource
             'medical_speciality_name' => $this->medical_speciality?->name,
             'likes' => $this->likes,
             'published_at' => $this->published_at?->format('Y-m-d H:i:s'),
+            // Add is_assigned_to_consultation based on consultation_id from request
+            'is_assigned_to_consultation' => $this->getIsAssignedToConsultation($request),
         ];
         $this->relations = [
             // 'main_image' => $this->relationLoaded('mainImage') ? null : null,
@@ -46,4 +48,24 @@ class EducationalContentResource extends BaseResource
         ];
         return $this->getResource();
     }
+
+    
+    /**
+     * Determine if the medical equipment is assigned to the consultation provided in the request.
+     *
+     * @param Request $request
+     * @return bool|null
+     */
+    protected function getIsAssignedToConsultation(Request $request): ?bool
+    {
+        $consultationId = $request->query('consultation_id');
+
+        if (!$consultationId) {
+            return null; // Return null if no consultation_id is provided
+        }
+
+        // Check if the medical equipment is assigned to the consultation
+        return $this->consultations()->where('consultation_id', $consultationId)->exists();
+    }
+
 }
