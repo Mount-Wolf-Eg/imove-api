@@ -29,6 +29,7 @@ class EducationalContentFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'consultation_id' => 'nullable|exists:consultations,id',
             'medical_speciality_ids' => 'nullable|array',
             'medical_speciality_ids.*' => 'exists:medical_specialities,id',
             'title_starts_with' => 'nullable|string|size:1|regex:/^[\p{L}\p{N}]+$/u',

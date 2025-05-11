@@ -210,8 +210,17 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::patch('packages/{package}/change-activation', [DoctorPackageController::class, 'changeActivation'])->name('packages.active');
             Route::get('get-setting-package', [DoctorPackageController::class, 'getSettingPackage']);
 
+  
+            // medical-equipments
             Route::post('consultation/{consultation}/assign-medical-equipments', [MedicalEquipmentController::class, 'assignToConsultation']);
             Route::post('consultation/{consultation}/remove-medical-equipments', [MedicalEquipmentController::class, 'removeFromConsultation']);
+
+            // programs
+            Route::controller(doctorProgramController::class)->prefix('programs')->group(function () {
+                Route::get('/{program}/program-report', 'getProgramReport');
+                Route::get('/session/{sessionId}/session-analytics', 'getSessionAnalytics');
+            });
+
 
         });
     });
