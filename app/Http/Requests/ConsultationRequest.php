@@ -70,7 +70,7 @@ class ConsultationRequest extends FormRequest
             if (isset($validated['package_id']) && $validated['package_id'] != null) {
                 $package = resolve(PackageContract::class)->find($validated['package_id']);
     
-                if ($package && $package->isValidForUser($validated['patient_id'])) {
+                if ($package && $package->ofIsValidForUser($validated['patient_id'])) {
                     if (isset($validated['doctor_id']) && $validated['doctor_id'] != null && $validated['doctor_id'] != $package->doctor_id) {
                         $validated['is_active'] = true;
                     } else {
