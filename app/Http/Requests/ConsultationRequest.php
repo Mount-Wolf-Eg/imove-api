@@ -193,7 +193,7 @@ class ConsultationRequest extends FormRequest
                 abort(422, __('messages.patient_can_not_reschedule_consultation'));
             }
 
-            $doctor_schedule_day_shift_is_required = $consultation->status == ConsultationStatusConstants::NEEDS_RESCHEDULE->value ? 'required|' : 'nullable|';
+            $doctor_schedule_day_shift_is_required = $consultation?->status == ConsultationStatusConstants::NEEDS_RESCHEDULE->value ? 'required|' : 'nullable|';
             $rules['doctor_schedule_day_shift_id'] = $doctor_schedule_day_shift_is_required . sprintf(config('validations.model.null'), 'doctor_schedule_day_shifts', 'id');
 
             return $rules;

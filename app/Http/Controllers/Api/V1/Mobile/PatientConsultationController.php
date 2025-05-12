@@ -131,7 +131,12 @@ class PatientConsultationController extends BaseApiController
             $consultation = $this->contract->update($consultation, ['status' => ConsultationStatusConstants::PATIENT_CANCELLED->value]);
 
             if ($consultation->subscribe && $consultation->subscribe->ofAvailable) {
-                $consultation->subscribe()->decrement('used_num_of_sessions', 1);
+                if ($consultation->returnMony()) {
+                    $consultation->subscribe()->decrement('used_num_of_sessions', 1);
+                    $consultation->update(['is_replaceable' => true]);
+                } else {
+                    $consultation->update(['is_replaceable' => false]);
+                }
             } else {
                 if ($consultation->returnMony()) $this->contract->refundAmount($consultation, $consultation->total_amount);
             }

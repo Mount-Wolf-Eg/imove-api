@@ -20,6 +20,7 @@ class DoctorPackageResource extends BaseResource
             'name' => $this->name,
             'description' => $this->description,
             'num_of_sessions' => $this->num_of_sessions,
+            'used_num_of_sessions' => $this->used_num_of_sessions,
             'duration' => $this->duration,
             'price' => $this->price,
         ];

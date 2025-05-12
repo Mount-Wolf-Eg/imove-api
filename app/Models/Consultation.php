@@ -59,6 +59,7 @@ class Consultation extends Model
         'coupon_id',
         'is_active',
         'package_id',
+        'is_replaceable'
     ];
 
     protected array $filters = [

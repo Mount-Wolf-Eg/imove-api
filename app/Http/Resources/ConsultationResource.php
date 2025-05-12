@@ -28,6 +28,7 @@ class ConsultationResource extends BaseResource
         ];
         $this->mini = [
             'is_active' => $this->is_active,
+            'is_replaceable' => (bool) $this->is_replaceable,
             'active_status' => $this->active_status,
             'active_class' => $this->active_class,
             'patient_can_reschedule' => (bool) $this->patientCanReschedule(),
