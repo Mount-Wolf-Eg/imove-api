@@ -62,7 +62,7 @@ class MyFatoorahController extends Controller
 
         $model   = $type === 'consultation' ? Consultation::class : Subscription::class;
 
-        if (!$model::where('id', $orderId)->exists()) {
+        if (!$model::where('id', $orderId)->withoutGlobalScopes()->exists()) {
             return $this->respondWithErrors('Order not found.', 404, [], 'Order not found.');
         }
 
