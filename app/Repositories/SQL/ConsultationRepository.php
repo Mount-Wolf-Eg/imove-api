@@ -237,18 +237,18 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
     }
 
     // add / Create Program Exercises  
-    public function createProgramExercises(Consultation $consultation, array $exercises): Program
+    public function createProgramExercises(Consultation $consultation, array $attributes)
     {
-        return DB::transaction(function () use ($consultation, $exercises) {
+        return DB::transaction(function () use ($consultation, $attributes) {
             // Update Or Create the program
             $program = Program::updateOrCreate(
                 ['consultation_id' => $consultation->id], 
                 ['patient_id' => $consultation->patient_id] 
             );
-
             // Create program exercises
             $syncData = [];
-            foreach ($exercises as $exercise) {
+            foreach ($attributes['exercises'] as $exercise) {
+                // return $exercise;
                 $syncData[$exercise['exercise_id']] = [
                     'sets' => $exercise['sets'] ?? null,
                     'break_between_sets' => $exercise['break_between_sets'] ?? null,
@@ -258,7 +258,6 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
                     'comments' => $exercise['comments'] ?? null,
                 ];
             }
-
             $program->exercises()->sync($syncData);
 
             return $program;

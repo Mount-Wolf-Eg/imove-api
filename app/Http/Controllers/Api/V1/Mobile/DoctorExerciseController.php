@@ -31,7 +31,7 @@ class DoctorExerciseController extends BaseApiController
         ConsultationContract        $contract,
     ) {
         $this->middleware('role:doctor');
-        parent::__construct($contract, ConsultationResource::class);
+        parent::__construct($contract, SettingProgramExercisesResource::class);
     }
 
 
@@ -71,10 +71,11 @@ class DoctorExerciseController extends BaseApiController
     }
 
     // assign To (add) Program Exercises consultation
-    public function assignToProgramExercises(CreateProgramExerciseRequest $request, Consultation $consultation): JsonResponse
+    public function assignToProgramExercises(CreateProgramExerciseRequest $request, Consultation $consultation)
     {
         try {
-            $this->contract->createProgramExercises(
+            // return $request->validated();
+            return $this->contract->createProgramExercises(
                 $consultation, $request->validated()
             );
 
@@ -106,6 +107,8 @@ class DoctorExerciseController extends BaseApiController
             $program = $this->contract->updateOrCreateDiagnosis(
                 $consultation, $request->validated()
             );
+
+            dd($program);
 
             return $this->respondWithModel($program);
         } catch (Exception $e) {
