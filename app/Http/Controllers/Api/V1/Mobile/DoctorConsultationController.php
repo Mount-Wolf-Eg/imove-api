@@ -267,7 +267,7 @@ class DoctorConsultationController extends BaseApiController
     public function getSettingProgramExercises(Consultation $consultation)
     {
         try {
-            $program = $consultation->program ?? null
+            $program = $consultation->program ?? null ;
             return $this->respondWithResource(new SettingProgramExercisesResource($program), 201);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
