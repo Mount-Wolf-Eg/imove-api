@@ -187,7 +187,13 @@ Route::group(['middleware' => 'locale'], static function () {
                 Route::post('/{consultation}/accept-urgent-case', 'acceptUrgentCase');
                 Route::post('/{consultation}/cancel', 'cancel');
                 Route::post('/{consultation}/reschedule', 'reschedule');
-                Route::post('/{consultation}/program', 'createProgram');
+                // Route::post('/{consultation}/program', 'createProgram');
+                Route::get('/{consultation}/program-exercises', 'getProgramExercises');
+                Route::get('/{consultation}/setting-program-exercises', 'getSettingProgramExercises');
+                Route::post('/{consultation}/update-or-create-setting-exercises', 'updateOrCreateSettingProgram');
+                Route::post('/{consultation}/update-or-create-diagnosis', 'updateOrCreateDiagnosis');
+                Route::post('/{consultation}/assign-exercises', 'assignToProgramExercises');
+                Route::post('/{consultation}/remove-exercises', 'removeFromProgramExercises');
             });
             Route::get('payments', [PaymentController::class, 'doctorIndex']);
             Route::post('refund-request', [PaymentController::class, 'refundRequest']);
