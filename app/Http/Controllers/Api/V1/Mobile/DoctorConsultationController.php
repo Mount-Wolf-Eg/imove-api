@@ -10,16 +10,22 @@ use App\Http\Requests\ConsultationPrescriptionRequest;
 use App\Http\Requests\ConsultationVendorReferralRequest;
 use App\Http\Requests\DoctorAcceptUrgentConsultationRequest;
 use App\Http\Requests\DoctorRescheduleConsultationRequest;
-use App\Http\Requests\CreateProgramRequest;
+use App\Http\Requests\CreateOrUpdateSettingProgramRequest;
+use App\Http\Requests\CreateProgramExerciseRequest;
+use App\Http\Requests\ExercisesIdRequest;
+use App\Http\Requests\DiagnosisRequest;
 use App\Http\Resources\ConsultationResource;
 use App\Http\Resources\PrescriptionConsultationResource;
 use App\Http\Resources\ProgramResource;
+use App\Http\Resources\ProgramExercisesResource;
+use App\Http\Resources\SettingProgramExercisesResource;
 use App\Models\Consultation;
 use App\Repositories\Contracts\ConsultationContract;
 use App\Services\Repositories\ConsultationDoctorReferralService;
 use App\Services\Repositories\ConsultationNotificationService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 
 class DoctorConsultationController extends BaseApiController
@@ -41,7 +47,7 @@ class DoctorConsultationController extends BaseApiController
     ) {
         $this->middleware('role:doctor');
         $this->defaultScopes = ['doctorsList' => true, 'doctorNoConsultationPatient' => true];
-        $this->relations = ['patient.parent', 'patient.diseases', 'doctorScheduleDayShift.day', 'doctor.rates', 'attachments'];
+        $this->relations = ['patient.parent', 'patient.diseases', 'doctorScheduleDayShift.day', 'doctor.rates', 'attachments', 'program'];
         parent::__construct($contract, ConsultationResource::class);
         $this->notificationService = $notificationService;
         $this->doctorReferralService = $doctorReferralService;
@@ -245,68 +251,81 @@ class DoctorConsultationController extends BaseApiController
         }
     }
 
-    
-    // public function createProgram(CreateProgramRequest $request, Consultation $consultation): JsonResponse
-    // {
-    //     try {
-    //         return DB::transaction(function () use ($request, $consultation) {
-    //             // Create the program
-    //             $programData = $request->only([
-    //                 'consultation_id',
-    //                 'diagnosis',
-    //                 'num_of_sessions_per_day',
-    //                 'num_of_days_of_week',
-    //                 'num_of_weeks',
-    //                 'break_between_exercises',
-    //             ]);
 
-    //             $program = Program::create(array_merge($programData, ['consultation_id' => $consultation->id]));
 
-    //             // Create program exercises
-    //             $exercises = $request->input('exercises', []);
-    //             foreach ($exercises as $exercise) {
-    //                 $program->exercises()->attach($exercise['exercise_id'], [
-    //                     'sets' => $exercise['sets'] ?? null,
-    //                     'break_between_sets' => $exercise['break_between_sets'] ?? null,
-    //                     'weight' => $exercise['weight'] ?? null,
-    //                     'rep' => $exercise['rep'] ?? null,
-    //                     'hold_duration' => $exercise['hold_duration'] ?? null,
-    //                     'comments' => $exercise['comments'] ?? null,
-    //                 ]);
-    //             }
-
-    //             return $this->respondWithResource(new ProgramResource($program->load(['exercises'])), 201);
-    //         });
-    //     } catch (Exception $e) {
-    //         return $this->respondWithError($e->getMessage(), 422);
-    //     }
-    // }
-
-    
-    /**
-     * Create a new program with associated exercises for a consultation.
-     *
-     * @param CreateProgramRequest $request
-     * @param Consultation $consultation
-     * @return JsonResponse
-     */
-    public function createProgram(CreateProgramRequest $request, Consultation $consultation): JsonResponse
+    // get Program Exercises in consultation
+    public function getProgramExercises(Consultation $consultation): JsonResponse
     {
         try {
-            $programData = $request->only([
-                'diagnosis','num_of_sessions_per_day',
-                'num_of_days_of_week','num_of_weeks',
-                'break_between_exercises',
-            ]);
+            return $this->respondWithResource(new ProgramExercisesResource($consultation->program), 201);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
 
-            $relations = ['consultation', 'exercises', 'sessions'];
+    // get Setting Program Exercises in consultation
+    public function getSettingProgramExercises(Consultation $consultation)
+    {
+        try {
+            $program = $consultation->program ?? null ;
+            return $this->respondWithResource(new SettingProgramExercisesResource($program), 201);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
 
-            $program = $this->contract->createProgram(
-                $consultation, $programData,
-                $request->input('exercises', []), $relations
+    // Update Or Create Setting Program Exercises
+    public function updateOrCreateSettingProgram(CreateOrUpdateSettingProgramRequest $request, Consultation $consultation)
+    {
+        try {
+            $program = $this->contract->updateOrCreateSettingProgram(
+                $consultation, $request->validated()
             );
 
-            return $this->respondWithResource(new ProgramResource($program), 201);
+            return $this->respondWithModel($program);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
+
+    // assign To (add) Program Exercises consultation
+    public function assignToProgramExercises(CreateProgramExerciseRequest $request, Consultation $consultation): JsonResponse
+    {
+        try {
+            $this->contract->createProgramExercises(
+                $consultation, $request->validated()
+            );
+
+            return $this->respondWithArray(['message' => __('messages.create_success')], [], Response::HTTP_CREATED);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    // remove From Program Exercises consultation
+    public function removeFromProgramExercises(Consultation $consultation, ExercisesIdRequest $request)
+    {
+        try {
+            $this->contract->deleteProgramExercises(
+                $consultation, $request->validated()['exercise_ids']
+            );
+
+            return $this->respondWithArray(['message' => __('messages.delete_success')], [], Response::HTTP_OK);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+
+    // Update Or Create Diagnosis consultation
+    public function updateOrCreateDiagnosis(DiagnosisRequest $request, Consultation $consultation)
+    {
+        try {
+            $program = $this->contract->updateOrCreateDiagnosis(
+                $consultation, $request->validated()
+            );
+
+            return $this->respondWithModel($program);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
         }

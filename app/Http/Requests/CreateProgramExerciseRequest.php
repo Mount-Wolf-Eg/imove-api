@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Traits\JsonValidationTrait;
 
-class CreateProgramRequest extends FormRequest
+class CreateProgramExerciseRequest extends FormRequest
 {
     use JsonValidationTrait;
 
@@ -27,12 +27,6 @@ class CreateProgramRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'consultation_id' => ['required', 'exists:consultations,id'],
-            'diagnosis' => ['required', 'string', 'max:255'],
-            'num_of_sessions_per_day' => ['required', 'integer', 'min:1'],
-            'num_of_days_of_week' => ['required', 'integer', 'min:1', 'max:7'],
-            'num_of_weeks' => ['required', 'integer', 'min:1'],
-            'break_between_exercises' => ['required', 'integer', 'min:0'],
             'exercises' => ['required', 'array', 'min:1'],
             'exercises.*.exercise_id' => ['required', 'exists:exercises,id'],
             'exercises.*.sets' => ['required', 'integer', 'min:1'],
