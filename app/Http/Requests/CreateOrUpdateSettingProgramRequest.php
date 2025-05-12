@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Traits\JsonValidationTrait;
 
-class ExerciseFilterRequest extends FormRequest
+class CreateOrUpdateSettingProgramRequest extends FormRequest
 {
     use JsonValidationTrait;
 
@@ -19,8 +19,6 @@ class ExerciseFilterRequest extends FormRequest
         return true;
     }
 
-  
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -29,14 +27,10 @@ class ExerciseFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'consultation_id' => 'nullable|exists:consultations,id',
-            'medical_speciality_ids'   => 'nullable|array',
-            'medical_speciality_ids.*' => 'exists:medical_specialities,id',
-            'keyword' => 'nullable|string',
-            'page'  => 'nullable|integer|min:1',
-            'limit' => 'nullable|integer|min:1',
-            'order' => 'nullable|array',
-            'order.*' => 'in:asc,desc',
+            'num_of_sessions_per_day' => ['required', 'integer', 'min:1'],
+            'num_of_days_of_week' => ['required', 'integer', 'min:1', 'max:7'],
+            'num_of_weeks' => ['required', 'integer', 'min:1'],
+            'break_between_exercises' => ['required', 'integer', 'min:0'],
         ];
     }
 
@@ -57,5 +51,4 @@ class ExerciseFilterRequest extends FormRequest
     {
         return [];
     }
-
 }

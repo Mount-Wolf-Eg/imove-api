@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Traits\JsonValidationTrait;
 
-class ExerciseFilterRequest extends FormRequest
+class ExercisesIdRequest extends FormRequest
 {
     use JsonValidationTrait;
 
@@ -17,6 +17,7 @@ class ExerciseFilterRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
+        // return auth()->check() && auth()->user()->doctor;
     }
 
   
@@ -29,14 +30,8 @@ class ExerciseFilterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'consultation_id' => 'nullable|exists:consultations,id',
-            'medical_speciality_ids'   => 'nullable|array',
-            'medical_speciality_ids.*' => 'exists:medical_specialities,id',
-            'keyword' => 'nullable|string',
-            'page'  => 'nullable|integer|min:1',
-            'limit' => 'nullable|integer|min:1',
-            'order' => 'nullable|array',
-            'order.*' => 'in:asc,desc',
+            'exercise_ids' => 'required|array',
+            'exercise_ids.*' => 'exists:exercises,id',
         ];
     }
 
