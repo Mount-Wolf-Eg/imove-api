@@ -33,7 +33,26 @@ class SubscriptionResource extends BaseResource
         ];
         $this->full = [];
         //$this->relationLoaded()
-        $this->relations = [];
+        $this->relations = [
+            'consultations' => $this->whenLoaded('consultations', function () {
+                return ConsultationResource::collection($this->consultations);
+            }),
+            'package' => $this->whenLoaded('package', function () {
+                return new DoctorPackageResource($this->package);
+            }),
+            'doctor' => $this->whenLoaded('doctor', function () {
+                return new UserResource($this->doctor);
+            }),
+            'patient' => $this->whenLoaded('patient', function () {
+                return new UserResource($this->patient);
+            }),
+            'coupon' => $this->whenLoaded('coupon', function () {
+                return new CouponResource($this->coupon);
+            }),
+            'payment' => $this->whenLoaded('payment', function () {
+                return new PaymentResource($this->payment);
+            }),
+        ];
         return $this->getResource();
     }
 }
