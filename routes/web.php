@@ -41,6 +41,7 @@ use App\Http\Controllers\Dashboard\HomeCareRequestController;
 use App\Http\Controllers\Dashboard\PackageController;
 use App\Http\Controllers\Dashboard\SettingPackageController; 
 use App\Http\Controllers\Dashboard\ExerciseController;
+use App\Http\Controllers\Dashboard\UniversityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -137,6 +138,8 @@ Route::group([
         Route::patch('home-care-requests/{homeCareRequest}/status', [HomeCareRequestController::class, 'updateStatus'])->name('home-care-requests.update-status');
         Route::resource('exercises', ExerciseController::class);
         Route::put('exercises/{exercise}/change-activation', [ExerciseController::class, 'changeActivation'])->name('exercises.active');
+        Route::resource('universities', UniversityController::class);
+        Route::put('universities/{university}/change-activation', [UniversityController::class, 'changeActivation'])->name('universities.active');
 
         Route::prefix('profile')->group(function () {
             Route::get('/', [ProfileController::class, 'profile'])->name('profile');

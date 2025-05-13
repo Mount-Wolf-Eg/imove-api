@@ -693,6 +693,15 @@ return [
     'add_exercise' => 'Add Exercise',
     'edit_exercises' => 'Edit Exercise',
     'exercise_details' => 'Exercise Details',
+    'medical-equipment_details' => 'Medical Equipment Details',
+    'universities' => 'Universities',
+    'add_university' => 'Add University',
+    'manage_universities' => 'Manage Universities',
+    'city' => 'City',
+    'edit_university' => 'Edit University',
+    'university' => 'University',
+    'university_details' => 'University Details',
+    'num_doctors' => 'Number Of Doctors',
 
 
 ];

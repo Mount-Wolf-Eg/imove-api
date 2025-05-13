@@ -27,7 +27,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(MedicalEquipmentSeeder::class);
         // $this->call(StaticPageSeeder::class);
         // $this->call(EducationalContentSeeder::class);
-        $this->call(ExerciseSeeder::class);
+        // $this->call(ExerciseSeeder::class);
 
 
     }

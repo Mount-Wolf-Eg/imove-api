@@ -96,10 +96,14 @@
                                 <br>
                                 @if(isset($exercise) && $exercise->media)
                                     <div class="col-6 position-relative">
-                                        <a class="btn btn-flat-light my-3 mx-2 remove-image-resource position-absolute top-0 {{app()->getLocale() == 'ar' ? 'start' : 'end'}}-0" data-id="{{$exercise->media->id}}">
+                                        <a class="btn btn-flat-light my-3 mx-2 remove-image-resource position-absolute top-0 {{ app()->getLocale() == 'ar' ? 'start' : 'end' }}-0" data-id="{{ $exercise->media->id }}">
                                             <i class="bi bi-x-lg"></i>
                                         </a>
-                                        <img src="{{$exercise->media->asset_url}}" title="{{$exercise->media->name}}" class="img-fluid mt-3" alt="{{__('messages.video')}}" style="max-height: 200px">
+
+                                        <video controls class="mt-3" style="max-height: 200px; width: 100%;">
+                                            <source src="{{ $exercise->media->asset_url }}" type="video/mp4">
+                                            {{ __('messages.video_not_supported') ?? 'Your browser does not support the video tag.' }}
+                                        </video>
                                     </div>
                                 @endif
                             </div>

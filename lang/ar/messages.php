@@ -690,5 +690,15 @@ return [
     'add_exercise' => 'اضافة تمرين',
     'edit_exercises' => 'تعديل التمرين',
     'exercise_details' => 'تفاصيل التمرين',
+    'medical-equipment_details' => 'التفاصيل',
+    'universities' => 'الجامعات',
+    'university' => 'الجامعة',
+    'city' => 'المدينة',
+    'manage_universities' => 'اداره الجامعات',
+    'add_university' => 'اضافة جامعة',
+    'edit_university' => 'تعديل بيانات الجامعة',
+    'university_details' => 'التفاصيل',
+    'num_doctors' => 'عدد الدكاترة',
+
 
 ];
