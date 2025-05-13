@@ -13,7 +13,7 @@ class City extends Model
 {
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     public const ADDITIONAL_PERMISSIONS = [];
-    protected $fillable = [];
+    protected $fillable = ['name', 'region_id', 'is_active'];
     protected array $filters = ['keyword', 'active'];
     protected array $searchable = [];
     protected array $dates = [];
@@ -31,6 +31,11 @@ class City extends Model
     public function users()
     {
         return $this->hasMany(User::class);
+    }
+
+    public function universities()
+    {
+        return $this->hasMany(University::class,'city_id');
     }
 
     //---------------------relations-------------------------------------

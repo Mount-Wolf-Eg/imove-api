@@ -293,6 +293,16 @@
                 </li>
                 @endif
 
+                
+                @if(auth()->user()->can('read-university') || auth()->user()->can('view-all-university'))
+                <li class="nav-item">
+                    <a href="{{route('universities.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('universities.index', 'universities.show', 'universities.create', 'universities.edit')])>
+                        <i class="bi bi-building"></i>
+                        <span data-key="t-dashboard">{{ __('messages.universities') }}</span>
+                    </a>
+                </li>
+                @endif
+
                 @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
                 <li class="nav-item">
                     <a href="{{route('static-pages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('static-pages.index', 'static-pages.show', 'static-pages.create', 'static-pages.edit')])>
