@@ -7,7 +7,14 @@
     <div class="row">
         <div class="col-md-4">
             <div class="card">
-                <img src="{{ $exercise->media->asset_url ?? asset('assets/images/logo-sm.png') }}" class="card-img-top img-fluid mx-auto d-block float-md-left mr-md-4" @style(['max-height:400px'])>
+                @if($exercise->media && Str::endsWith($exercise->media->asset_url, ['.mp4', '.webm', '.ogg']))
+                    <video controls style="max-height:400px; width: 100%;" class="mx-auto d-block float-md-left mr-md-4">
+                        <source src="{{ $exercise->media->asset_url }}" type="video/mp4">
+                        المتصفح لا يدعم تشغيل الفيديو.
+                    </video>
+                @else
+                    <img src="{{ $exercise->media->asset_url ?? asset('assets/images/logo-sm.png') }}" class="card-img-top img-fluid mx-auto d-block float-md-left mr-md-4" style="max-height:400px;">
+                @endif
             </div>
         </div>
         <div class="col-md-8">

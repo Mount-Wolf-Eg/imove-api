@@ -60,7 +60,7 @@ class ExerciseRequest extends FormRequest
             'brief.en' => __('messages.brief_en'),
             'description.ar' => __('messages.description_ar'),
             'description.en' => __('messages.description_en'),
-            'media' => __('messages.image'),
+            'media' => __('messages.video'),
         ];
     }
 
