@@ -59,6 +59,7 @@ class Consultation extends Model
         'coupon_id',
         'is_active',
         'package_id',
+        'subscription_id',
         'is_replaceable'
     ];
 
