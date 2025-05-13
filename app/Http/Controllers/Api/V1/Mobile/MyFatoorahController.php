@@ -156,6 +156,7 @@ class MyFatoorahController extends Controller
                 if ($status) {
                     $order->update(['is_active' => true, 'is_paid' => true]);
                     $order->payment()->update(['status' => PaymentStatusConstants::COMPLETED->value, 'transaction_id' => $paymentId]);
+                    $order->consultations()->update(['is_active' => true]);
                 } else {
                     $order->update(['is_active' => false, 'is_paid' => false]);
                     $order->payment()->update(['status' => PaymentStatusConstants::CANCELLED->value, 'transaction_id' => $paymentId]);

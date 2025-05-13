@@ -81,6 +81,11 @@ class Subscription extends Model
     {
         return $this->belongsTo(Package::class, 'package_id');
     }
+
+    public function consultations()
+    {
+        return $this->hasMany(Consultation::class, 'subscription_id');
+    }
     //---------------------relations-------------------------------------
 
     //---------------------attributes-------------------------------------
