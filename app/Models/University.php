@@ -21,19 +21,29 @@ class University extends Model
     protected array $filters = ['keyword'];
     protected array $searchable = ['name'];
     protected array $dates = [];
-    public array $filterModels = [];
+    public array $filterModels = ['City'];
     public array $filterCustom = [];
     public array $translatable = ['name'];
+    protected $with = ['city', 'doctors'];
 
     //---------------------relations-------------------------------------
     public function city(): BelongsTo
     {
         return $this->belongsTo(City::class, 'city_id');
     }
+
+    public function doctors(): HasMany
+    {
+        return $this->hasMany(DoctorUniversity::class,'university_id');
+    }
+    
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
-
+    public function scopeOfCity($query, $value)
+    {
+        return $query->where('city_id', $value);
+    }
     //---------------------Scopes-------------------------------------
 
 }
