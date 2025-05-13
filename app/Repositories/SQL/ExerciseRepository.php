@@ -102,7 +102,8 @@ class ExerciseRepository extends BaseRepository implements ExerciseContract
     //         $model->medicalSpecialities()->sync($attributes['specialities']);
     //     }
     //     if (isset($attributes['media'])) {
-    //         if ($model->media && $model->media->id != $attributes['media'])
+    //         if ($model->media &&
+    //             !($attributes['media'] instanceof \Illuminate\Http\UploadedFile) && $model->media->id != $attributes['media'])
     //             resolve(FileContract::class)->remove($model->media);
     //         if (is_file($attributes['media'])) {
     //             $file = resolve(FileContract::class)->create([
@@ -119,38 +120,39 @@ class ExerciseRepository extends BaseRepository implements ExerciseContract
 
     public static function syncMediaAndSpecialities($model, $attributes)
     {
-        if (isset($attributes['specialities'])) {
+        // 1. مزامنة التخصصات الطبية
+        if (!empty($attributes['specialities'])) {
             $model->medicalSpecialities()->sync($attributes['specialities']);
         }
 
-        if (isset($attributes['media'])) {
-            $media = $attributes['media'];
+        // 2. التعامل مع الوسائط (فيديو، صورة، ملف...)
+        if (!empty($attributes['media'])) {
 
-            // Deleted the old file and found it was different
-            if (
-                $model->media &&
-                !($media instanceof \Illuminate\Http\UploadedFile) &&
-                $model->media->id != $media
-            ) {
+            // حذف الملف القديم إن وجد
+            if ($model->media) {
                 resolve(FileContract::class)->remove($model->media);
             }
 
-            // If a new file is uploaded
-            if ($media instanceof \Illuminate\Http\UploadedFile) {
+            // تحديد ما إذا كان ملف مرفوع جديد أو ID لملف قديم
+            $file = null;
+            if ($attributes['media'] instanceof \Illuminate\Http\UploadedFile) {
                 $file = resolve(FileContract::class)->create([
-                    'file' => $media,
-                    'type' => FileConstants::FILE_TYPE_EXERCISE_MEDIA->value,
+                    'file' => $attributes['media'],
+                    'type' => FileConstants::FILE_TYPE_EXERCISE_MEDIA->value
                 ]);
             } else {
-                // If media is an ID of an existing file
-                $file = resolve(FileContract::class)->find($media);
+                $file = resolve(FileContract::class)->find($attributes['media']);
             }
 
-            $model->media()->save($file);
+            // ربط الملف الجديد بالموديل
+            if ($file) {
+                $model->media()->save($file);
+            }
         }
 
         return $model;
     }
+
 
 
 }
