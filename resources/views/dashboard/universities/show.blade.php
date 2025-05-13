@@ -12,10 +12,7 @@
                     <h5 class="card-title py-2">{{ucfirst($university->name)}}</h5>
                     <p class="card-text">{{__('messages.created')}}: {{$university->created_at->format('Y-m-d')}}</p>
                     <h5 class="card-title py-2">{{__('messages.details')}}</h5>
-                    <div class="row py-2">
-                        <div class="col-6">{{__('messages.city')}}</div>
-                        <div class="col-6">{{$university->city->name?? '------'}}</div>
-                    </div>
+                    
                     
                 </div>
             </div>

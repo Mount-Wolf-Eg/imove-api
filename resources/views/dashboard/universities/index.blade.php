@@ -13,15 +13,7 @@
         </a>
     </div>
     <x-filter>
-        {{-- <div class="col-lg-4">
-            {{Form::label('type', __('messages.city'), ['class' => 'form-label'])}}
-            {!! Form::select('city', $city->pluck('name', 'id')->prepend(__('messages.select'), ''),
-                request('city') ?? '',
-                ['class' => 'form-select']) !!}
-            @error("city")
-            <span class="text-danger">{{$message}}</span>
-            @enderror
-        </div> --}}
+        
     </x-filter>
     <div class="row">
         <div class="col-12">
@@ -30,7 +22,6 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">{{__('messages.name')}}</th>
-                    <th scope="col">{{__('messages.city')}}</th>
                     <th scope="col">{{__('messages.num_doctors')}}</th>
                     <th scope="col">{{__('messages.activation')}}</th>
                     <th scope="col">{{__('messages.actions')}}</th>
@@ -43,7 +34,6 @@
                             <a href="#" class="fw-semibold">#{{$loop->iteration}}</a>
                         </th>
                         <td>{{$resource->name}}</td>
-                        <td>{{$resource->city->name?? '----'}}</td>
                         <td>{{$resource->doctors?->count()}}</td>
                         @include('dashboard.partials.__table-actions', ['resource' => $resource, 'route' => 'universities', 'showModel' => false])
                     </tr>

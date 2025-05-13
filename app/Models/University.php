@@ -17,20 +17,16 @@ class University extends Model
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     public const ADDITIONAL_PERMISSIONS = [];
     protected $table = "universities";
-    protected $fillable = ['name', 'city_id', 'is_active'];
+    protected $fillable = ['name', 'is_active'];
     protected array $filters = ['keyword'];
     protected array $searchable = ['name'];
     protected array $dates = [];
-    public array $filterModels = ['City'];
+    public array $filterModels = [];
     public array $filterCustom = [];
     public array $translatable = ['name'];
-    protected $with = ['city', 'doctors'];
+    protected $with = ['doctors'];
 
     //---------------------relations-------------------------------------
-    public function city(): BelongsTo
-    {
-        return $this->belongsTo(City::class, 'city_id');
-    }
 
     public function doctors(): HasMany
     {
@@ -40,10 +36,7 @@ class University extends Model
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
-    public function scopeOfCity($query, $value)
-    {
-        return $query->where('city_id', $value);
-    }
+ 
     //---------------------Scopes-------------------------------------
 
 }

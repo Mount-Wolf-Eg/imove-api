@@ -33,11 +33,6 @@ class City extends Model
         return $this->hasMany(User::class);
     }
 
-    public function universities()
-    {
-        return $this->hasMany(University::class,'city_id');
-    }
-
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
