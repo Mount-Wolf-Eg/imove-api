@@ -22,16 +22,7 @@
                         @enderror
                     </div>
 
-                    <div class="col-lg-6">
-                        {{Form::label('city', __('messages.city'), ['class' => 'form-label'])}}
-                        <span class="text-danger fw-bold">*</span>
-                        {!! Form::select('city_id', $city->pluck('name', 'id')->prepend(__('messages.select'), ''),
-                            $university->city_id ?? '',
-                            ['class' => 'form-select']) !!}
-                        @error("city_id")
-                        <span class="text-danger">{{$message}}</span>
-                        @enderror
-                    </div>
+
 
                 
                     <div class="col-lg-12">

@@ -36,7 +36,7 @@ class UniversityController extends BaseWebController
      */
     public function index(Request $request): View|Factory|Application
     {
-        $resources = $this->contract->searchWeb($request->all(), ['city', 'doctors']);
+        $resources = $this->contract->searchWeb($request->all(), ['doctors']);
         $category = $this->cityContract->search([], [], ['limit' => 0, 'page' => 0]);
         return $this->indexBlade(['resources' => $resources,'city' => $category]);
     }
