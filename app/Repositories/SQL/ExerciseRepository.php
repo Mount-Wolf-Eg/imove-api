@@ -96,25 +96,61 @@ class ExerciseRepository extends BaseRepository implements ExerciseContract
     }
 
 
+    // public static function syncMediaAndSpecialities($model, $attributes)
+    // {
+    //     if (isset($attributes['specialities'])){
+    //         $model->medicalSpecialities()->sync($attributes['specialities']);
+    //     }
+    //     if (isset($attributes['media'])) {
+    //         if ($model->media && $model->media->id != $attributes['media'])
+    //             resolve(FileContract::class)->remove($model->media);
+    //         if (is_file($attributes['media'])) {
+    //             $file = resolve(FileContract::class)->create([
+    //                 'file' => $attributes['media'],
+    //                 'type' => FileConstants::FILE_TYPE_EXERCISE_MEDIA->value
+    //             ]);
+    //         } else {
+    //             $file = resolve(FileContract::class)->find($attributes['media']);
+    //         }
+    //         $model->media()->save($file);
+    //     }
+    //     return $model;
+    // }
+
     public static function syncMediaAndSpecialities($model, $attributes)
     {
-        if (isset($attributes['specialities'])){
+        if (isset($attributes['specialities'])) {
             $model->medicalSpecialities()->sync($attributes['specialities']);
         }
+
         if (isset($attributes['media'])) {
-            if ($model->media && $model->media->id != $attributes['media'])
+            $media = $attributes['media'];
+
+            // Deleted the old file and found it was different
+            if (
+                $model->media &&
+                !($media instanceof \Illuminate\Http\UploadedFile) &&
+                $model->media->id != $media
+            ) {
                 resolve(FileContract::class)->remove($model->media);
-            if (is_file($attributes['media'])) {
+            }
+
+            // If a new file is uploaded
+            if ($media instanceof \Illuminate\Http\UploadedFile) {
                 $file = resolve(FileContract::class)->create([
-                    'file' => $attributes['media'],
-                    'type' => FileConstants::FILE_TYPE_EXERCISE_MEDIA->value
+                    'file' => $media,
+                    'type' => FileConstants::FILE_TYPE_EXERCISE_MEDIA->value,
                 ]);
             } else {
-                $file = resolve(FileContract::class)->find($attributes['media']);
+                // If media is an ID of an existing file
+                $file = resolve(FileContract::class)->find($media);
             }
+
             $model->media()->save($file);
         }
+
         return $model;
     }
+
 
 }
