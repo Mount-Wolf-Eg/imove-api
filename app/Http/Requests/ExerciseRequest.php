@@ -40,10 +40,12 @@ class ExerciseRequest extends FormRequest
         ];
         if ($this->isMethod('post')) {
             $rules['media'] = 'required|'.config('validations.file.mixed').'|max:20048';
-            // $rules['media'] = 'required|'.config('validations.file.mixed').'|mimes:jpeg,jpg,png|max:20048';
+            $rules['main_image'] = 'required|'.config('validations.file.image').'|mimes:jpeg,jpg,png|max:2048';
         }else{
             $rules['media'] = 'nullable|'.config('validations.file.mixed').'|max:20048';
+            $rules['main_image'] = 'nullable|'.config('validations.file.image').'|mimes:jpeg,jpg,png|max:2048';
         }
+        
         return $rules;
     }
 

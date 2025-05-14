@@ -26,7 +26,7 @@ class Exercise extends Model
     public array $filterModels = ['MedicalSpecialities'];
     public array $filterCustom = [];
     public array $translatable = ['name', 'brief', 'description'];
-    public $with = ['media', 'medicalSpecialities'];
+    public $with = ['media', 'mainImage', 'medicalSpecialities'];
 
     //---------------------relations-------------------------------------
 
@@ -36,6 +36,11 @@ class Exercise extends Model
             ->where('type', FileConstants::FILE_TYPE_EXERCISE_MEDIA);
     }
 
+    public function mainImage(): MorphOne
+    {
+        return $this->morphOne(File::class, 'fileable')
+            ->where('type', FileConstants::FILE_TYPE_EXERCISE_MAIN_IMAGE);
+    }
     public function medicalSpecialities(): BelongsToMany
     {
         return $this->belongsToMany(MedicalSpeciality::class, 'exercise_medical_specialities');

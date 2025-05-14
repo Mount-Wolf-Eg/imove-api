@@ -92,48 +92,27 @@ class ExerciseRepository extends BaseRepository implements ExerciseContract
     public function syncRelations($model, $attributes)
     {
         self::syncMediaAndSpecialities($model, $attributes);
+        self::syncMainImage($model, $attributes);
         return $model;
     }
 
 
-    // public static function syncMediaAndSpecialities($model, $attributes)
-    // {
-    //     if (isset($attributes['specialities'])){
-    //         $model->medicalSpecialities()->sync($attributes['specialities']);
-    //     }
-    //     if (isset($attributes['media'])) {
-    //         if ($model->media &&
-    //             !($attributes['media'] instanceof \Illuminate\Http\UploadedFile) && $model->media->id != $attributes['media'])
-    //             resolve(FileContract::class)->remove($model->media);
-    //         if (is_file($attributes['media'])) {
-    //             $file = resolve(FileContract::class)->create([
-    //                 'file' => $attributes['media'],
-    //                 'type' => FileConstants::FILE_TYPE_EXERCISE_MEDIA->value
-    //             ]);
-    //         } else {
-    //             $file = resolve(FileContract::class)->find($attributes['media']);
-    //         }
-    //         $model->media()->save($file);
-    //     }
-    //     return $model;
-    // }
-
     public static function syncMediaAndSpecialities($model, $attributes)
     {
-        // 1. مزامنة التخصصات الطبية
+        // 1.Synchronization of medical specialties
         if (!empty($attributes['specialities'])) {
             $model->medicalSpecialities()->sync($attributes['specialities']);
         }
 
-        // 2. التعامل مع الوسائط (فيديو، صورة، ملف...)
+        // 2. Handling media (video, image, file...)
         if (!empty($attributes['media'])) {
 
-            // حذف الملف القديم إن وجد
+            // Delete the old file if it exists.
             if ($model->media) {
                 resolve(FileContract::class)->remove($model->media);
             }
 
-            // تحديد ما إذا كان ملف مرفوع جديد أو ID لملف قديم
+            // Determine whether the uploaded file is a new one or an old file ID
             $file = null;
             if ($attributes['media'] instanceof \Illuminate\Http\UploadedFile) {
                 $file = resolve(FileContract::class)->create([
@@ -144,7 +123,7 @@ class ExerciseRepository extends BaseRepository implements ExerciseContract
                 $file = resolve(FileContract::class)->find($attributes['media']);
             }
 
-            // ربط الملف الجديد بالموديل
+            // Link the new file to the model
             if ($file) {
                 $model->media()->save($file);
             }
@@ -153,6 +132,35 @@ class ExerciseRepository extends BaseRepository implements ExerciseContract
         return $model;
     }
 
+
+    public static function syncMainImage($model, $attributes)
+    {
+        if (!isset($attributes['main_image'])) {
+            return $model;
+        }
+
+        $mainImage = $attributes['main_image'];
+
+        // Remove the old image if it exists and is different
+        if ($model->mainImage && !($mainImage instanceof \Illuminate\Http\UploadedFile) && $model->mainImage->id != $mainImage) {
+            resolve(FileContract::class)->remove($model->mainImage);
+        }
+
+        // If the uploaded image is new
+        if ($mainImage instanceof \Illuminate\Http\UploadedFile) {
+            $file = resolve(FileContract::class)->create([
+                'file' => $mainImage,
+                'type' => FileConstants::FILE_TYPE_EXERCISE_MAIN_IMAGE->value
+            ]);
+        } else {
+            // If media is an ID of an existing file
+            $file = resolve(FileContract::class)->find($mainImage);
+        }
+
+        $model->mainImage()->save($file);
+
+        return $model;
+    }
 
 
 }

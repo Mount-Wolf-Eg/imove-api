@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Dashboard;
 
-// use App\Http\Requests\EducationalContentRequest;
 use App\Http\Requests\ExerciseRequest;
 use App\Models\Exercise;
 use App\Models\MedicalSpeciality;
