@@ -53,7 +53,7 @@ class SessionResource extends BaseResource
                 'patient_exercise_repetitions' => $exercise->pivot->patient_exercise_repetitions,
                 'created_at' => $exercise->pivot->created_at?->format('Y-m-d H:i:s'),
                 'exercise_media' => $exercise->relationLoaded('media') && $exercise->media ? new FileResource($exercise->media) : null,
-                'exercise_main_image' => $exercise->relationLoaded('mainImage') && $exercise->media ? new FileResource($exercise->mainImage) : null,
+                'exercise_main_image' => $exercise->relationLoaded('mainImage') && $exercise->mainImage ? new FileResource($exercise->mainImage) : null,
                 // 'updated_at' => $exercise->pivot->updated_at?->format('Y-m-d H:i:s'),
             ])),
 
