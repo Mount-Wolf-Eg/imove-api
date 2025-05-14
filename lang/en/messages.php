@@ -704,4 +704,13 @@ return [
     'num_doctors' => 'Number Of Doctors',
 
 
+    'regions' => 'Regions',
+    'region'  => 'Region',
+    'cities' => 'Cities',
+    'city' => 'City',
+    'add_city' => 'Add City',
+    'edit_city' => 'Edit City',
+    'manage_cities' => 'Manage Cities',
+    'city_details' => 'City Details',
+
 ];
