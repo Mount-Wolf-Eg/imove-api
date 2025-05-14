@@ -712,6 +712,7 @@ return [
     'The browser does not support video playback' => 'المتصفح لا يدعم تشغيل الفيديو',
     'manage_regions' => 'ادارة المناطق',
     'edit_region' => 'تعديل المنطقة',
+    'add_region' => 'اضافة منطقة',
 
 
 ];

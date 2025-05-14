@@ -716,6 +716,7 @@ return [
     'The browser does not support video playback' => 'The browser does not support video playback',
     'manage_regions' => 'Manage Regions',
     'edit_region' => 'Edit Region',
+    'add_region' => 'Add Region',
 
 
 ];
