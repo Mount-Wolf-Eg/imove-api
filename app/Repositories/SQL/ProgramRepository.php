@@ -142,6 +142,7 @@ class ProgramRepository extends BaseRepository implements ProgramContract
 
             // Determine if complete_sets should be true
             $completeSets = $patientTotalSets >= $exercise->sets;
+            // $repetitions = json_decode($data['patient_exercise_repetitions'], true);
 
             // Update the exercise
             $exercise->update([

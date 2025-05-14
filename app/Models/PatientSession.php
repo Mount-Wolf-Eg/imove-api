@@ -43,7 +43,6 @@ class PatientSession extends Model
         return $this->belongsTo(Consultation::class, 'consultation_id');
     }
 
-
     public function sessionExercises(): BelongsToMany
     {
         return $this->belongsToMany(Exercise::class, 'patient_session_exercises', 'session_id', 'exercise_id')
@@ -54,7 +53,6 @@ class PatientSession extends Model
                      'updated_at', 'created_at',
                     ]);
     }
-    
 
     //---------------------relations-------------------------------------
 
