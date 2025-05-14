@@ -710,6 +710,8 @@ return [
     'manage_cities' => 'إدارة المدن',
     'city_details' => 'تفاصيل المدينة',
     'The browser does not support video playback' => 'المتصفح لا يدعم تشغيل الفيديو',
+    'manage_regions' => 'ادارة المناطق',
+    'edit_region' => 'تعديل المنطقة',
 
 
 ];

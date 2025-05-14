@@ -714,6 +714,8 @@ return [
     'manage_cities' => 'Manage Cities',
     'city_details' => 'City Details',
     'The browser does not support video playback' => 'The browser does not support video playback',
+    'manage_regions' => 'Manage Regions',
+    'edit_region' => 'Edit Region',
 
 
 ];
