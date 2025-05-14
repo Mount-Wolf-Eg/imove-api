@@ -13,13 +13,13 @@ class Region extends Model
 {
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     public const ADDITIONAL_PERMISSIONS = [];
-    protected $fillable = [];
+    protected $fillable = ['name', 'is_active'];
     protected array $filters = ['keyword', 'active'];
     protected array $searchable = [];
     protected array $dates = [];
     public array $filterModels = [];
     public array $filterCustom = [];
-    public array $translatable = [];
+    public array $translatable = ['name'];
 
     //---------------------relations-------------------------------------
 

@@ -700,5 +700,14 @@ return [
     'university_details' => 'التفاصيل',
     'num_doctors' => 'عدد الدكاترة',
 
+    'regions' => 'المناطق',
+    'region'  => 'منطقة',
+    'cities' => 'المدن',
+    'city' => 'مدينة',
+    'add_city' => 'إضافة مدينة',
+    'edit_city' => 'تعديل البيانات',
+    'manage_cities' => 'إدارة المدن',
+    'city_details' => 'تفاصيل المدينة',
+
 
 ];
