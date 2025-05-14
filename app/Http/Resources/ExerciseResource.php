@@ -34,6 +34,7 @@ class ExerciseResource extends BaseResource
         ];
         $this->relations = [
             'media' => $this->relationLoaded('media') ? new FileResource($this->media) : null,
+            'main_image' => $this->relationLoaded('mainImage') ? new FileResource($this->mainImage) : null,
         ];
         return $this->getResource();
     }

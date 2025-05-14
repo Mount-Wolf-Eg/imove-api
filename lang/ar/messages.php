@@ -708,6 +708,7 @@ return [
     'edit_city' => 'تعديل البيانات',
     'manage_cities' => 'إدارة المدن',
     'city_details' => 'تفاصيل المدينة',
-
+    'The browser does not support video playback' => 'المتصفح لا يدعم تشغيل الفيديو',
+    
 
 ];
