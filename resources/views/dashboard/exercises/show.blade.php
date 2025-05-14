@@ -10,7 +10,7 @@
                 @if($exercise->media && Str::endsWith($exercise->media->asset_url, ['.mp4', '.webm', '.ogg']))
                     <video controls style="max-height:400px; width: 100%;" class="mx-auto d-block float-md-left mr-md-4">
                         <source src="{{ $exercise->media->asset_url }}" type="video/mp4">
-                        المتصفح لا يدعم تشغيل الفيديو.
+                         @lang('messages.The browser does not support video playback')
                     </video>
                 @else
                     <img src="{{ $exercise->media->asset_url ?? asset('assets/images/logo-sm.png') }}" class="card-img-top img-fluid mx-auto d-block float-md-left mr-md-4" style="max-height:400px;">
