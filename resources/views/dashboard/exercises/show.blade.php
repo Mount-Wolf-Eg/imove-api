@@ -17,11 +17,11 @@
                 @endif
             </div>
             
-            {{-- <div class="col-md-10"> --}}
+            <div class="col-md-11">
                 <div class="card">
                     <img src="{{ $exercise->mainImage->asset_url ?? asset('assets/images/logo-sm.png') }}" class="card-img-top img-fluid mx-auto d-block float-md-left mr-md-4" @style(['max-height:400px'])>
                 </div>
-            {{-- </div> --}}
+            </div>
         </div>
         <div class="col-md-8">
             <div class="card p-2">
