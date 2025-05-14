@@ -673,6 +673,7 @@ return [
     'confirm_reject' => 'Confirm Reject ?',
     'confirm_visited' => 'Confirm Visited ?',
     'actions_messages' => [
+        'create_success' => 'created successfully',
         'reject_success' => 'The request was successfully rejected.',
         'visited_success' => 'The visit has been confirmed successfully.',
         'update_success' => 'The request has been updated successfully.',
