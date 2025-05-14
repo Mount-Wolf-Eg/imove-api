@@ -668,6 +668,7 @@ return [
     'confirm_reject' => 'هل أنت متأكد من رفض الطلب؟',
     'confirm_visited' => 'هل أنت متأكد من تأكيد إتمام الزيارة؟',
     'actions_messages' => [
+        'create_success' => 'تم الإنشاء بنجاح',
         'reject_success' => 'تم رفض الطلب بنجاح.',
         'visited_success' => 'تم تأكيد إتمام الزيارة بنجاح.',
         'update_success' => 'تم تحديث الطلب بنجاح.',
@@ -709,6 +710,6 @@ return [
     'manage_cities' => 'إدارة المدن',
     'city_details' => 'تفاصيل المدينة',
     'The browser does not support video playback' => 'المتصفح لا يدعم تشغيل الفيديو',
-    
+
 
 ];

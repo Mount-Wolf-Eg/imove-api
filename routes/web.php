@@ -42,6 +42,7 @@ use App\Http\Controllers\Dashboard\PackageController;
 use App\Http\Controllers\Dashboard\SettingPackageController; 
 use App\Http\Controllers\Dashboard\ExerciseController;
 use App\Http\Controllers\Dashboard\UniversityController;
+use App\Http\Controllers\Dashboard\RegionController;
 use App\Http\Controllers\Dashboard\CityController;
 
 /*
@@ -141,6 +142,8 @@ Route::group([
         Route::put('exercises/{exercise}/change-activation', [ExerciseController::class, 'changeActivation'])->name('exercises.active');
         Route::resource('universities', UniversityController::class);
         Route::put('universities/{university}/change-activation', [UniversityController::class, 'changeActivation'])->name('universities.active');
+        Route::resource('regions', RegionController::class);
+        Route::put('regions/{region}/change-activation', [RegionController::class, 'changeActivation'])->name('regions.active');
         Route::resource('cities', CityController::class);
         Route::put('cities/{city}/change-activation', [CityController::class, 'changeActivation'])->name('cities.active');
 
