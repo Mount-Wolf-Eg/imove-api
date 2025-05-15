@@ -49,7 +49,7 @@ class Subscription extends Model
         'payment_type'         => ConsultationPaymentTypeConstants::class,
         'is_paid'              => 'boolean',
     ];
-    protected array $filters = ['keyword', 'active', 'available', 'myCurrentSubscription', 'myPreviousSubscriptions', 'doctorId', 'patientId', 'packageId', 'patient', 'doctor'];
+    protected array $filters = ['keyword', 'active', 'available', 'myCurrentSubscriptions', 'myPreviousSubscriptions', 'doctorId', 'patientId', 'packageId', 'patient', 'doctor'];
     protected array $searchable = [];
     protected array $dates = [];
     public array $filterModels = [];
@@ -116,7 +116,7 @@ class Subscription extends Model
             ->whereRaw('num_of_sessions > used_num_of_sessions');
     }
 
-    public function scopeOfMyCurrentSubscription($query)
+    public function scopeOfMyCurrentSubscriptions($query)
     {
         return $query->where('patient_id', auth()->user()->id)
             ->where('is_active', true)
@@ -126,7 +126,7 @@ class Subscription extends Model
             ->whereDate('end_date', '>=', now());
     }
 
-    public function scopeOfMyPreviousSubscription($query)
+    public function scopeOfMyPreviousSubscriptions($query)
     {
         return $query->where('patient_id', auth()->user()->id)
             ->where('is_paid', true)
