@@ -56,6 +56,15 @@ class Subscription extends Model
     public array $filterCustom = [];
     public array $translatable = [];
 
+    //---------------------attributes-------------------------------------
+    public function getIsActiveAttribute(): bool
+    {
+        return $this->start_date <= now() &&
+            $this->end_date >= now() &&
+            $this->is_paid &&
+            $this->num_of_sessions > $this->used_num_of_sessions;
+    }
+
     //---------------------relations-------------------------------------
     public function patient()
     {

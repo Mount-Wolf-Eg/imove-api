@@ -59,4 +59,16 @@ class PatientPackageController extends BaseApiController
             return $this->respondWithError($e->getMessage());
         }
     }
+
+    public function getSubscriptions(): JsonResponse
+    {
+        try {
+            $this->relations = ['image', 'user', 'package', 'consultations', 'consultations.doctor', 'consultations.doctor.medicalSpecialities']; 
+            $subscriptions   = $this->subscriptionContract->search();
+            return $this->respondWithSuccess('Subscriptions retrieved successfully', ['subscriptions' => $subscriptions]);
+        } catch (Exception $e) {
+            info($e);
+            return $this->respondWithError($e->getMessage());
+        }
+    }
 }
