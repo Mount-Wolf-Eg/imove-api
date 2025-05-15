@@ -68,7 +68,7 @@ class PatientPackageController extends BaseApiController
             if (request()->has('embed')) {
                 $embedRelations = explode(',', request('embed'));
             }
-            $relations           = ['package', 'consultations', 'consultations.doctor', 'consultations.doctor.medicalSpecialities'] + $embedRelations;
+            $relations           = ['package', 'consultations', 'consultations.doctor', 'consultations.doctor.rates', 'consultations.doctor.medicalSpecialities'] + $embedRelations;
             $this->modelResource = SubscriptionResource::class;
             $subscriptions       = $this->subscriptionContract->search(request()->all(), $relations, ['patient_id' => auth()->id()]);
             return $this->respondWithCollection($subscriptions);
