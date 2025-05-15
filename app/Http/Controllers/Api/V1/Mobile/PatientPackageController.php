@@ -64,7 +64,7 @@ class PatientPackageController extends BaseApiController
     public function getSubscriptions(): JsonResponse
     {
         try {
-            $this->relations     = ['image', 'user', 'package', 'consultations', 'consultations.doctor', 'consultations.doctor.medicalSpecialities'];
+            $this->relations     = ['package', 'consultations', 'consultations.doctor', 'consultations.doctor.medicalSpecialities'];
             $this->modelResource = SubscriptionResource::class;
             $subscriptions       = $this->subscriptionContract->search(request()->all(), $this->relations, ['patient_id' => auth()->id()]);
             return $this->respondWithCollection($subscriptions);
