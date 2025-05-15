@@ -115,6 +115,48 @@ class Subscription extends Model
             ->where('is_paid', true)
             ->whereRaw('num_of_sessions > used_num_of_sessions');
     }
+
+    public function scopeOfMyCurrentSubscription($query)
+    {
+        return $query->where('patient_id', auth()->user()->id)
+            ->where('is_active', true)
+            ->where('is_paid', true)
+            ->whereRaw('num_of_sessions > used_num_of_sessions')
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now());
+    }
+
+    public function scopeOfMyPreviousSubscription($query)
+    {
+        return $query->where('patient_id', auth()->user()->id)
+            ->where('is_paid', true)
+            ->whereDate('end_date', '<', now());
+    }
+    
+    public function scopeOfDoctorId($query, $doctorId)
+    {
+        return $query->where('doctor_id', $doctorId);
+    }
+
+    public function scopeOfPatientId($query, $patientId)
+    {
+        return $query->where('patient_id', $patientId);
+    }
+
+    public function scopeOfPackageId($query, $packageId)
+    {
+        return $query->where('package_id', $packageId);
+    }
+
+    public function scopeOfPatient($query)
+    {
+        return $query->where('patient_id', auth()->user()->id);
+    }
+    
+    public function scopeOfDoctor($query)
+    {
+        return $query->where('doctor_id', auth()->user()->id);
+    }
     //---------------------Scopes-------------------------------------
 
 }

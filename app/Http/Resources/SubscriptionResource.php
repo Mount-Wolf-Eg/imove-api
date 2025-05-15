@@ -16,7 +16,6 @@ class SubscriptionResource extends BaseResource
         $this->micro = [
             'id' => $this->id,
             'package_id' => $this->package_id,
-            'user_id' => $this->user_id,
             'start_date' => $this->start_date?->format('Y-m-d H:i:s'),
             'end_date' => $this->end_date?->format('Y-m-d H:i:s'),
             'status' => $this->status,
