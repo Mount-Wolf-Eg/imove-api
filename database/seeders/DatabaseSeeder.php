@@ -28,6 +28,7 @@ class DatabaseSeeder extends Seeder
         // $this->call(StaticPageSeeder::class);
         // $this->call(EducationalContentSeeder::class);
         // $this->call(ExerciseSeeder::class);
+        $this->call(SettingConsultationSeeder::class);
 
 
     }

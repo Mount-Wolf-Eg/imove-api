@@ -44,6 +44,7 @@ use App\Http\Controllers\Dashboard\ExerciseController;
 use App\Http\Controllers\Dashboard\UniversityController;
 use App\Http\Controllers\Dashboard\RegionController;
 use App\Http\Controllers\Dashboard\CityController;
+use App\Http\Controllers\Dashboard\SettingConsultationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -159,12 +160,14 @@ Route::group([
         Route::get('/settings', [GeneralSettingsController::class, 'edit'])->name('settings.edit');
         Route::post('/settings', [GeneralSettingsController::class, 'update'])->name('settings.update');
 
-        Route::resource('setting-packages', SettingPackageController::class);
-
         Route::resource('packages', PackageController::class);
         Route::put('packages/{package}/change-activation', [PackageController::class, 'changeActivation'])->name('packages.active');
 
         Route::resource('setting-packages', SettingPackageController::class);
         Route::put('setting-packages/{settingPackage}/change-activation', [SettingPackageController::class, 'changeActivation'])->name('setting-packages.active');
+
+        // setting-consultations
+        Route::resource('setting-consultations', SettingConsultationController::class);
+        
     });
 });
