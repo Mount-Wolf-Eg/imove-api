@@ -41,6 +41,14 @@
         </div>
         <div class="row">
             <div class="col-lg-4">
+                <p><strong>{{__('messages.start_at')}}</strong></p>
+            </div>
+            <div class="col-lg-8">
+                <p>{{$consultation->patient_start_at?->format('H:i')}}</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
                 <p><strong>{{__('messages.referral_reason')}}</strong></p>
             </div>
             <div class="col-lg-8">
