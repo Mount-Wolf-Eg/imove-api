@@ -158,7 +158,7 @@ Route::group(['middleware' => 'locale'], static function () {
 
             Route::apiResource('packages', PatientPackageController::class)->only('index', 'show');
             Route::post('packages/{package}/subscribe', [PatientPackageController::class, 'subscribe'])->name('packages.subscribe');
-            Route::get('packages/{package}/subscriptions', [PatientPackageController::class, 'getSubscriptions'])->name('packages.subscriptions');
+            Route::get('subscriptions', [PatientPackageController::class, 'getSubscriptions'])->name('packages.subscriptions');
 
         });
 
