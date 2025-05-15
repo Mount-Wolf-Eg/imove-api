@@ -60,7 +60,9 @@ class Consultation extends Model
         'is_active',
         'package_id',
         'subscription_id',
-        'is_replaceable'
+        'is_replaceable',
+        'patient_start_at',
+        'doctor_start_at'
     ];
 
     protected array $filters = [

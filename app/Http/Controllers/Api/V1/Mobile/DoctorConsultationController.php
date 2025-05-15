@@ -262,5 +262,23 @@ class DoctorConsultationController extends BaseApiController
     }
 
 
+    /**
+     * doctor_start_at the consultation.
+     * @param Consultation $consultation
+     * @return JsonResponse
+     */
+    public function doctorStartAt(Consultation $consultation)
+    {
+        try {
+            if (!$consultation->doctor_start_at) {
+                $consultation = $this->contract->update($consultation, [
+                    'doctor_start_at' => now(), 
+                ]);
+            }
+            return $this->respondWithSuccess();
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), 422);
+        }
+    }
 
 }

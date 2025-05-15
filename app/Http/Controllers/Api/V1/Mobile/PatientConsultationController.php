@@ -255,4 +255,25 @@ class PatientConsultationController extends BaseApiController
             'files'  => FileResource::collection($attachments),
         ]);
     }
+
+    
+    /**
+     * patient_start_at the consultation.
+     * @param Consultation $consultation
+     * @return JsonResponse
+     */
+    public function patientStartAt(Consultation $consultation)
+    {
+        try {
+            if (!$consultation->patient_start_at) {
+                $consultation = $this->contract->update($consultation, [
+                    'patient_start_at' => now(), 
+                ]);
+            }
+            return $this->respondWithSuccess();
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), 422);
+        }
+    }
+
 }
