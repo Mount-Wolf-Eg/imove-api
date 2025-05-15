@@ -179,6 +179,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('articles', ArticleController::class)->only('store', 'update', 'destroy');
             Route::put('articles/{article}/change-activation', [ArticleController::class, 'changeActivation'])->name('articles.active');
             Route::apiResource('vendors', VendorController::class)->only('index');
+            Route::get('/consultations/setting-consultation', [DoctorConsultationController::class, 'settingConsultation']);
             Route::get('/consultations/statistics', [DoctorConsultationController::class, 'statistics']);
             Route::apiResource('consultations', DoctorConsultationController::class)->only('index', 'show');
             Route::get('patients/{id}/consultations', [DoctorConsultationController::class, 'getPatientConsultations']);
