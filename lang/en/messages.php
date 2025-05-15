@@ -719,6 +719,10 @@ return [
     'add_region'  => 'Add Region',
     'avg_rates'   => 'Avg Rates',
     'start_at'    => 'Start At',
+    'setting-consultations'  => 'Setting Consultations',
+    'minimum'  => 'Minimum',
+    'maximum'  => 'Maximum',
+    'edit_setting-consultation'  => 'Edit Setting Consultation',
 
 
 ];

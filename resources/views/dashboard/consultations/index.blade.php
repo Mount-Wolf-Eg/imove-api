@@ -53,7 +53,7 @@
                 <tbody>
                 @foreach($resources as $resource)
                     <tr id="role{{$resource->id}}Row">
-                       
+                
                         <td><a href="{{route('consultations.show', $resource->id)}}">#{{$resource->id}}</a></td>
                         <td>{{$resource->created_at->format('Y-m-d h:i A')}}</td>
                         <td>{{$resource->patient?->user?->name}}</td>

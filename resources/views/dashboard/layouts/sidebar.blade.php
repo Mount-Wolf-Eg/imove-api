@@ -329,6 +329,15 @@
                     </a>
                 </li>
                 @endif
+                
+                @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
+                <li class="nav-item">
+                    <a href="{{route('setting-consultations.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('setting-consultations.index', 'setting-consultations.show', 'setting-consultations.create', 'setting-consultations.edit')])>
+                        <i class="bi bi-cash-stack"></i>
+                        <span data-key="t-dashboard">{{ __('messages.setting-consultations') }}</span>
+                    </a>
+                </li>
+                @endif
 
                 @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
                 <li class="nav-item">
