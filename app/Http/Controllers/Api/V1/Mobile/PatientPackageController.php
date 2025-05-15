@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Mobile;
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Requests\PackageSubscribeRequest;
 use App\Http\Resources\DoctorPackageResource;
+use App\Http\Resources\SubscriptionResource;
 use App\Models\Consultation;
 use App\Models\Package;
 use App\Repositories\Contracts\ConsultationContract;
@@ -63,9 +64,10 @@ class PatientPackageController extends BaseApiController
     public function getSubscriptions(): JsonResponse
     {
         try {
-            $this->relations = ['image', 'user', 'package', 'consultations', 'consultations.doctor', 'consultations.doctor.medicalSpecialities']; 
-            $subscriptions   = $this->subscriptionContract->search();
-            return $this->respondWithSuccess('Subscriptions retrieved successfully', ['subscriptions' => $subscriptions]);
+            $this->relations     = ['image', 'user', 'package', 'consultations', 'consultations.doctor', 'consultations.doctor.medicalSpecialities'];
+            $this->modelResource = SubscriptionResource::class;
+            $subscriptions       = $this->subscriptionContract->search();
+            return $this->respondWithCollection($subscriptions);
         } catch (Exception $e) {
             info($e);
             return $this->respondWithError($e->getMessage());
