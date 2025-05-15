@@ -66,7 +66,7 @@ class PatientPackageController extends BaseApiController
         try {
             $this->relations     = ['image', 'user', 'package', 'consultations', 'consultations.doctor', 'consultations.doctor.medicalSpecialities'];
             $this->modelResource = SubscriptionResource::class;
-            $subscriptions       = $this->subscriptionContract->search();
+            $subscriptions       = $this->subscriptionContract->search(request()->all(), $this->relations, ['patient_id' => auth()->id()]);
             return $this->respondWithCollection($subscriptions);
         } catch (Exception $e) {
             info($e);
