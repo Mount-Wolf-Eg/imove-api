@@ -55,7 +55,8 @@ class Package extends Model
             ->where('is_paid', true)
             ->whereRaw('num_of_sessions > used_num_of_sessions')
             ->whereDate('start_date', '<=', now())
-            ->whereDate('end_date', '>=', now());
+            ->whereDate('end_date', '>=', now())
+            ->latest();
     }
     //---------------------relations-------------------------------------
 
