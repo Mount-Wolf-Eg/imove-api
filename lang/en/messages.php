@@ -717,6 +717,7 @@ return [
     'manage_regions' => 'Manage Regions',
     'edit_region' => 'Edit Region',
     'add_region' => 'Add Region',
+    'avg_rates' => 'Avg Rates',
 
 
 ];

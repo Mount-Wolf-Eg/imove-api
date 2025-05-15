@@ -42,7 +42,7 @@ class DoctorController extends BaseWebController
      */
     public function index(Request $request): View|Factory|Application
     {
-        $resources = $this->contract->search($request->all(), ['medicalSpecialities']);
+        $resources = $this->contract->search($request->all(), ['medicalSpecialities', 'rates', 'user']);
         return $this->indexBlade(['resources' => $resources]);
     }
 

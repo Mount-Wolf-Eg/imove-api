@@ -6,6 +6,7 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">{{__('messages.name')}}</th>
+                <th scope="col">{{__('messages.avg_rates')}}</th>
                 <th scope="col">{{__('messages.speciality')}}</th>
                 <th scope="col">{{__('messages.medical_id')}}</th>
                 <th scope="col">{{__('messages.national_id')}}</th>
@@ -21,6 +22,7 @@
                         <a href="#" class="fw-semibold">#{{$loop->iteration}}</a>
                     </th>
                     <td>{{$resource->user?->name}}</td>
+                    <td>{{$resource->rates?->avg('value') ?? 0}}</td>
                     <td>
                         @foreach($resource->medicalSpecialities as $speciality)
                            - {{$speciality->name}} <br>
