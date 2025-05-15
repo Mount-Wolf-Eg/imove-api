@@ -114,7 +114,9 @@ class Consultation extends Model
         'contact_type' => ConsultationContactTypeConstants::class,
         'payment_type' => ConsultationPaymentTypeConstants::class,
         'transfer_case_rate' => ConsultationTransferCaseRateConstants::class,
-        'prescription' => 'array'
+        'prescription' => 'array',
+        'patient_start_at' => 'datetime',
+        'doctor_start_at' => 'datetime',
     ];
 
     protected static function booted()
