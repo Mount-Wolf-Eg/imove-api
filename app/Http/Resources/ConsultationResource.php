@@ -36,8 +36,8 @@ class ConsultationResource extends BaseResource
             'is_past_consultation' => (bool) $this->is_past_consultation,
             // 'doctor_can_reschedule' => (bool) $this->doctorCanReschedule(),
             // 'doctor_can_cancel' => (bool) $this->doctorCanCancel(),
-            'patient_start_at' => $this->patient_start_at?->format('H:i:s'),
-            'doctor_start_at' => $this->doctor_start_at?->format('H:i:s'),
+            'patient_start_at' => $this->patient_start_at?->format('H:i'),
+            'doctor_start_at' => $this->doctor_start_at?->format('H:i'),
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
         ];
