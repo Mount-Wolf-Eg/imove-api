@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Traits\JsonValidationTrait;
 
-class UniversityRequest extends FormRequest
+class CityRequest extends FormRequest
 {
     use JsonValidationTrait;
 
@@ -27,8 +27,11 @@ class UniversityRequest extends FormRequest
     public function rules(): array
     {
         $rules =  [
-            'name.ar' => config('validations.string.req'),
-            'name.en' => config('validations.string.req'),
+            'name.ar' => config('validations.string.req') . '|unique:cities,name->ar,' .$this->route('cities')?->id,
+            'name.en' => config('validations.string.req') . '|unique:cities,name->en,' .$this->route('cities')?->id
+            // 'name.ar' => config('validations.string.req'),
+            // 'name.en' => config('validations.string.req'),
+            'region_id' => sprintf(config('validations.model.active_req'), 'regions'),
         ];
         return $rules;
 
@@ -43,6 +46,7 @@ class UniversityRequest extends FormRequest
         return [
             'name.ar' => __('messages.name_ar'),
             'name.en' => __('messages.name_en'),
+            'region_id' => __('messages.type'),
         ];
     }
 

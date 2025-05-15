@@ -50,9 +50,11 @@ class SessionResource extends BaseResource
                 'complete_sets' => $exercise->pivot->complete_sets,
                 'patient_total_sets' => $exercise->pivot->patient_total_sets,
                 'patient_total_reps' => $exercise->pivot->patient_total_reps,
-                'patient_exercise_repetitions' => $exercise->pivot->patient_exercise_repetitions,
+                'patient_exercise_repetitions' => $this->parsePatientExerciseRepetitions($exercise->pivot->patient_exercise_repetitions),                'created_at' => $exercise->pivot->created_at?->format('Y-m-d H:i:s'),
+                // 'patient_exercise_repetitions' => json_decode($exercise->pivot->patient_exercise_repetitions, true),
                 'created_at' => $exercise->pivot->created_at?->format('Y-m-d H:i:s'),
                 'exercise_media' => $exercise->relationLoaded('media') && $exercise->media ? new FileResource($exercise->media) : null,
+                'exercise_main_image' => $exercise->relationLoaded('mainImage') && $exercise->mainImage ? new FileResource($exercise->mainImage) : null,
                 // 'updated_at' => $exercise->pivot->updated_at?->format('Y-m-d H:i:s'),
             ])),
 
@@ -66,4 +68,39 @@ class SessionResource extends BaseResource
 
         return $this->getResource();
     }
+
+    /**
+     * Parse patient_exercise_repetitions to ensure it returns as a JSON object.
+     *
+     * @param mixed $repetitions
+     * @return array|null
+     */
+    protected function parsePatientExerciseRepetitions($repetitions): ?array
+    {
+        if (is_null($repetitions)) {
+            return null;
+        }
+
+        // if it is already an array (because of $casts)
+        if (is_array($repetitions)) {
+            return $repetitions;
+        }
+
+        // If it's text, try converting it to JSON
+        try {
+            $decoded = json_decode($repetitions, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                return $decoded;
+            }
+        } catch (\Exception $e) {
+            \Log::error('Failed to parse patient_exercise_repetitions', [
+                'value' => $repetitions,
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        // If the value is invalid, return null
+        return null;
+    }
+    
 }

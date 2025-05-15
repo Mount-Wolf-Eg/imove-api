@@ -668,6 +668,7 @@ return [
     'confirm_reject' => 'هل أنت متأكد من رفض الطلب؟',
     'confirm_visited' => 'هل أنت متأكد من تأكيد إتمام الزيارة؟',
     'actions_messages' => [
+        'create_success' => 'تم الإنشاء بنجاح',
         'reject_success' => 'تم رفض الطلب بنجاح.',
         'visited_success' => 'تم تأكيد إتمام الزيارة بنجاح.',
         'update_success' => 'تم تحديث الطلب بنجاح.',
@@ -699,6 +700,19 @@ return [
     'edit_university' => 'تعديل بيانات الجامعة',
     'university_details' => 'التفاصيل',
     'num_doctors' => 'عدد الدكاترة',
+
+    'regions' => 'المناطق',
+    'region'  => 'منطقة',
+    'cities' => 'المدن',
+    'city' => 'مدينة',
+    'add_city' => 'إضافة مدينة',
+    'edit_city' => 'تعديل البيانات',
+    'manage_cities' => 'إدارة المدن',
+    'city_details' => 'تفاصيل المدينة',
+    'The browser does not support video playback' => 'المتصفح لا يدعم تشغيل الفيديو',
+    'manage_regions' => 'ادارة المناطق',
+    'edit_region' => 'تعديل المنطقة',
+    'add_region' => 'اضافة منطقة',
 
 
 ];

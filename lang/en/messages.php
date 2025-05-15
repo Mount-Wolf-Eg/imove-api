@@ -673,6 +673,7 @@ return [
     'confirm_reject' => 'Confirm Reject ?',
     'confirm_visited' => 'Confirm Visited ?',
     'actions_messages' => [
+        'create_success' => 'created successfully',
         'reject_success' => 'The request was successfully rejected.',
         'visited_success' => 'The visit has been confirmed successfully.',
         'update_success' => 'The request has been updated successfully.',
@@ -702,6 +703,20 @@ return [
     'university' => 'University',
     'university_details' => 'University Details',
     'num_doctors' => 'Number Of Doctors',
+
+
+    'regions' => 'Regions',
+    'region'  => 'Region',
+    'cities' => 'Cities',
+    'city' => 'City',
+    'add_city' => 'Add City',
+    'edit_city' => 'Edit City',
+    'manage_cities' => 'Manage Cities',
+    'city_details' => 'City Details',
+    'The browser does not support video playback' => 'The browser does not support video playback',
+    'manage_regions' => 'Manage Regions',
+    'edit_region' => 'Edit Region',
+    'add_region' => 'Add Region',
 
 
 ];

@@ -43,6 +43,7 @@ class ProgramExercisesResource extends BaseResource
                         'hold_duration' => $exercise->pivot->hold_duration,
                         'comments' => $exercise->pivot->comments,
                         'media' => $exercise->relationLoaded('media') && $exercise->media ? new FileResource($exercise->media) : null,
+                        'main_image' => $this->relationLoaded('mainImage') && $exercise->mainImage  ? new FileResource($this->mainImage) : null,
                     ];
                 });
             }),

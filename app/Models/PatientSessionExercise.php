@@ -19,6 +19,9 @@ class PatientSessionExercise extends Model
     protected $fillable = ['program_id', 'session_id', 'exercise_id', 'sets', 'break_between_sets',
                     'weight', 'rep', 'hold_duration', 'comments', 'ease_of_exercise', 'reason_for_overtaking',
                      'complete_sets', 'patient_total_sets', 'patient_total_reps', 'patient_exercise_repetitions'];
+    protected $casts = [
+        'patient_exercise_repetitions' => 'array',
+    ];
     protected array $filters = ['keyword'];
     protected array $searchable = [];
     protected array $dates = [];

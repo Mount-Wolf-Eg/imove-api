@@ -303,6 +303,24 @@
                 </li>
                 @endif
 
+                @if(auth()->user()->can('read-region') || auth()->user()->can('view-all-region'))
+                <li class="nav-item">
+                    <a href="{{route('regions.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('regions.index', 'regions.show', 'regions.create', 'regions.edit')])>
+                        <i class="bi bi-map"></i>
+                        <span data-key="t-dashboard">{{ __('messages.regions') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-city') || auth()->user()->can('view-all-city'))
+                <li class="nav-item">
+                    <a href="{{route('cities.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('cities.index', 'cities.show', 'cities.create', 'cities.edit')])>
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.cities') }}</span>
+                    </a>
+                </li>
+                @endif
+
                 @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
                 <li class="nav-item">
                     <a href="{{route('static-pages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('static-pages.index', 'static-pages.show', 'static-pages.create', 'static-pages.edit')])>
