@@ -716,8 +716,9 @@ return [
     'The browser does not support video playback' => 'The browser does not support video playback',
     'manage_regions' => 'Manage Regions',
     'edit_region' => 'Edit Region',
-    'add_region' => 'Add Region',
-    'avg_rates' => 'Avg Rates',
+    'add_region'  => 'Add Region',
+    'avg_rates'   => 'Avg Rates',
+    'start_at'    => 'Start At',
 
 
 ];
