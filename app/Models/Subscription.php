@@ -49,7 +49,7 @@ class Subscription extends Model
         'payment_type'         => ConsultationPaymentTypeConstants::class,
         'is_paid'              => 'boolean',
     ];
-    protected array $filters = ['keyword'];
+    protected array $filters = ['keyword', 'active', 'available', 'myCurrentSubscription', 'myPreviousSubscriptions', 'doctorId', 'patientId', 'packageId', 'patient', 'doctor'];
     protected array $searchable = [];
     protected array $dates = [];
     public array $filterModels = [];
@@ -132,7 +132,7 @@ class Subscription extends Model
             ->where('is_paid', true)
             ->whereDate('end_date', '<', now());
     }
-    
+
     public function scopeOfDoctorId($query, $doctorId)
     {
         return $query->where('doctor_id', $doctorId);
