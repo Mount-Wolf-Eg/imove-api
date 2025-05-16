@@ -60,7 +60,9 @@ class Consultation extends Model
         'is_active',
         'package_id',
         'subscription_id',
-        'is_replaceable'
+        'is_replaceable',
+        'patient_start_at',
+        'doctor_start_at'
     ];
 
     protected array $filters = [
@@ -112,7 +114,9 @@ class Consultation extends Model
         'contact_type' => ConsultationContactTypeConstants::class,
         'payment_type' => ConsultationPaymentTypeConstants::class,
         'transfer_case_rate' => ConsultationTransferCaseRateConstants::class,
-        'prescription' => 'array'
+        'prescription' => 'array',
+        'patient_start_at' => 'datetime',
+        'doctor_start_at' => 'datetime',
     ];
 
     protected static function booted()

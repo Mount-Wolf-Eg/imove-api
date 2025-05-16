@@ -103,6 +103,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::get('consultations/replies', [PatientConsultationController::class, 'replies']);
             Route::apiResource('consultations', PatientConsultationController::class);
             Route::controller(PatientConsultationController::class)->prefix('consultations')->group(static function () {
+                Route::get('/{consultation}/patient-start-at',  'patientStartAt');
                 Route::put('/{consultation}/cancel',  'cancel');
                 Route::put('/{consultation}/confirm-referral',  'confirmReferral');
                 Route::post('/{consultation}/approve-urgent-doctor-offer', 'approveUrgentDoctorOffer');
@@ -178,6 +179,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('articles', ArticleController::class)->only('store', 'update', 'destroy');
             Route::put('articles/{article}/change-activation', [ArticleController::class, 'changeActivation'])->name('articles.active');
             Route::apiResource('vendors', VendorController::class)->only('index');
+            Route::get('/consultations/setting-consultation', [DoctorConsultationController::class, 'settingConsultation']);
             Route::get('/consultations/statistics', [DoctorConsultationController::class, 'statistics']);
             Route::apiResource('consultations', DoctorConsultationController::class)->only('index', 'show');
             Route::get('patients/{id}/consultations', [DoctorConsultationController::class, 'getPatientConsultations']);
@@ -185,6 +187,7 @@ Route::group(['middleware' => 'locale'], static function () {
                 Route::post('/{consultation}/vendor-referral','vendorReferral');
                 Route::post('/{consultation}/doctor-referral','doctorReferral');
                 Route::get('/{consultation}/get-prescription', 'getPrescription');
+                Route::get('/{consultation}/doctor-start-at',  'doctorStartAt');
                 Route::post('/{consultation}/prescription', 'prescription');
                 Route::post('/{consultation}/approve-medical-report', 'approveMedicalReport');
                 Route::post('/{consultation}/accept-urgent-case', 'acceptUrgentCase');

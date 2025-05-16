@@ -713,6 +713,13 @@ return [
     'manage_regions' => 'ادارة المناطق',
     'edit_region' => 'تعديل المنطقة',
     'add_region' => 'اضافة منطقة',
+    'avg_rates' => 'متوسط التقييمات',
+    'start_at' => 'وقت الانضمام للاستشاره',
+    'setting-consultations'  => 'اعدادات الاستشاره',
+    'minimum'  => 'اقل سعر',
+    'maximum'  => 'اكبر سعر',
+    'edit_setting-consultation'  => 'تعديل',
+
 
 
 ];

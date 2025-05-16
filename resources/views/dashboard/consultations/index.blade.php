@@ -41,6 +41,7 @@
                     <th scope="col">{{__('messages.doctor_phone')}}</th>
                     <th scope="col">{{__('messages.session_type')}}</th>
                     <th scope="col">{{__('messages.session_status')}}</th>
+                    <th scope="col">{{__('messages.start_at')}}</th>
                     <!-- <th scope="col">{{__('messages.referral_reason')}}</th> -->
                     <th scope="col">{{__('messages.actions')}}</th>
                     @if(auth()->user()?->vendor)
@@ -52,7 +53,7 @@
                 <tbody>
                 @foreach($resources as $resource)
                     <tr id="role{{$resource->id}}Row">
-                       
+                
                         <td><a href="{{route('consultations.show', $resource->id)}}">#{{$resource->id}}</a></td>
                         <td>{{$resource->created_at->format('Y-m-d h:i A')}}</td>
                         <td>{{$resource->patient?->user?->name}}</td>
@@ -60,6 +61,10 @@
                         <td>{{$resource->doctor?->user?->phone}}</td>
                         <td>{{$resource->type?->label()}}</td>
                         <td>session status</td>
+                        <td>
+                            {{__('messages.doctor')}} :-    {{$resource->doctor_start_at?->format('H:i')}} <br>
+                            {{__('messages.patient')}} :-    {{$resource->patient_start_at?->format('H:i')}}
+                        </td>
                         <!-- <td>{{$resource->transfer_reason}}</td> -->
                         @include('dashboard.partials.__table-actions', ['resource' => $resource, 'disableEdit' => true,
                         'disableDelete' => !auth()->user()->can('delete-consultation'),

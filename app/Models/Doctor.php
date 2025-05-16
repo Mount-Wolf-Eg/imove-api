@@ -57,7 +57,7 @@ class Doctor extends Model
     public $casts = [
         'request_status' => DoctorRequestStatusConstants::class
     ];
-    public $with = ['user'];
+    public $with = ['user', 'rates'];
 
     //---------------------relations-------------------------------------
     public function user(): BelongsTo

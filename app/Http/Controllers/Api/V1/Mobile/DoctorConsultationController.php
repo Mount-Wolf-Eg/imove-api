@@ -20,6 +20,7 @@ use App\Http\Resources\ProgramResource;
 use App\Http\Resources\ProgramExercisesResource;
 use App\Http\Resources\SettingProgramExercisesResource;
 use App\Models\Consultation;
+use App\Models\SettingConsultation;
 use App\Repositories\Contracts\ConsultationContract;
 use App\Services\Repositories\ConsultationDoctorReferralService;
 use App\Services\Repositories\ConsultationNotificationService;
@@ -260,6 +261,34 @@ class DoctorConsultationController extends BaseApiController
         }
     }
 
+    /**
+     * doctor_start_at the consultation.
+     * @param Consultation $consultation
+     * @return JsonResponse
+     */
+    public function doctorStartAt(Consultation $consultation)
+    {
+        try {
+            if (!$consultation->doctor_start_at) {
+                $consultation = $this->contract->update($consultation, [
+                    'doctor_start_at' => now(), 
+                ]);
+            }
+            return $this->respondWithSuccess();
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), 422);
+        }
+    }
 
+       
+    public function settingConsultation()
+    {
+        try {
+            $setting = SettingConsultation::get();
+            return $this->respondWithModel($setting);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), 422);
+        }
+    }
 
 }
