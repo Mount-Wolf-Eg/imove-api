@@ -207,11 +207,10 @@ class DoctorConsultationController extends BaseApiController
             // if (!$consultation->doctorCanCancel()) abort(422, __('messages.doctor_cancel_validation', ['status' => $consultation->status->label()]));
             $consultation = $this->contract->update($consultation, ['status' => ConsultationStatusConstants::DOCTOR_CANCELLED->value]);
             // if ($consultation->returnMony) $this->contract->refundAmount($consultation, $consultation->amount);
-            $this->contract->refundAmount($consultation, $consultation->amount);
             if ($consultation->subscribe && $consultation->subscribe->ofAvailable) {
                 $consultation->subscribe()->decrement('used_num_of_sessions', 1);
             } else {
-                $this->contract->refundAmount($consultation, $consultation->amount);
+                if ($consultation->returnMony) $this->contract->refundAmount($consultation, $consultation->amount);
             }
             $this->notificationService->doctorCancel($consultation);
             return $this->respondWithModel($consultation);

@@ -47,7 +47,8 @@ class Payment extends Model
         'fromCreationDate',
         'toCreationDate',
         'consultationType',
-        'coupon'
+        'coupon',
+        'patient',
     ];
     protected array $searchable = ['transaction_id', 'currency.name', 'payer.name', 'beneficiary.name'];
     protected array $dates = [];
