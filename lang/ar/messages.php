@@ -719,6 +719,11 @@ return [
     'minimum'  => 'اقل سعر',
     'maximum'  => 'اكبر سعر',
     'edit_setting-consultation'  => 'تعديل',
+    'questions' => 'الاسئلة ',
+    'consultation-questions' => 'اسئلة الاستشاره',
+    'manage_consultation-questions' => 'اداره اسئلة الاستشاره',
+    'answers' => 'الاجابات',
+    'consultation-questions_details' => 'تفاصيل اسئلة الاستشاره',
 
 
 

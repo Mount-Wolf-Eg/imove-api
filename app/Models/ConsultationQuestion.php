@@ -13,6 +13,7 @@ class ConsultationQuestion extends Model
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     
     public const ADDITIONAL_PERMISSIONS = [];
+    protected $table = "consultation_questions";
     protected $fillable = ['question', 'is_active'];
     protected array $filters = ['keyword', 'question'];
     protected array $searchable = ['question'];

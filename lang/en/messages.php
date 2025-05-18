@@ -723,6 +723,11 @@ return [
     'minimum'  => 'Minimum',
     'maximum'  => 'Maximum',
     'edit_setting-consultation'  => 'Edit Setting Consultation',
+    'consultation-questions'     => 'Consultation Questions',
+    'manage_consultation-questions' => 'Manage Consultation Questions',
+    'answers' => 'Answers',
+    'questions' => 'Questions',
+    'consultation-questions_details' => 'Consultation Questions Details',
 
 
 ];
