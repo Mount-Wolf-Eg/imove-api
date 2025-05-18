@@ -4,6 +4,16 @@
 @endsection
 @section('content')
     <x-breadcrumb title="{{__('messages.referral_details')}}" pagetitle="{{__('messages.referrals')}}" route="{{route('consultations.index')}}"/>
+    
+    <div class="row">
+        <div class="col-lg-12">
+            <a href="{{ route('consultation-questions.show', $consultation->id) }}" class="btn btn-primary"  target="_blank">
+                    {{-- <i class="bi bi-question-circle me-1"></i> --}}
+                ({{ $consultation->consultationQuestions->count() }}) {{ __('messages.answers') . ' & ' . __('messages.questions') }}
+            </a> 
+        </div>
+    </div><br>
+
     <div class="row">
         <div class="col-lg-6">
             @include('dashboard.consultations.partials.__patient-info')

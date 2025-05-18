@@ -54,11 +54,7 @@ class ConsultationQuestionsController extends BaseWebController
 
     public function show(Consultation $consultation_question)
     {
-         $consultation_question->load('doctor', 'patient', 'consultationQuestions');  
-        // dd($consultation_question);
-        // dd($consultation->consultationQuestions->count());   
-        //  $consultation->load('consultationQuestions');
-        // return $this->showBlade(['consultation' => $consultation]);
+        $consultation_question->load('doctor', 'patient', 'consultationQuestions');  
         return view('dashboard.consultation-questions.show', ['consultation' => $consultation_question]);
     }
 
