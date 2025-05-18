@@ -196,7 +196,10 @@ class Consultation extends Model
 
     public function consultationQuestions(): BelongsToMany
     {
-        return $this->belongsToMany(ConsultationQuestion::class, 'consultation_question')->withPivot('answer');
+        return $this->belongsToMany(ConsultationQuestion::class, 'consultation_question', 'consultation_id', 'consultation_question_id')
+    ->withPivot('answer');
+
+        // return $this->belongsToMany(ConsultationQuestion::class, 'consultation_question')->withPivot('answer');
     }
     public function program(): HasOne
     {

@@ -1,11 +1,11 @@
 @extends('dashboard.layouts.master')
 @section('title')
-    {{__('messages.manage_referrals')}}
+    {{__('messages.manage_consultation-questions')}}
 @endsection
 @section('content')
-    <x-breadcrumb title="{{__('messages.manage_referrals')}}"
-                  pagetitle="{{__('messages.referrals')}}"
-                  route="{{route('consultations.index')}}"/>
+    <x-breadcrumb title="{{__('messages.manage_consultation-questions')}}"
+                  pagetitle="{{__('messages.consultation-questions')}}"
+                  route="{{route('consultation-questions.index')}}"/>
     <x-filter>
         <div class="col-lg-2 py-1">
             {{ Form::label('Date', __('messages.date'), ['class' => 'form-label']) }}
@@ -38,16 +38,11 @@
                     <th scope="col">{{__('messages.reporting_date')}}</th>
                     <th scope="col">{{__('messages.patient_name')}}</th>
                     <th scope="col">{{__('messages.doctor_name')}}</th>
-                    <th scope="col">{{__('messages.doctor_phone')}}</th>
+                    <th scope="col">{{__('messages.medicalSpeciality')}}</th>
                     <th scope="col">{{__('messages.session_type')}}</th>
-                    <th scope="col">{{__('messages.session_status')}}</th>
-                    <th scope="col">{{__('messages.start_at')}}</th>
-                    <!-- <th scope="col">{{__('messages.referral_reason')}}</th> -->
+                    <th scope="col">{{__('messages.answers')}}</th>
                     <th scope="col">{{__('messages.actions')}}</th>
-                    @if(auth()->user()?->vendor)
-                        <th scope="col">{{__('messages.vendor_status')}}</th>
-                        <th scope="col">{{__('messages.request_actions')}}</th>
-                    @endif
+
                 </tr>
                 </thead>
                 <tbody>
@@ -58,26 +53,15 @@
                         <td>{{$resource->created_at->format('Y-m-d h:i A')}}</td>
                         <td>{{$resource->patient?->user?->name}}</td>
                         <td>{{$resource->doctor?->user?->name}}</td>
-                        <td>{{$resource->doctor?->user?->phone}}</td>
+                        <td>{{$resource->medicalSpeciality?->name}}</td>
                         <td>{{$resource->type?->label()}}</td>
-                        <td>session status</td>
-                        {{-- <td>{{ $resource->consultationQuestions->count() }}</td> --}}
-                        <td>
-                            {{__('messages.doctor')}} :-    {{$resource->doctor_start_at?->format('H:i')}} <br>
-                            {{__('messages.patient')}} :-    {{$resource->patient_start_at?->format('H:i')}}
-                        </td>
-                        <!-- <td>{{$resource->transfer_reason}}</td> -->
+                        {{-- <td>{{ $resource->consultationQuestions }}</td> --}}
+                        <td>{{ $resource->consultationQuestions->count() }}</td>
+
                         @include('dashboard.partials.__table-actions', ['resource' => $resource, 'disableEdit' => true,
-                        'disableDelete' => !auth()->user()->can('delete-consultation'),
-                        'route' => 'consultations', 'hideActive' => true, 'showModel' => false])
-                        @if(auth()->user()?->vendor)
-                            <td><span
-                                    class="text-{{$resource->getVendorStatusColor(auth()->user()->vendor->id)}}">{{$resource->getVendorStatusTxt(auth()->user()->vendor->id)}}
-                            </td>
-                            <td>
-                                @include('dashboard.consultations.partials.__vendor-actions')
-                            </td>
-                        @endif
+                        'disableDelete' => true,
+                        'route' => 'consultation-questions', 'hideActive' => true, 'showModel' => false])
+       
                     </tr>
                 @endforeach
                 </tbody>

@@ -192,6 +192,14 @@
                 </li>
                 @endif
 
+                @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
+                <li class="nav-item">
+                    <a href="{{route('consultation-questions.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('consultation-questions.index', 'consultation-questions.show')])>
+                        <i class="bi bi-tv"></i>
+                        <span data-key="t-dashboard">{{ __('messages.consultation-questions') }}</span>
+                    </a>
+                </li>
+                @endif
                 @if(auth()->user()->can('read-payment') || auth()->user()->can('view-all-payment'))
                 <li class="nav-item">
                     <a href="{{route('payments.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('payments.index', 'payments.show')])>
