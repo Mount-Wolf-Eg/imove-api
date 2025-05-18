@@ -58,6 +58,19 @@
                                 @endforeach
                             </div>
                         </div>
+                    <div class="py-2">
+                        <h5 class="card-title py-2">{{__('messages.universities')}}</h5>
+                        <div class="row py-2">
+                            @foreach($doctor->universities as $university)
+                                <div class="col-6 col-md-4">{{$university?->name}}</div>
+                                <div class="col-6 col-md-8">
+                                    <span class="px-2 fs-5">{{$university->academicDegree?->name}}</span>
+                                    <span class="px-2 fs-5">{{$university->medicalSpeciality?->name}}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
                         <div class="row py-2">
                             <div class="col-6">{{__('messages.experience_years')}}</div>
                             <div class="col-6">{{$doctor->experience_years ? : 0}}</div>

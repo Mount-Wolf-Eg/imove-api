@@ -47,6 +47,10 @@ class MedicalSpeciality extends Model
         return $this->hasMany(Consultation::class);
     }
 
+    public function doctorUniversities(): HasMany
+    {
+        return $this->hasMany(DoctorUniversity::class);
+    }
     public function exercises(): BelongsToMany
     {
         return $this->belongsToMany(Exercise::class, 'exercise_medical_specialities');
