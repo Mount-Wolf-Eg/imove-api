@@ -36,7 +36,7 @@ class ConsultationQuestionsController extends BaseWebController
      * @param Request $request
      * @return Application|Factory|View
      */
-    public function index(Request $request)
+    public function index(Request $request): View|Factory|Application
     {
         $filters = $request->all();
         if (!auth()->user()->can('view-all-consultation'))
@@ -52,7 +52,7 @@ class ConsultationQuestionsController extends BaseWebController
     }
 
 
-    public function show(Consultation $consultation_question)
+    public function show(Consultation $consultation_question): View|Factory|Application
     {
         $consultation_question->load('doctor', 'patient', 'consultationQuestions');  
         return view('dashboard.consultation-questions.show', ['consultation' => $consultation_question]);
