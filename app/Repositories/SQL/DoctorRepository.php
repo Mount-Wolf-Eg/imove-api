@@ -2,13 +2,18 @@
 
 namespace App\Repositories\SQL;
 
+use App\Exceptions\CantDeleteModelException;
 use App\Constants\FileConstants;
+use App\Models\Consultation;
 use App\Models\Doctor;
+use App\Models\Package;
 use App\Repositories\Contracts\DoctorContract;
 use App\Repositories\Contracts\FileContract;
 use App\Repositories\Contracts\UserContract;
+use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Support\Arr;
 use function Laravel\Prompts\select;
+
 
 class DoctorRepository extends BaseRepository implements DoctorContract
 {
@@ -105,4 +110,97 @@ class DoctorRepository extends BaseRepository implements DoctorContract
         }
         return $model;
     }
+
+    /**
+     * Remove the specified doctor from storage.
+     * @param Model $model
+     * @return mixed
+     * @throws CantDeleteModelException
+     */
+    public function remove(Model $model): mixed
+    {
+        /** @var Doctor $doctor */
+        $doctor = $model;
+
+        // Check if the doctor can be removed (wallet, consultations, packages)
+        if (!$this->canRemove($doctor)) {
+            // canRemove already throws CantDeleteModelException, so this is just for clarity
+            throw new CantDeleteModelException(
+                __('messages.errors.cannot_delete_doctor', ['model' => __('messages.modelSingle.doctor')])
+            );
+        }
+
+        // Log the activity and delete (from BaseRepository)
+        return parent::remove($model);
+    }
+    
+    public function canRemove(Model $model): bool
+    {
+        /** @var Doctor $doctor */
+        $doctor = $model;
+
+        // Check parent class conditions (existing relations)
+        if (!parent::canRemove($doctor)) {
+            return false;
+        }
+
+        // 1. Check wallet balance
+        if ($doctor->user && $doctor->user->wallet > 0) {
+            throw new CantDeleteModelException(
+                __('messages.errors.cannot_delete_doctor_with_wallet_balance', [
+                    'model' => __('messages.modelSingle.doctor'),
+                    'balance' => $doctor->user->wallet
+                ])
+            );
+        }
+
+        // 2. Check for upcoming consultations
+        $upcomingConsultations = Consultation::where('doctor_id', $doctor->id)
+            ->where('is_active', true)
+            ->whereNotIn('status', [
+                \App\Constants\ConsultationStatusConstants::PATIENT_CANCELLED->value,
+                \App\Constants\ConsultationStatusConstants::DOCTOR_CANCELLED->value
+            ])
+            ->where(function ($query) {
+                $query->whereHas('doctorScheduleDayShift', function ($q) {
+                    $q->whereHas('day', function ($dayQuery) {
+                        $dayQuery->where('date', '>=', now()->format('Y-m-d'));
+                    });
+                });
+            })
+            ->count();
+            // exists()
+        if ($upcomingConsultations > 0) {
+            throw new CantDeleteModelException(
+                __('messages.errors.cannot_delete_doctor_with_upcoming_consultations', [
+                    'model' => __('messages.modelSingle.doctor'),
+                    'count' => $upcomingConsultations
+                ])
+            );
+        }
+
+        // 3. Check for active package consultations
+        $packageConsultations = Consultation::whereHas('package', function ($query) use ($doctor) {
+            $query->where('user_id', $doctor->user_id);
+        })
+            ->where('is_active', true)
+            ->whereNotIn('status', [
+                \App\Constants\ConsultationStatusConstants::PATIENT_CANCELLED->value,
+                \App\Constants\ConsultationStatusConstants::DOCTOR_CANCELLED->value
+            ])
+            ->count();
+
+        if ($packageConsultations > 0) {
+            throw new CantDeleteModelException(
+                __('messages.errors.cannot_delete_doctor_with_package_consultations', [
+                    'model' => __('messages.modelSingle.doctor'),
+                    'count' => $packageConsultations
+                ])
+            );
+        }
+
+        return true;
+    }
+
+
 }

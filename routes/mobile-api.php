@@ -176,6 +176,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::put('universities/{university}', [DoctorProfileController::class, 'updateUniversity']);
             Route::delete('universities/{university}', [DoctorProfileController::class, 'deleteUniversity']);
             Route::put('deactivate', [DoctorProfileController::class, 'deactivate']);
+            Route::delete('delete-account', [DoctorProfileController::class, 'deleteAccount']);
             Route::apiResource('articles', ArticleController::class)->only('store', 'update', 'destroy');
             Route::put('articles/{article}/change-activation', [ArticleController::class, 'changeActivation'])->name('articles.active');
             Route::apiResource('vendors', VendorController::class)->only('index');

@@ -291,7 +291,11 @@ return [
         'reset_link_not_sent' => 'لم يتم إرسال رابط إعادة التعيين',
         'token_expired' => 'لقد انتهت صلاحية الرمز المميز لإعادة تعيين كلمة المرور، يرجى طلب رمز آخر',
         'cannot_delete' => 'لا يمكن حذف :model, هناك علاقة قائمة مع :relation برجاء حذف العلاقة أولا',
-        'something_wrong' => 'حدث خطأ ما!'
+        'something_wrong' => 'حدث خطأ ما!',
+        'cannot_delete_doctor_with_wallet_balance' => 'لا يمكن حذف :model لأن لديه رصيد في المحفظة (:balance).',
+        'cannot_delete_doctor_with_upcoming_consultations' => 'لا يمكن حذف :model لأن لديه :count استشارات قادمة.',
+        'cannot_delete_doctor_with_package_consultations' => 'لا يمكن حذف :model لأن لديه :count استشارات مرتبطة بالباقات.',
+        'no_doctor_account' => 'لا يوجد حساب طبيب مرتبط بهذا المستخدم.',
     ],
     'confirm' => [
         'are_you_sure' => 'هل أنت متأكد؟',
