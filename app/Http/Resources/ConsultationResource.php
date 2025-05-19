@@ -78,7 +78,7 @@ class ConsultationResource extends BaseResource
             'doctor_can_accept_urgent_case' => $this->doctorCanAcceptUrgentCase(),
         ];
         $this->relations = [
-            'medicalProcedure' => $this->relationLoaded('program') ? new self($this->program) : null,
+            'medicalProcedure' => $this->relationLoaded('program') ? $this->program : null,
             'attachments' => $this->relationLoaded('attachments') ? FileResource::collection($this->attachments) : [],
             'patient' => $this->relationLoaded('patient') ? new PatientResource($this->patient) : null,
             'doctor' => $this->relationLoaded('doctor') ? new DoctorResource($this->doctor) : null,
