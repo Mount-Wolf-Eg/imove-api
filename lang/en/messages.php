@@ -298,7 +298,13 @@ return [
         'cannot_delete_doctor_with_wallet_balance' => 'cannot delete :model because it has a balance in the wallet (:balance).',
         'cannot_delete_doctor_with_upcoming_consultations' => ' cannot delete :model because it has :count consultations coming.',
         'cannot_delete_doctor_with_package_consultations'  => 'cannot delete :model because it has :count consultations associated with packages.',
-        'no_doctor_account' = > ' there is no doctor account associated with this user.',
+        'no_doctor_account' => ' there is no doctor account associated with this user.',
+        'cannot_delete_doctor' => 'cannot delete :model due to additional restrictions.',
+        'cannot_delete_patient_with_wallet_balance' => ' cannot delete :model because it has a balance in the wallet (:balance).',
+        'cannot_delete_patient_with_upcoming_consultations' => ' cannot delete :model because he has consultations coming.',
+        'cannot_delete_patient_with_package_consultations' => ' cannot delete :model because it has consultations associated with packages.',
+        'cannot_delete_patient' => 'cannot delete :model due to additional restrictions.',
+        'no_patient_account' => ' there is no patient account associated with this user.',
     ],
     'confirm' => [
         'are_you_sure' => 'Are you sure?',
@@ -682,6 +688,7 @@ return [
         'visited_success' => 'The visit has been confirmed successfully.',
         'update_success' => 'The request has been updated successfully.',
         'delete_success' => 'The request has been successfully deleted.',
+        'delete_failed'  => 'deletion failed, try again',
     ],
 
     'unauthorized' => 'You are not authorized',

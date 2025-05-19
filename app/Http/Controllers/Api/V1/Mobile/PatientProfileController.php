@@ -8,7 +8,10 @@ use App\Http\Requests\PatientProfileRequest;
 use App\Http\Resources\UserResource;
 use App\Repositories\Contracts\PatientContract;
 use App\Repositories\Contracts\UserContract;
-
+use App\Models\Patient;
+use App\Exceptions\CantDeleteModelException;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class PatientProfileController extends BaseApiController
 {
@@ -43,5 +46,27 @@ class PatientProfileController extends BaseApiController
     }
 
 
+    /**
+     * Delete the authenticated patient's account.
+     *
+     * @return JsonResponse
+     */
+    public function deleteAccount(): JsonResponse
+    {
+        $user = Auth::user();
+        $patient = $user->patient; // Assuming Patient has a BelongsTo relationship with User
+
+        try {
+            $this->patientContract->remove($patient);
+            return $this->respondWithSuccess(__('messages.actions_messages.delete_success'));
+        } catch (CantDeleteModelException $e) {
+            return $this->respondWithError($e->getMessage(), 422);
+        } catch (\Exception $e) {
+            \Log::error('Failed to delete patient account via API', [
+                'patient_id' => $patient->id, 'user_id' => $user->id, 'error' => $e->getMessage(),
+            ]);
+            return $this->respondWithError(__('messages.actions_messages.delete_failed'), 500);
+        }
+    }
 
 }
