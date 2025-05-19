@@ -294,7 +294,11 @@ return [
         'reset_link_not_sent' => 'Reset link not sent',
         'token_expired' => 'Password reset token has expired, please request another one',
         'cannot_delete' => 'Can\'t delete this :model, it has :relation please remove them first',
-        'something_wrong' => 'Something went wrong!'
+        'something_wrong' => 'Something went wrong!',
+        'cannot_delete_doctor_with_wallet_balance' => 'cannot delete :model because it has a balance in the wallet (:balance).',
+        'cannot_delete_doctor_with_upcoming_consultations' => ' cannot delete :model because it has :count consultations coming.',
+        'cannot_delete_doctor_with_package_consultations'  => 'cannot delete :model because it has :count consultations associated with packages.',
+        'no_doctor_account' = > ' there is no doctor account associated with this user.',
     ],
     'confirm' => [
         'are_you_sure' => 'Are you sure?',

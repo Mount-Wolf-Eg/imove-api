@@ -14,6 +14,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use App\Exceptions\CantDeleteModelException;
 
 class DoctorController extends BaseWebController
 {
@@ -120,8 +121,15 @@ class DoctorController extends BaseWebController
      */
     public function destroy(Doctor $doctor): RedirectResponse
     {
-       $this->contract->remove($doctor);
-       return $this->redirectBack()->with('success', __('messages.actions_messages.delete_success'));
+        try {
+            $this->contract->remove($doctor);
+            return $this->redirectBack()->with('success', __('messages.actions_messages.delete_success'));
+        } catch (CantDeleteModelException $e) {
+            return $this->redirectBack()->with('error', $e->getMessage());
+        } catch (\Exception $e) {
+            \Log::error('Failed to delete doctor: ' . $e->getMessage(), ['doctor_id' => $doctor->id]);
+            return $this->redirectBack()->with('error', __('messages.actions_messages.delete_failed'));
+        }
     }
 
     /**

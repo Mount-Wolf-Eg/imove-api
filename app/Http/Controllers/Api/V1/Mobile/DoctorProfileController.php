@@ -11,7 +11,12 @@ use App\Http\Resources\UserResource;
 use App\Models\DoctorUniversity;
 use App\Repositories\Contracts\DoctorContract;
 use Illuminate\Http\JsonResponse;
+use App\Models\Doctor;
+use App\Exceptions\CantDeleteModelException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+
+
 
 class DoctorProfileController extends BaseApiController
 {
@@ -94,6 +99,30 @@ class DoctorProfileController extends BaseApiController
         $doctor = auth()->user()->doctor;
         $this->contract->toggleField($doctor, 'is_active');
         return $this->respondWithSuccess(__('messages.actions_messages.update_success'));
+    }
+
+    
+    /**
+     * Delete the authenticated doctor's account.
+     *
+     * @return JsonResponse
+     */
+    public function deleteAccount(): JsonResponse
+    {
+        $user = auth()->user();
+        $doctor = $user->doctor;
+        
+        try {
+            $this->doctorContract->remove($doctor);
+            return $this->respondWithSuccess(__('messages.actions_messages.delete_success'));
+        } catch (CantDeleteModelException $e) {
+            return $this->respondWithError($e->getMessage(), 422);
+        } catch (\Exception $e) {
+            \Log::error('Failed to delete doctor account via API', [
+                'doctor_id' => $doctor->id, 'user_id' => $user->id, 'error' => $e->getMessage(),
+            ]);
+            return $this->respondWithError(__('messages.actions_messages.delete_failed'), 500);
+        }
     }
 
 }

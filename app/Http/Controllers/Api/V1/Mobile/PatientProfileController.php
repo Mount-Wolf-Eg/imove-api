@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use App\Repositories\Contracts\PatientContract;
 use App\Repositories\Contracts\UserContract;
 
+
 class PatientProfileController extends BaseApiController
 {
     public function __construct(PatientContract $contract)
@@ -40,5 +41,7 @@ class PatientProfileController extends BaseApiController
         resolve(UserContract::class)->toggleField($user, 'is_active');
         return $this->respondWithSuccess(__('messages.actions_messages.update_success'));
     }
+
+
 
 }
