@@ -296,6 +296,14 @@ return [
         'cannot_delete_doctor_with_upcoming_consultations' => 'لا يمكن حذف :model لأن لديه :count استشارات قادمة.',
         'cannot_delete_doctor_with_package_consultations' => 'لا يمكن حذف :model لأن لديه :count استشارات مرتبطة بالباقات.',
         'no_doctor_account' => 'لا يوجد حساب طبيب مرتبط بهذا المستخدم.',
+        
+        'cannot_delete_doctor' => 'لا يمكن حذف :model بسبب قيود إضافية.',
+        'cannot_delete_patient_with_wallet_balance' => 'لا يمكن حذف :model لأن لديه رصيد في المحفظة (:balance).',
+        'cannot_delete_patient_with_upcoming_consultations' => 'لا يمكن حذف :model لأن لديه استشارات قادمة.',
+        'cannot_delete_patient_with_package_consultations' => 'لا يمكن حذف :model لأن لديه استشارات مرتبطة بالباقات.',
+        'cannot_delete_patient' => 'لا يمكن حذف :model بسبب قيود إضافية.',
+        'no_patient_account' => 'لا يوجد حساب مريض مرتبط بهذا المستخدم.',
+
     ],
     'confirm' => [
         'are_you_sure' => 'هل أنت متأكد؟',
@@ -677,6 +685,7 @@ return [
         'visited_success' => 'تم تأكيد إتمام الزيارة بنجاح.',
         'update_success' => 'تم تحديث الطلب بنجاح.',
         'delete_success' => 'تم حذف الطلب بنجاح.',
+        'delete_failed' => 'فشل الحذف، حاول مرة أخرى',
     ],
 
     

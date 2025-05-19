@@ -99,6 +99,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::put('update-main-info', [PatientProfileController::class, 'updateMainInfo']);
             Route::put('update-medical-records', [PatientProfileController::class, 'updateMedicalRecords']);
             Route::put('deactivate', [PatientProfileController::class, 'deactivate']);
+            Route::delete('delete-account', [PatientProfileController::class, 'deleteAccount']);
             Route::apiResource('relatives', PatientRelativeController::class);
             Route::get('consultations/replies', [PatientConsultationController::class, 'replies']);
             Route::apiResource('consultations', PatientConsultationController::class);

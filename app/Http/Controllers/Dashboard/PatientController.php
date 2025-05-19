@@ -105,14 +105,28 @@ class PatientController extends BaseWebController
      *
      * @return RedirectResponse
      */
+    // public function destroy(Patient $patient): RedirectResponse
+    // {
+    //     try {
+    //         $this->contract->remove($patient);
+    //         resolve(UserContract::class)->remove($patient->user);
+    //         return $this->redirectBack()->with('success', __('messages.actions_messages.delete_success'));
+    //     }catch (Exception $e){
+    //         return $this->redirectBack()->with('error', $e->getMessage());
+    //     }
+    // }
+    
     public function destroy(Patient $patient): RedirectResponse
     {
         try {
             $this->contract->remove($patient);
             resolve(UserContract::class)->remove($patient->user);
             return $this->redirectBack()->with('success', __('messages.actions_messages.delete_success'));
-        }catch (Exception $e){
+        } catch (CantDeleteModelException $e) {
             return $this->redirectBack()->with('error', $e->getMessage());
+        } catch (\Exception $e) {
+            \Log::error('Failed to delete patient: ' . $e->getMessage(), ['patient_id' => $patient->id]);
+            return $this->redirectBack()->with('error', __('messages.actions_messages.delete_failed'));
         }
     }
 
