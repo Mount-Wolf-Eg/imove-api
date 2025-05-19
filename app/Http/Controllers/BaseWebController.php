@@ -23,7 +23,6 @@ class BaseWebController extends Controller
 
     protected function indexBlade(array $with)
     {
-        return $this->viewPath;
         return view($this->viewPath . '.index', $with);
     }
 
