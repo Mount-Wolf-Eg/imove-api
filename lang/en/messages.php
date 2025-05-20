@@ -40,7 +40,7 @@ return [
     'insufficient_wallet_balance' => 'Insufficient wallet balance',
     'credit' => 'Credit',
     'wallet' => 'Wallet',
-    'tabibak' => 'Tabibak',
+    'imove' => 'I-Move',
     'dashboard' => 'Dashboard',
     'overview' => 'Overview',
     'download_PDF' => 'Download as PDF',

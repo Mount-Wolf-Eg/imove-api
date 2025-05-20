@@ -37,7 +37,7 @@ return [
     'insufficient_wallet_balance' => 'رصيد المحفظة غير كافٍ',
     'credit' => 'فيزا / ماستر كارد',
     'wallet' => 'محفظة',
-    'tabibak' => 'طبيبك',
+    'imove' => 'i-move',
     'dashboard' => 'لوحة القيادة',
     'overview' => 'ملخص',
     'download_PDF' => 'حفظ pdf',

@@ -9,7 +9,8 @@
     right: 0;
     top: 0;
     height: $top-tagbar-height;
-    padding: 0 calc(#{$grid-gutter-width} * 0.5) 0 calc(#{$grid-gutter-width} * 0.5);
+    padding: 0 calc(#{$grid-gutter-width} * 0.5) 0
+        calc(#{$grid-gutter-width} * 0.5);
     display: flex;
     align-items: center;
 }
@@ -56,11 +57,11 @@
     margin: 0 auto;
     height: $header-height;
     padding: 0 calc(#{$grid-gutter-width} * 1) 0 calc(#{$grid-gutter-width} * 1)
-    /*rtl: 0 0 0 calc(#{$grid-gutter-width} / 2) */
-    ;
+        /*rtl: 0 0 0 calc(#{$grid-gutter-width} / 2) */;
 
     @media (max-width: 767.98px) {
-        padding: 0 calc(#{$grid-gutter-width} * 0.5) 0 calc(#{$grid-gutter-width} * 0.5);
+        padding: 0 calc(#{$grid-gutter-width} * 0.5) 0
+            calc(#{$grid-gutter-width} * 0.5);
     }
 
     .topbar-head-dropdown {
@@ -163,9 +164,9 @@
     .dropdown-menu {
         top: 94px;
         width: 100%;
-        .list-group-item{
+        .list-group-item {
             border: none !important;
-         }
+        }
     }
 }
 
@@ -368,9 +369,22 @@
             }
         }
 
-        
-        &[data-topbar="dark"]:is([data-sidebar="light"], [data-sidebar="dark"], [data-sidebar="gradient"], [data-sidebar="gradient-2"], [data-sidebar="gradient-3"],[data-sidebar="gradient-4"]),
-        &[data-topbar="brand"]:is([data-sidebar="light"], [data-sidebar="dark"], [data-sidebar="gradient"], [data-sidebar="gradient-2"], [data-sidebar="gradient-3"],[data-sidebar="gradient-4"]) {
+        &[data-topbar="dark"]:is(
+                [data-sidebar="light"],
+                [data-sidebar="dark"],
+                [data-sidebar="gradient"],
+                [data-sidebar="gradient-2"],
+                [data-sidebar="gradient-3"],
+                [data-sidebar="gradient-4"]
+            ),
+        &[data-topbar="brand"]:is(
+                [data-sidebar="light"],
+                [data-sidebar="dark"],
+                [data-sidebar="gradient"],
+                [data-sidebar="gradient-2"],
+                [data-sidebar="gradient-3"],
+                [data-sidebar="gradient-4"]
+            ) {
             .horizontal-logo {
                 .logo-dark {
                     display: none;
@@ -382,7 +396,13 @@
             }
         }
 
-        &:is([data-sidebar="dark"], [data-sidebar="gradient"], [data-sidebar="gradient-2"], [data-sidebar="gradient-3"], [data-sidebar="gradient-4"]) {
+        &:is(
+                [data-sidebar="dark"],
+                [data-sidebar="gradient"],
+                [data-sidebar="gradient-2"],
+                [data-sidebar="gradient-3"],
+                [data-sidebar="gradient-4"]
+            ) {
             .horizontal-logo {
                 .logo-dark {
                     display: block;
@@ -413,7 +433,9 @@
             margin-top: calc(#{$header-height} + #{$top-tagbar-height});
         }
 
-        padding: calc(45px + #{$grid-gutter-width}) calc(#{$grid-gutter-width} * 0.5) $footer-height calc(#{$grid-gutter-width} * 0.5);
+        padding: calc(45px + #{$grid-gutter-width})
+            calc(#{$grid-gutter-width} * 0.5) $footer-height
+            calc(#{$grid-gutter-width} * 0.5);
     }
 
     &[data-layout-width="boxed"] {
@@ -426,8 +448,7 @@
 }
 
 [data-layout="vertical"] {
-
-    &:is([data-sidebar-size="sm"], [data-sidebar-size="sm-hover"]){
+    &:is([data-sidebar-size="sm"], [data-sidebar-size="sm-hover"]) {
         #page-topbar {
             @media (min-width: 768px) {
                 left: $vertical-menu-width-sm;
@@ -447,7 +468,9 @@
 [data-layout="twocolumn"] {
     #page-topbar {
         @media (min-width: 768px) {
-            left: calc(#{$twocolumn-menu-iconview-width} + #{$twocolumn-menu-width});
+            left: calc(
+                #{$twocolumn-menu-iconview-width} + #{$twocolumn-menu-width}
+            );
         }
     }
 

@@ -4,18 +4,18 @@
     <div class="navbar-brand-box">
         <a href="{{route('dashboard')}}" class="logo logo-dark">
             <span class="logo-sm">
-                <img src="{{ URL::asset('assets/images/logo-sm.png') }}" alt="" height="26">
-            </span>
+                <img src="{{ URL::asset('assets/images/iMoveLogo.svg') }}" alt="" height="26">
+             </span>
             <span class="logo-lg">
-                <img src="{{ URL::asset('assets/images/logo-dark.png') }}" alt="" height="26">
-            </span>
+                <img src="{{ URL::asset('assets/images/iMoveLogo.svg') }}" alt="" height="26">
+             </span>
         </a>
         <a href="{{route('dashboard')}}" class="logo logo-light">
             <span class="logo-sm">
-                <img src="{{ URL::asset('assets/images/logo-sm.png') }}" alt="" height="24">
-            </span>
+                <img src="{{ URL::asset('assets/images/iMoveLogo.svg') }}" alt="" height="40">
+             </span>
             <span class="logo-lg">
-                <img src="{{ URL::asset('assets/images/logo-light.png') }}" alt="" height="24">
+                 <img src="{{ URL::asset('assets/images/iMoveLogo.svg') }}" alt="" height="80" class="my-2">
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item {{app()->getLocale() == 'ar' ? 'float-start' : 'float-end'}} btn-vertical-sm-hover"
@@ -34,8 +34,7 @@
                     <a href="{{route('dashboard')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('dashboard')])>
                         <i class="bi bi-speedometer2"></i>
                         <span data-key="t-dashboard">{{ __('t-dashboard') }}</span>
-                        <span class="badge badge-pill badge-soft-danger" data-key="t-hot">{{ __('t-hot') }}</span>
-                    </a>
+                     </a>
                 </li>
 
                 @if(auth()->user()->can('read-role') || auth()->user()->can('view-all-role'))
