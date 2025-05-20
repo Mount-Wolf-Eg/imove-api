@@ -105,14 +105,27 @@ class Coupon extends Model
         return $this->is_active
             && $this->valid_from->isPast() && $this->valid_to->isFuture()
             && $this->payments->count() < $this->total_limit;
-            // && $this->payments->where('payer_id', auth()->user->id)->count() < $this->total_limit;
     }
 
     public function isValidForUser($userId, $specialityId = null): bool
     {
-        return $this->isValid()
-            && $this->payments->where('payer_id', $userId)->count() < $this->user_limit;
-            // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+        if($this->users->count() > 0){
+            return $this->isValid()
+                && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
+                && $this->users->contains($userId);
+                // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+        }
+        
+        if($this->cities->count() > 0){
+            return $this->isValid()
+                && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
+                && $this->cities->contains(auth()->user()->city_id);
+                // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+        }else{
+            return $this->isValid()
+                && $this->payments->where('payer_id', $userId)->count() < $this->user_limit;
+                // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+        }
     }
 
     public function applyDiscount($amount): float
