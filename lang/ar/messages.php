@@ -260,7 +260,7 @@ return [
     'discount_amount' => 'قيمة الخصم',
     'valid_from' => 'صالح منذ',
     'valid_to' => 'صالح إلى',
-    'user_limit' => 'عدد المستخدمين',
+    'user_limit' => 'عدد المرات لكل مستخدم',
     'total_limit' => 'الاستخدام لكل قسيمة',
     'main_image' => 'الصورة الرئيسية',
     'images' => 'الصور',
