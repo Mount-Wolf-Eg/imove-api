@@ -207,7 +207,7 @@ return [
     'patient_details' => 'تفاصيل المريض',
     'coupon' => 'قسيمة',
     'manage_coupons' => 'إدارة القسائم',
-    'coupons' => 'القسائم',
+    'coupons' => 'القسائم (الكوبونات)',
     'add_coupon' => 'إضافة قسيمة جديدة',
     'edit_coupon' => 'تعديل القسيمة',
     'date_of_birth' => 'تاريخ الميلاد',
