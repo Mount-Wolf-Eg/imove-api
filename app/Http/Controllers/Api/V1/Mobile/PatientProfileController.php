@@ -57,7 +57,7 @@ class PatientProfileController extends BaseApiController
         $patient = $user->patient; // Assuming Patient has a BelongsTo relationship with User
 
         try {
-            $this->patientContract->remove($patient);
+            $this->contract->remove($patient);
             return $this->respondWithSuccess(__('messages.actions_messages.delete_success'));
         } catch (CantDeleteModelException $e) {
             return $this->respondWithError($e->getMessage(), 422);
