@@ -74,11 +74,59 @@
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
+
                     <div class="col-lg-6">
                         {{Form::label('total_limit', __('messages.total_limit'), ['class' => 'form-label'])}}
                         <span class="text-danger fw-bold">*</span>
                         {!! Form::number('total_limit' , $coupon->total_limit ?? '', ['class' => 'form-control', 'pattern' => '[0-9]', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         @error("total_limit")
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6">
+                        {{Form::label('patients', __('messages.patients'), ['class' => 'form-label'])}}
+                        {{-- <span class="text-danger fw-bold">*</span> --}}
+                        {!! Form::select('users[]' ,$patients->pluck('user.phone', 'user_id'),
+                            isset($coupon) ? $coupon->users->pluck('id') : [],
+                            ['class' => 'form-select', 'multiple' => true]) !!}
+                        @error("users")
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                        @error("users.*")
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                    </div>
+                    <div class="col-lg-6">
+                        {{Form::label('cities', __('messages.cities'), ['class' => 'form-label'])}}
+                        {{-- <span class="text-danger fw-bold">*</span> --}}
+                        {!! Form::select('cities[]' ,$cities->pluck('name', 'id'),
+                            isset($coupon) ? $coupon->cities->pluck('id') : [],
+                            ['class' => 'form-select', 'multiple' => true]) !!}
+                        @error("cities")
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                        @error("cities.*")
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                    </div>
+
+                    <div class="col-lg-12">
+                        <h5>@lang('messages.The coupon can be used with') : -</h5>
+                    </div>
+                    <div class="col-lg-6">
+                        {{Form::label('package', __('messages.package'), ['class' => 'form-label'])}}
+                        <span class="text-danger fw-bold">*</span>
+                        {!! Form::checkbox('package' , $coupon->package ?? false, ['class' => 'form-control']) !!}
+                        @error("package")
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                    </div>
+
+                    <div class="col-lg-6">
+                        {{Form::label('consultation', __('messages.consultation'), ['class' => 'form-label'])}}
+                        <span class="text-danger fw-bold">*</span>
+                        {!! Form::checkbox('consultation' , $coupon->consultation ?? false, ['class' => 'form-control']) !!}
+                        @error("consultation")
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
@@ -106,6 +154,21 @@
             } else {
                 discountAmountInput.removeAttr('max');
             }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            function enforceExclusiveSelection() {
+                const usersSelected = $('select[name="users[]"]').val().filter(Boolean).length > 0;
+                const citiesSelected = $('select[name="cities[]"]').val().filter(Boolean).length > 0;
+
+                if (usersSelected && citiesSelected) {
+                    alert("من فضلك اختر المرضى أو المدن فقط، وليس الإثنين معًا.");
+                    $('select[name="cities[]"]').val(null).trigger('change');
+                }
+            }
+
+            $('select[name="users[]"], select[name="cities[]"]').on('change', enforceExclusiveSelection);
         });
     </script>
 @endpush

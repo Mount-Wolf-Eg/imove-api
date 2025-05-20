@@ -21,6 +21,12 @@ class CouponRepository extends BaseRepository implements CouponContract
         if (isset($attributes['specialities'])) {
             $model->medicalSpecialities()->sync($attributes['specialities']);
         }
+        if (isset($attributes['cities'])) {
+            $model->cities()->sync($attributes['cities']);
+        }
+        if (isset($attributes['users'])) {
+            $model->users()->sync($attributes['users']);
+        }
         return $model;
     }
 }

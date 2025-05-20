@@ -7,6 +7,8 @@ use App\Http\Requests\CouponRequest;
 use App\Models\Coupon;
 use App\Repositories\Contracts\CouponContract;
 use App\Repositories\Contracts\MedicalSpecialityContract;
+use App\Repositories\Contracts\CityContract;
+use App\Repositories\Contracts\PatientContract;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -16,16 +18,24 @@ use Illuminate\Http\Request;
 class CouponController extends BaseWebController
 {
     protected MedicalSpecialityContract $medicalSpecialityContract;
+    protected CityContract $cityContract;
+    protected PatientContract $patientContract;
 
     /**
      * CouponController constructor.
      * @param CouponContract $contract
      * @param MedicalSpecialityContract $medicalSpecialityContract
+     * @param CityContract $cityContract
+     * @param PatientContract $patientContract
      */
-    public function __construct(CouponContract $contract, MedicalSpecialityContract $medicalSpecialityContract)
+    public function __construct(CouponContract $contract, 
+        MedicalSpecialityContract $medicalSpecialityContract, 
+        CityContract $cityContract, PatientContract $patientContract)
     {
         parent::__construct($contract, 'dashboard');
         $this->medicalSpecialityContract = $medicalSpecialityContract;
+        $this->cityContract = $cityContract;
+        $this->patientContract = $patientContract;
     }
 
     /**
@@ -49,7 +59,12 @@ class CouponController extends BaseWebController
     {
         $types = [1 => 'percentage', 2 => 'amount'];
         $specialities = $this->medicalSpecialityContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
-        return $this->createBlade(['types' => $types, 'specialities' => $specialities]);
+        $cities   = $this->cityContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
+        $patients = $this->patientContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
+        return $this->createBlade(['types' => $types, 
+            'specialities' => $specialities, 'cities' => $cities,
+            'patients' => $patients
+        ]);
     }
 
     /**
@@ -88,7 +103,12 @@ class CouponController extends BaseWebController
     {
         $types = [1 => 'percentage', 2 => 'amount'];
         $specialities = $this->medicalSpecialityContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
-        return $this->editBlade(['coupon' => $coupon, 'types' => $types, 'specialities' => $specialities]);
+        $cities   = $this->cityContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
+        $patients = $this->patientContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
+        return $this->editBlade(['coupon' => $coupon, 'types' => $types, 
+            'specialities' => $specialities, 'cities' => $cities,
+            'patients' => $patients
+        ]);
     }
 
     /**

@@ -739,6 +739,7 @@ return [
     'answers' => 'Answers',
     'questions' => 'Questions',
     'consultation-questions_details' => 'Consultation Questions Details',
+    'The coupon can be used with' => 'The coupon can be used with',
 
 
 ];
