@@ -37,7 +37,7 @@ return [
     'insufficient_wallet_balance' => 'رصيد المحفظة غير كافٍ',
     'credit' => 'فيزا / ماستر كارد',
     'wallet' => 'محفظة',
-    'imove' => 'i-move',
+    'virtual' => 'Virtual-Touch',
     'dashboard' => 'لوحة القيادة',
     'overview' => 'ملخص',
     'download_PDF' => 'حفظ pdf',
