@@ -737,7 +737,7 @@ return [
     'manage_consultation-questions' => 'اداره اسئلة الاستشاره',
     'answers' => 'الاجابات',
     'consultation-questions_details' => 'تفاصيل اسئلة الاستشاره',
-
+    'The coupon can be used with' => 'يمكن الاستخدام مع',
 
 
 ];

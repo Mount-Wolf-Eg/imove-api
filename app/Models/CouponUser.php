@@ -5,39 +5,23 @@ namespace App\Models;
 use App\Traits\ModelTrait;
 use App\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
-class City extends Model
+class CouponUser extends Model
 {
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
     public const ADDITIONAL_PERMISSIONS = [];
-    protected $fillable = ['name', 'region_id', 'is_active'];
-    protected array $filters = ['keyword', 'active'];
+    protected $table = "coupon_users";
+    protected $fillable = [];
+    protected array $filters = ['keyword'];
     protected array $searchable = [];
     protected array $dates = [];
     public array $filterModels = [];
     public array $filterCustom = [];
-    public array $translatable = ['name'];
+    public array $translatable = [];
 
     //---------------------relations-------------------------------------
-
-    public function region (): BelongsTo
-    {
-        return $this->belongsTo(Region::class);
-    }
-
-    public function users()
-    {
-        return $this->hasMany(User::class);
-    }
-    
-    public function coupons(): BelongsToMany
-    {
-        return $this->belongsToMany(Coupon::class, 'coupon_cities');
-    }
 
     //---------------------relations-------------------------------------
 

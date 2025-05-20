@@ -37,6 +37,14 @@ class CouponRequest extends FormRequest
             'specialities.*' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
             'user_limit' => config('validations.integer.req'),
             'total_limit' => config('validations.integer.req').'|gte:user_limit',
+            'package' => 'nullable|boolean',
+            'consultation' => 'nullable|boolean',
+            // 'users'    => 'nullable|array|required_without:cities',
+            'users'    => 'nullable|array|prohibited_with:cities',
+            'users.*'  => 'exists:users,id',
+            'cities'   => 'nullable|array|prohibited_with:users',
+            'cities.*' => 'exists:cities,id',
+
         ];
     }
 
@@ -57,6 +65,8 @@ class CouponRequest extends FormRequest
             'user_limit' => __('messages.user_limit'),
             'total_limit' => __('messages.total_limit'),
             'specialities.*' => __('messages.speciality'),
+            'cities.*' => __('messages.cities'),
+            'users.*'  => __('messages.users'),
         ];
     }
 

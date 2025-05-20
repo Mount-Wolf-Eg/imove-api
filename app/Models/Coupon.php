@@ -18,8 +18,9 @@ class Coupon extends Model
     use SoftDeletes, ModelTrait, SearchTrait, HasTranslations;
 
     public const ADDITIONAL_PERMISSIONS = [];
+    protected $table = "coupons";
     protected $fillable = ['code', 'description', 'discount_type', 'discount_amount',
-        'valid_from', 'valid_to', 'user_limit', 'total_limit', 'is_active'];
+        'valid_from', 'valid_to', 'user_limit', 'total_limit', 'is_active', 'package' , 'consultation'];
     protected array $filters = ['keyword', 'active', 'valid', 'used', 'expired'];
     protected array $searchable = [];
     protected array $dates = ['valid_from', 'valid_to'];
@@ -35,7 +36,14 @@ class Coupon extends Model
     {
         return $this->belongsToMany(MedicalSpeciality::class, 'coupon_medical_speciality');
     }
-
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'coupon_users');
+    }
+    public function cities(): BelongsToMany
+    {
+        return $this->belongsToMany(City::class, 'coupon_cities');
+    }
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
@@ -97,6 +105,7 @@ class Coupon extends Model
         return $this->is_active
             && $this->valid_from->isPast() && $this->valid_to->isFuture()
             && $this->payments->count() < $this->total_limit;
+            // && $this->payments->where('payer_id', auth()->user->id)->count() < $this->total_limit;
     }
 
     public function isValidForUser($userId, $specialityId = null): bool
