@@ -107,25 +107,53 @@ class Coupon extends Model
             && $this->payments->count() < $this->total_limit;
     }
 
-    public function isValidForUser($userId, $specialityId = null): bool
+    public function isValidForUser($userId, $specialityId = null, $type = null): bool
     {
-        if($this->users->count() > 0){
-            return $this->isValid()
-                && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
-                && $this->users->contains($userId);
-                // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+        if ("consultation" == $type){
+            if($this->users->count() > 0){
+                return $this->isValid()
+                    && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
+                    && $this->users->contains($userId)
+                    && $this->consultation == true;
+                    // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+            }
+            
+            if($this->cities->count() > 0){
+                return $this->isValid()
+                    && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
+                    && $this->cities->contains(auth()->user()->city_id)
+                    && $this->consultation == true;
+                    // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+            }else{
+                return $this->isValid()
+                    && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
+                    && $this->consultation == true;
+                    // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+            }
         }
-        
-        if($this->cities->count() > 0){
-            return $this->isValid()
-                && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
-                && $this->cities->contains(auth()->user()->city_id);
-                // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
-        }else{
-            return $this->isValid()
-                && $this->payments->where('payer_id', $userId)->count() < $this->user_limit;
-                // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
-        }
+        elseif ("subscription" == $type) { // type = package
+             if($this->users->count() > 0){
+                return $this->isValid()
+                    && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
+                    && $this->users->contains($userId)
+                    && $this->package == true;
+                    // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+            }
+            
+            if($this->cities->count() > 0){
+                return $this->isValid()
+                    && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
+                    && $this->cities->contains(auth()->user()->city_id)
+                    && $this->package == true;
+                    // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+            }else{
+                return $this->isValid()
+                    && $this->payments->where('payer_id', $userId)->count() < $this->user_limit
+                    && $this->package == true;
+                    // && $this->medicalSpecialities->contains($specialityId); // TODO uncomment this line
+            }
+        }else
+            return false;
     }
 
     public function applyDiscount($amount): float

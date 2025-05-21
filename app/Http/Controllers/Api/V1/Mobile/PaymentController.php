@@ -38,7 +38,7 @@ class PaymentController extends BaseApiController
         $user                = auth()->user();
         $userId              = $user->id;
         $medicalSpecialtyId  = request()->get('medical_specialty_id');
-
+        $type                = request()->get('type');
         if (! $amount || $amount <= 0) {
             return $this->respondWithError(__('Amount must be greater than 0'), 422);
         }
@@ -46,7 +46,7 @@ class PaymentController extends BaseApiController
         if ($coupon) {
             $coupon = resolve(CouponContract::class)->findBy('code', $coupon, false);
 
-            if ($coupon?->isValidForUser($userId, $medicalSpecialtyId)) {
+            if ($coupon?->isValidForUser($userId, $medicalSpecialtyId, $type)) {
                 $amountAfterDiscount = $coupon->applyDiscount($amount);
             } else {
                 return $this->respondWithError(__('messages.invalid_coupon'));

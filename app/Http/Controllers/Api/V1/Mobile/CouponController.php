@@ -20,10 +20,11 @@ class CouponController extends BaseApiController
     {
         $request->validate([
             'medical_speciality_id' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
-            'amount'                => config('validations.integer.req')
+            'amount'                => config('validations.integer.req'),
+            'type'                  => 'required|in:consultation,subscription'
         ]);
 
-        $valid = $coupon->isValidForUser(auth()->id(), request('medical_speciality_id'));
+        $valid = $coupon->isValidForUser(auth()->id(), request('medical_speciality_id'), request('type'));
 
         if (!$valid) {
             return $this->respondWithError(__('messages.invalid_coupon'));
