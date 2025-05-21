@@ -188,7 +188,7 @@ class Doctor extends Model
         });
     }
 
-    public function scopeOfday($query, $value)
+    public function scopeOfDate($query, $value)
     {
         return $query->whereHas('scheduleDays', function ($q) use ($value) {
             $q->whereDate('date', $value);
