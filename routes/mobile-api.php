@@ -32,6 +32,7 @@ use App\Http\Controllers\Api\V1\Mobile\PatientPackageController;
 use App\Http\Controllers\Api\V1\Mobile\ExerciseController;
 use App\Http\Controllers\Api\V1\Mobile\PatientProgramController;
 use App\Http\Controllers\Api\V1\Mobile\DoctorExerciseController;
+use App\Http\Controllers\Api\V1\Mobile\BannerController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
@@ -126,6 +127,7 @@ Route::group(['middleware' => 'locale'], static function () {
 
             Route::apiResource('banks', BankController::class);
 
+            Route::resource('banners', BannerController::class)->only('index');
             Route::resource('coupons', CouponController::class)->only('index');
             Route::get('coupons/{coupon:code}/apply', [CouponController::class, 'applyCoupon']);
 
