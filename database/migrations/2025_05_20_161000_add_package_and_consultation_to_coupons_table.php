@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('coupons', function (Blueprint $table) {
-            $table->boolean('package')->default(true)->after('is_active');
-            $table->boolean('consultation')->default(true)->after('is_active');
+        if (!Schema::hasColumn('coupons', 'consultation')) {
+            Schema::table('coupons', function (Blueprint $table) {
+                $table->boolean('package')->default(true)->after('is_active');
+                $table->boolean('consultation')->default(true)->after('is_active');
 
-        });
+            });
+        }
     }
 
     /**
@@ -24,7 +26,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('coupons', function (Blueprint $table) {
-            $table->dropColumn(['package', 'session']);
+            $table->dropColumn(['package', 'consultation']);
         });
     }
 };

@@ -46,6 +46,7 @@ use App\Http\Controllers\Dashboard\RegionController;
 use App\Http\Controllers\Dashboard\CityController;
 use App\Http\Controllers\Dashboard\SettingConsultationController;
 use App\Http\Controllers\Dashboard\ConsultationQuestionsController;
+use App\Http\Controllers\Dashboard\BannerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -149,6 +150,7 @@ Route::group([
         Route::put('regions/{region}/change-activation', [RegionController::class, 'changeActivation'])->name('regions.active');
         Route::resource('cities', CityController::class);
         Route::put('cities/{city}/change-activation', [CityController::class, 'changeActivation'])->name('cities.active');
+        Route::resource('banners', BannerController::class);
 
         Route::prefix('profile')->group(function () {
             Route::get('/', [ProfileController::class, 'profile'])->name('profile');

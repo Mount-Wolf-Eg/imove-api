@@ -740,6 +740,13 @@ return [
     'questions' => 'Questions',
     'consultation-questions_details' => 'Consultation Questions Details',
     'The coupon can be used with' => 'The coupon can be used with',
+ 
+    'banner'   => 'Banner',
+    'banners'  => 'Banners',
+    'manage_banners' => 'Manage Banners',
+    'edit_banner'    => 'Edit',
+    'add_banner'     => 'add_banner',
+
 
 
 ];
