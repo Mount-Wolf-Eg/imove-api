@@ -13,6 +13,7 @@ enum FileConstants: string
     case FILE_TYPE_EDUCATIONAL_MAIN_IMAGE = 'educational_content_main_image';
     case FILE_TYPE_EXERCISE_MAIN_IMAGE = 'exercise_main_image';
     case FILE_TYPE_EXERCISE_MEDIA = 'exercise_media';
+    case FILE_TYPE_BANNER_IMAGE = 'banner_image';
 
     case FILE_TYPE_ARTICLE_IMAGES = 'article_images';
     case FILE_TYPE_CONSULTATION_ATTACHMENTS = 'consultation_attachments';
