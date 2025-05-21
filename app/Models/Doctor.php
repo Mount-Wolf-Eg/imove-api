@@ -51,7 +51,7 @@ class Doctor extends Model
     ];
     protected array $searchable = ['user.name'];
     protected array $dates = [];
-    public array $filterModels = ['City', 'MedicalSpeciality', 'AcademicDegree', 'University', 'Hospital'];
+    public array $filterModels = ['City', 'MedicalSpeciality', 'AcademicDegree', 'University', 'Hospital', 'DoctorScheduleDay'];
     public array $filterCustom = ['consultationPeriods', 'reminders'];
     public array $translatable = [];
     public $casts = [
@@ -188,6 +188,12 @@ class Doctor extends Model
         });
     }
 
+    public function scopeOfday($query, $value)
+    {
+        return $query->whereHas('scheduleDays', function ($q) use ($value) {
+            $q->whereDate('date', $value);
+        });
+    }
     public function scopeOfAcademicDegree($query, $value)
     {
         return $query->where('academic_degree_id', (array)$value);
