@@ -35,6 +35,7 @@
                             <a href="#" class="fw-semibold">#{{$loop->iteration}}</a>
                         </th>
                         <td>{{$resource->code}}</td>
+                        {{-- <td>{{$resource->isNumberOfUse()}}</td> --}}
                         <td>
                             {{ucfirst(strtolower($resource->discount_type->name))}}
                         </td>
