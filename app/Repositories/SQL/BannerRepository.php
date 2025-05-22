@@ -26,7 +26,7 @@ class BannerRepository extends BaseRepository implements BannerContract
     {
         if (isset($attributes['main_image'])) {
             if (is_file($attributes['main_image'])){
-                $file = resolve(FileContract::class)->create(['file' => $attributes['main_imageo'],
+                $file = resolve(FileContract::class)->create(['file' => $attributes['main_image'],
                     'type' => FileConstants::FILE_TYPE_BANNER_IMAGE->value]);
             }else{
                 $file = resolve(FileContract::class)->find($attributes['main_image']);
