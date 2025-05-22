@@ -162,51 +162,7 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
         // $this->notificationService->newConsultation($model);
     }
 
-    /**
-     * Create a new program with associated exercises for a consultation.
-     *
-     * @param Consultation $consultation
-     * @param array $programData
-     * @param array $exercises
-     * @param array $relations
-     * @return Program
-     * @throws \Exception
-     */
-    // public function createProgram(Consultation $consultation, array $programData, array $exercises, array $relations = []): Program
-    // {
-    //     return DB::transaction(function () use ($consultation, $programData, $exercises, $relations) {
-    //         // Create the program
-    //         $program = Program::create(array_merge($programData, ['consultation_id' => $consultation->id, 'patient_id'=> $consultation->patient_id]));
 
-    //         // Create program exercises
-    //         $syncData = [];
-    //         foreach ($exercises as $exercise) {
-    //             $syncData[$exercise['exercise_id']] = [
-    //                 'sets' => $exercise['sets'] ?? null,
-    //                 'break_between_sets' => $exercise['break_between_sets'] ?? null,
-    //                 'weight' => $exercise['weight'] ?? null,
-    //                 'rep' => $exercise['rep'] ?? null,
-    //                 'hold_duration' => $exercise['hold_duration'] ?? null,
-    //                 'comments' => $exercise['comments'] ?? null,
-    //             ];
-    //         }
-
-    //         $program->exercises()->sync($syncData);
-
-    //         // Log the action
-    //         Log::info('Program created for consultation', [
-    //             'consultation_id' => $consultation->id,
-    //             'program_id' => $program->id,
-    //         ]);
-
-    //         // Load requested relations
-    //         if (!empty($relations)) {
-    //             $program->load(array_intersect($relations, ['consultation', 'exercises', 'patientSessions']));
-    //         }
-
-    //         return $program;
-    //     });
-    // }
 
     // update Or Create Setting Program Exercises
     public function updateOrCreateSettingProgram(Consultation $consultation, array $programData): Program

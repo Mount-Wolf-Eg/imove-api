@@ -15,6 +15,7 @@ use App\Models\File;
 use App\Repositories\Contracts\ConsultationContract;
 use App\Repositories\Contracts\DoctorContract;
 use App\Services\Repositories\ConsultationNotificationService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
 
@@ -276,4 +277,196 @@ class PatientConsultationController extends BaseApiController
         }
     }
 
+    /**
+     * Get the next appointment date for the authenticated patient.
+     *
+     * @return JsonResponse
+     */
+    public function nextAppointment(): JsonResponse
+    {
+        try {
+            $patientId = auth()->user()->patient?->id;
+
+            $consultation = Consultation::where('patient_id', $patientId)
+                ->ofNextConsultation()
+                ->select('id', 'doctor_schedule_day_shift_id')
+                ->with(['doctorScheduleDayShift.day', 'replies' => function ($query) {
+                    $query->where('status', ConsultationPatientStatusConstants::APPROVED->value)
+                          ->select('id', 'consultation_id', 'doctor_set_consultation_at');
+                }])
+                ->orderByRaw('
+                    COALESCE(
+                        (
+                            SELECT STR_TO_DATE(
+                                CONCAT(
+                                    doctor_schedule_days.date, 
+                                    " ", 
+                                    doctor_schedule_day_shifts.from_time
+                                ), 
+                                "%Y-%m-%d %H:%i:%s"
+                            )
+                            FROM doctor_schedule_day_shifts
+                            JOIN doctor_schedule_days 
+                                ON doctor_schedule_days.id = doctor_schedule_day_shifts.doctor_schedule_day_id
+                            WHERE doctor_schedule_day_shifts.id = consultations.doctor_schedule_day_shift_id
+                        ),
+                        (
+                            SELECT doctor_set_consultation_at
+                            FROM consultation_doctor_replies
+                            WHERE consultation_doctor_replies.consultation_id = consultations.id
+                            AND consultation_doctor_replies.status = ?
+                            LIMIT 1
+                        )
+                    ) ASC
+                ', [ConsultationPatientStatusConstants::APPROVED->value])
+                ->first();
+
+            if (!$consultation) {
+                return $this->respondWithSuccess(__('messages.no_data'), 200, [
+                    'next_appointment' => null
+                ]);
+            }
+
+            $nextAppointment = null;
+            if ($consultation->doctorScheduleDayShift?->day) {
+                $shiftDateTime = $consultation->doctorScheduleDayShift->day->date
+                    ->copy()
+                    ->setTimeFrom($consultation->doctorScheduleDayShift->from_time);
+                if ($shiftDateTime->isFuture()) {
+                    $nextAppointment = $shiftDateTime;
+                }
+            }
+            $approvedReply = $consultation->replies->first();
+            if ($approvedReply?->doctor_set_consultation_at && $approvedReply->doctor_set_consultation_at->isFuture()) {
+                if (!$nextAppointment || $approvedReply->doctor_set_consultation_at->lessThan($nextAppointment)) {
+                    $nextAppointment = $approvedReply->doctor_set_consultation_at;
+                }
+            }
+
+            return $this->respondWithSuccess(__('messages.next_appointment_found'), 200, [
+                'next_appointment' => $nextAppointment ? $nextAppointment->toDateTimeString() : null,
+                'consultation_id'  => $consultation->id ?? null
+            ]);
+        } catch (Exception $e) {
+            \Log::error('Failed to fetch next appointment', [
+                'user_id' => auth()->user()->id,
+                'error' => $e->getMessage(),
+            ]);
+            return $this->respondWithError(__('messages.error_fetching_appointment'), 500);
+        }
+    }
+
+    
+    /**
+     * Get the next appointment date for the authenticated patient.
+     *
+     * @return JsonResponse
+     */
+    public function nextAppointment(): JsonResponse
+    {
+        try {
+            $patientId = auth()->user()->patient?->id;
+            
+            if (!$patientId) {
+                return $this->respondWithError(__('messages.errors.no_patient_account'), 404);
+            }
+
+            $consultation = Consultation::where('patient_id', $patientId)
+                ->ofNextConsultation()
+                ->select('id', 'doctor_schedule_day_shift_id')
+                ->with(['doctorScheduleDayShift.day', 'replies' => function ($query) {
+                    $query->where('status', ConsultationPatientStatusConstants::APPROVED->value)
+                          ->select('id', 'consultation_id', 'doctor_set_consultation_at');
+                }])
+                ->orderByRaw('
+                    COALESCE(
+                        (
+                            SELECT STR_TO_DATE(
+                                CONCAT(
+                                    doctor_schedule_days.date, 
+                                    " ", 
+                                    doctor_schedule_day_shifts.from_time
+                                ), 
+                                "%Y-%m-%d %H:%i:%s"
+                            )
+                            FROM doctor_schedule_day_shifts
+                            JOIN doctor_schedule_days 
+                                ON doctor_schedule_days.id = doctor_schedule_day_shifts.doctor_schedule_day_id
+                            WHERE doctor_schedule_day_shifts.id = consultations.doctor_schedule_day_shift_id
+                        ),
+                        (
+                            SELECT doctor_set_consultation_at
+                            FROM consultation_doctor_replies
+                            WHERE consultation_doctor_replies.consultation_id = consultations.id
+                            AND consultation_doctor_replies.status = ?
+                            LIMIT 1
+                        )
+                    ) ASC
+                ', [ConsultationPatientStatusConstants::APPROVED->value])
+                ->first();
+
+            if (!$consultation) {
+                return $this->respondWithSuccess(__('messages.no_data'), 200, [
+                    'consultation_id' => null,
+                    'day_next_appointment' => null,
+                    'date_next_appointment' => null,
+                    'time_next_appointment' => null
+                ]);
+            }
+
+            $nextAppointment = null;
+            if ($consultation->doctorScheduleDayShift?->day) {
+                $shiftDateTime = $consultation->doctorScheduleDayShift->day->date
+                    ->copy()
+                    ->setTimeFrom($consultation->doctorScheduleDayShift->from_time);
+                if ($shiftDateTime->isFuture()) {
+                    $nextAppointment = $shiftDateTime;
+                }
+            }
+            $approvedReply = $consultation->replies->first();
+            if ($approvedReply?->doctor_set_consultation_at && $approvedReply->doctor_set_consultation_at->isFuture()) {
+                if (!$nextAppointment || $approvedReply->doctor_set_consultation_at->lessThan($nextAppointment)) {
+                    $nextAppointment = $approvedReply->doctor_set_consultation_at;
+                }
+            }
+            $locale = app()->getLocale(); 
+            return $this->respondWithSuccess(__('messages.next_appointment_found'), 200, [
+                'consultation_id' => $consultation->id?? null,
+                // 'day_next_appointment' => $this->getDayName($nextAppointment)?? null,
+                'day_next_appointment' => $nextAppointment->locale($locale)->dayName?? null,
+                'date_next_appointment' => $nextAppointment->format('Y-m-d')?? null,
+                'time_next_appointment' => $nextAppointment->format('H:i')?? null
+            ]);
+        } catch (Exception $e) {
+            \Log::error('Failed to fetch next appointment', [
+                'user_id' => auth()->user()->id,
+                'error' => $e->getMessage(),
+            ]);
+            return $this->respondWithError(__('messages.error_fetching_appointment'), 500);
+        }
+    }
+
+    /**
+     * Get day name in Arabic/English format (e.g., "الجمعة / Friday").
+     *
+     * @param Carbon $date
+     * @return string
+     */
+    // private function getDayName(Carbon $date): string
+    // {
+    //     $dayNames = [
+    //         0 => ['ar' => 'الأحد', 'en' => 'Sunday'],
+    //         1 => ['ar' => 'الإثنين', 'en' => 'Monday'],
+    //         2 => ['ar' => 'الثلاثاء', 'en' => 'Tuesday'],
+    //         3 => ['ar' => 'الأربعاء', 'en' => 'Wednesday'],
+    //         4 => ['ar' => 'الخميس', 'en' => 'Thursday'],
+    //         5 => ['ar' => 'الجمعة', 'en' => 'Friday'],
+    //         6 => ['ar' => 'السبت', 'en' => 'Saturday'],
+    //     ];
+
+    //     $dayIndex = $date->dayOfWeek;
+    //     return "{$dayNames[$dayIndex]['ar']} / {$dayNames[$dayIndex]['en']}";
+    // }
+
 }
+
