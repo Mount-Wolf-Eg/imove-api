@@ -283,7 +283,9 @@ return [
     'experience_years' => 'سنوات الخبرة',
     'accept_requests' => 'قبول الطلبات',
     'social_status' => 'الحالة الاجتماعية',
-    'logout' => 'تسجيل الخروج',
+    'logout'  => 'تسجيل الخروج',
+    'no_data' => 'لا توجد بيانات',
+    'next_appointment_found' => 'تم العثور على الموعد القادم',
     'errors' => [
         'doctor_request_pending' => 'طلب الطبيب معلقا',
         'cannot_login' => 'لا يمكنك تسجيل الدخول لأن حسابك غير فعال',
@@ -303,6 +305,7 @@ return [
         'cannot_delete_patient_with_package_consultations' => 'لا يمكن حذف :model لأن لديه استشارات مرتبطة بالباقات.',
         'cannot_delete_patient' => 'لا يمكن حذف :model بسبب قيود إضافية.',
         'no_patient_account' => 'لا يوجد حساب مريض مرتبط بهذا المستخدم.',
+        'error_fetching_appointment' => 'فشل في جلب الموعد القادم',
 
     ],
     'confirm' => [
