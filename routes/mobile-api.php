@@ -104,6 +104,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('relatives', PatientRelativeController::class);
             Route::get('consultations/replies', [PatientConsultationController::class, 'replies']);
             Route::apiResource('consultations', PatientConsultationController::class);
+            Route::get('next-appointment', [PatientConsultationController::class, 'nextAppointment']);
             Route::controller(PatientConsultationController::class)->prefix('consultations')->group(static function () {
                 Route::get('/{consultation}/patient-start-at',  'patientStartAt');
                 Route::put('/{consultation}/cancel',  'cancel');

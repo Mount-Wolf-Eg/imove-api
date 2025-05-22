@@ -305,6 +305,7 @@ return [
         'cannot_delete_patient_with_package_consultations' => ' cannot delete :model because it has consultations associated with packages.',
         'cannot_delete_patient' => 'cannot delete :model due to additional restrictions.',
         'no_patient_account' => ' there is no patient account associated with this user.',
+        'error_fetching_appointment' => 'failed to fetch the next appointment',
     ],
     'confirm' => [
         'are_you_sure' => 'Are you sure?',
@@ -747,6 +748,8 @@ return [
     'edit_banner'    => 'Edit',
     'add_banner'     => 'add_banner',
     'the_number_used' => 'The Number Used',
+    'no_data' => 'no data',
+    'next_appointment_found' => 'the next appointment has been found',
 
 
 
