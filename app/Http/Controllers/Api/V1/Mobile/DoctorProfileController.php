@@ -113,7 +113,7 @@ class DoctorProfileController extends BaseApiController
         $doctor = $user->doctor;
         
         try {
-            $this->doctorContract->remove($doctor);
+            $this->contract->remove($doctor);
             return $this->respondWithSuccess(__('messages.actions_messages.delete_success'));
         } catch (CantDeleteModelException $e) {
             return $this->respondWithError($e->getMessage(), 422);
@@ -124,5 +124,7 @@ class DoctorProfileController extends BaseApiController
             return $this->respondWithError(__('messages.actions_messages.delete_failed'), 500);
         }
     }
+
+  
 
 }
