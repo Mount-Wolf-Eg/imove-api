@@ -13,6 +13,7 @@ use App\Http\Resources\MedicalSpecialityResource;
 use App\Http\Resources\UniversityResource;
 use App\Http\Resources\VendorServiceResource;
 use App\Http\Resources\VendorTypeResource;
+use App\Http\Resources\DoctorScheduleDayResource;
 use App\Models\DoctorScheduleDay;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -78,6 +79,7 @@ class FilterController extends Controller
             'Hospital' => HospitalResource::collection($data),
             'University' => UniversityResource::collection($data),
             'FaqSubject' => FaqSubjectResource::collection($data),
+            'DoctorScheduleDay' => DoctorScheduleDayResource::collection($data),
             default => $model::collection($data),
         };
     }
