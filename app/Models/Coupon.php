@@ -156,10 +156,10 @@ class Coupon extends Model
             return false;
     }
 
-    // public function isNumberOfUse()
-    // {
-    //     return $this->payments->count()?? 0;
-    // }
+    public function isNumberOfUse()
+    {
+        return $this->payments->count()?? 0;
+    }
 
     public function applyDiscount($amount): float
     {

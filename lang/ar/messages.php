@@ -744,5 +744,5 @@ return [
     'manage_banners' => 'اداره المساحة الاعلانيه',
     'edit_banner'    => 'تعديل',
     'add_banner'     => 'اضافة',
-
+    'the_number_used' => 'العدد المستخدام',
 ];
