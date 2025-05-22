@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1\Mobile;
 
 use App\Constants\ConsultationStatusConstants;
 use App\Constants\FileConstants;
+use App\Constants\ConsultationPatientStatusConstants;
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Requests\ConsultationRequest;
 use App\Http\Requests\PatientUrgentApproveRequest;
