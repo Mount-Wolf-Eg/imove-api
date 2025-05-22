@@ -121,15 +121,15 @@ class DoctorController extends BaseWebController
      */
     public function destroy(Doctor $doctor): RedirectResponse
     {
-        try {
+        // try {
             $this->contract->remove($doctor);
             return $this->redirectBack()->with('success', __('messages.actions_messages.delete_success'));
-        } catch (CantDeleteModelException $e) {
-            return $this->redirectBack()->with('error', $e->getMessage());
-        } catch (\Exception $e) {
-            \Log::error('Failed to delete doctor: ' . $e->getMessage(), ['doctor_id' => $doctor->id]);
-            return $this->redirectBack()->with('error', __('messages.actions_messages.delete_failed'));
-        }
+        // } catch (CantDeleteModelException $e) {
+        //     return $this->redirectBack()->with('error', $e->getMessage());
+        // } catch (\Exception $e) {
+        //     \Log::error('Failed to delete doctor: ' . $e->getMessage(), ['doctor_id' => $doctor->id]);
+        //     return $this->redirectBack()->with('error', __('messages.actions_messages.delete_failed'));
+        // }
     }
 
     /**
