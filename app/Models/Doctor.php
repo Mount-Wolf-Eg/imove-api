@@ -188,12 +188,12 @@ class Doctor extends Model
         });
     }
 
-    // public function scopeOfDate($query, $value)
-    // {
-    //     return $query->whereHas('scheduleDays', function ($q) use ($value) {
-    //         $q->whereDate('date', $value);
-    //     });
-    // }
+    public function scopeOfDate($query, $value)
+    {
+        return $query->whereHas('scheduleDays', function ($q) use ($value) {
+            $q->whereDate('date', $value);
+        });
+    }
     public function scopeOfAcademicDegree($query, $value)
     {
         return $query->where('academic_degree_id', (array)$value);
