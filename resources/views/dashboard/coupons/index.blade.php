@@ -20,6 +20,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">{{__('messages.code')}}</th>
+                    <th scope="col">{{__('messages.the_number_used')}}</th>
                     <th scope="col">{{__('messages.discount_type')}}</th>
                     <th scope="col">{{__('messages.discount_amount')}}</th>
                     <th scope="col">{{__('messages.valid_from')}}</th>
@@ -35,7 +36,11 @@
                             <a href="#" class="fw-semibold">#{{$loop->iteration}}</a>
                         </th>
                         <td>{{$resource->code}}</td>
-                        {{-- <td>{{$resource->isNumberOfUse()}}</td> --}}
+                        <td>
+                            {{$resource->isNumberOfUse()}} <br>
+                            {{__('messages.from')}} <br>
+                            {{$resource->total_limit}}
+                        </td>
                         <td>
                             {{ucfirst(strtolower($resource->discount_type->name))}}
                         </td>

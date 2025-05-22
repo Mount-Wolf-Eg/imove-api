@@ -46,7 +46,7 @@ class CouponController extends BaseWebController
      */
     public function index(Request $request): View|Factory|Application
     {
-        $resources = $this->contract->search($request->all(), ['medicalSpecialities']);
+        $resources = $this->contract->search($request->all(), ['medicalSpecialities', 'payments', 'cities']);
         return $this->indexBlade(['resources' => $resources]);
     }
 

@@ -746,6 +746,7 @@ return [
     'manage_banners' => 'Manage Banners',
     'edit_banner'    => 'Edit',
     'add_banner'     => 'add_banner',
+    'the_number_used' => 'The Number Used',
 
 
 
