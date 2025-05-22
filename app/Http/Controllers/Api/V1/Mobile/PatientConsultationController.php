@@ -328,7 +328,7 @@ class PatientConsultationController extends BaseApiController
                 ->first();
 
             if (!$consultation) {
-                return $this->respondWithSuccess(__('messages.no_data'), 200, [
+                return $this->respondWithSuccess(__('messages.no_data'), [
                     'consultation_id' => null,
                     'day_next_appointment' => null,
                     'date_next_appointment' => null,
@@ -352,7 +352,7 @@ class PatientConsultationController extends BaseApiController
                 }
             }
             $locale = app()->getLocale(); 
-            return $this->respondWithSuccess(__('messages.next_appointment_found'), 200, [
+            return $this->respondWithSuccess(__('messages.next_appointment_found'), [
                 'consultation_id' => $consultation->id?? null,
                 // 'day_next_appointment' => $this->getDayName($nextAppointment)?? null,
                 'day_next_appointment' => $nextAppointment->locale($locale)->dayName?? null,
