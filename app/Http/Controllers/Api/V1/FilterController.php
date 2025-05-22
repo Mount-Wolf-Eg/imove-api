@@ -13,6 +13,7 @@ use App\Http\Resources\MedicalSpecialityResource;
 use App\Http\Resources\UniversityResource;
 use App\Http\Resources\VendorServiceResource;
 use App\Http\Resources\VendorTypeResource;
+use App\Models\DoctorScheduleDay;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
