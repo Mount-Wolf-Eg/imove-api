@@ -31,7 +31,7 @@ class BannerRepository extends BaseRepository implements BannerContract
             }else{
                 $file = resolve(FileContract::class)->find($attributes['main_image']);
             }
-            $model->photo()->save($file);
+            $model->mainImage()->save($file);
         }
         return $model;
     }
