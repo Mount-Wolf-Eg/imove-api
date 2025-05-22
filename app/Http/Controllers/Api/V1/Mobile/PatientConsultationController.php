@@ -278,7 +278,7 @@ class PatientConsultationController extends BaseApiController
         }
     }
 
-    
+
     /**
      * Get the next appointment date for the authenticated patient.
      *
@@ -288,7 +288,7 @@ class PatientConsultationController extends BaseApiController
     {
         // try {
             $patientId = auth()->user()->patient?->id;
-            
+
             if (!$patientId) {
                 return $this->respondWithError(__('messages.errors.no_patient_account'), 404);
             }
@@ -298,7 +298,7 @@ class PatientConsultationController extends BaseApiController
                 ->select('id', 'doctor_schedule_day_shift_id')
                 ->with(['doctorScheduleDayShift.day', 'replies' => function ($query) {
                     $query->where('status', ConsultationPatientStatusConstants::APPROVED->value)
-                          ->select('id', 'consultation_id', 'doctor_set_consultation_at');
+                        ->select('consultation_doctor_replies.id', 'consultation_doctor_replies.consultation_id', 'consultation_doctor_replies.doctor_set_consultation_at');
                 }])
                 ->orderByRaw('
                     COALESCE(
@@ -328,7 +328,7 @@ class PatientConsultationController extends BaseApiController
                 ->first();
 
             if (!$consultation) {
-                return $this->respondWithSuccess(__('messages.no_data'), [
+                return $this->respondWithSuccess(__('messages.no_data'), 200, [
                     'consultation_id' => null,
                     'day_next_appointment' => null,
                     'date_next_appointment' => null,
@@ -351,6 +351,16 @@ class PatientConsultationController extends BaseApiController
                     $nextAppointment = $approvedReply->doctor_set_consultation_at;
                 }
             }
+
+            if (!$nextAppointment) {
+                return $this->respondWithSuccess(__('messages.no_data'), 200, [
+                    'consultation_id' => $consultation->id,
+                    'day_next_appointment' => null,
+                    'date_next_appointment' => null,
+                    'time_next_appointment' => null
+                ]);
+            }
+
             $locale = app()->getLocale(); 
             return $this->respondWithSuccess(__('messages.next_appointment_found'), [
                 'consultation_id' => $consultation->id?? null,
