@@ -211,6 +211,10 @@ class Consultation extends Model
         return $this->belongsTo(Subscription::class);
     }
 
+    public function package(): BelongsTo
+    {
+        return $this->belongsTo(Package::class);
+    }
     //---------------------relations-------------------------------------
     //---------------------constants-------------------------------------
     public static function types(): array
