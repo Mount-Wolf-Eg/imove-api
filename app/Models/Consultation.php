@@ -453,6 +453,15 @@ class Consultation extends Model
         return $hasPastShift || $hasPastReply;
     }
 
+    public static function patientCanCreateNewGeneralSession($patientUser): bool
+    {
+        $hasSessionThisMonth = $patientUser->consultations()
+            ->where('type', ConsultationTypeConstants::GENERAL_SESSION->value)
+            ->where('created_at', '>=', now()->startOfMonth())
+            ->exists();
+
+        return !$hasSessionThisMonth;
+    }
     //---------------------methods-------------------------------------
 
     //---------------------attributes-------------------------------------

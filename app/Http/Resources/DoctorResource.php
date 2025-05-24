@@ -37,6 +37,7 @@ class DoctorResource extends BaseResource
             'bio' => $this->bio,
             'urgent_consultation_enabled' => $this->urgent_consultation_enabled,
             'with_appointment_consultation_enabled' => $this->with_appointment_consultation_enabled,
+            'general_session_enabled' => $this->general_session_enabled,
             'experience_years' => $this->experience_years,
             'price' => $this->with_appointment_consultation_price ?? 0,
             'reminder_before_consultation' => $this->reminder_before_consultation,

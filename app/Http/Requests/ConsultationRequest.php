@@ -7,7 +7,9 @@ use App\Constants\ConsultationPaymentTypeConstants;
 use App\Constants\ConsultationStatusConstants;
 use App\Constants\ConsultationTypeConstants;
 use App\Constants\ReminderConstants;
+use App\Models\Consultation;
 use App\Models\Doctor;
+use App\Models\GeneralSettings;
 use App\Repositories\Contracts\ConsultationContract;
 use App\Repositories\Contracts\CouponContract;
 use App\Repositories\Contracts\DoctorContract;
@@ -43,7 +45,7 @@ class ConsultationRequest extends FormRequest
             return $validated;
         }
 
-        if (isset($validated['doctor_id']) && isset($validated['type']) && $validated['type'] == ConsultationTypeConstants::WITH_APPOINTMENT->value) {
+        if (isset($validated['doctor_id']) && isset($validated['type']) && in_array($validated['type'], [ConsultationTypeConstants::WITH_APPOINTMENT->value, ConsultationTypeConstants::URGENT->value])) {
             // $shiftTaken = resolve(ConsultationContract::class)->withFilters(['cancelled' => true])->findBy('doctor_schedule_day_shift_id', $validated['doctor_schedule_day_shift_id'], false);
             $shiftTaken = resolve(ConsultationContract::class)->findByFilters(['cancelled' => false, 'doctorScheduleDayShiftId' => $validated['doctor_schedule_day_shift_id']]);
 
@@ -51,9 +53,14 @@ class ConsultationRequest extends FormRequest
                 throw new ValidationException(__('messages.schedule_slot_expired'));
             }
 
-            $validated['amount'] = resolve(DoctorContract::class)->find($validated['doctor_id'])->with_appointment_consultation_price;
+            if ($validated['type'] == ConsultationTypeConstants::WITH_APPOINTMENT) {
+                $validated['amount'] = resolve(DoctorContract::class)->find($validated['doctor_id'])->with_appointment_consultation_price;
+            } else {
+                $validated['amount'] = GeneralSettings::getSettingValue('general_session_price');
+            }
+
             $scheduleSlot = resolve(DoctorScheduleDayShiftContract::class)->find($validated['doctor_schedule_day_shift_id']);
-            $actualTime = Carbon::parse($scheduleSlot->day->date->format('Y-m-d') . ' ' . $scheduleSlot->from_time->format('H:i:s'));
+            $actualTime   = Carbon::parse($scheduleSlot->day->date->format('Y-m-d') . ' ' . $scheduleSlot->from_time->format('H:i:s'));
 
             if ($actualTime->isPast()) {
                 throw new ValidationException(__('messages.schedule_slot_expired'));
@@ -69,7 +76,7 @@ class ConsultationRequest extends FormRequest
 
             if (isset($validated['package_id']) && $validated['package_id'] != null) {
                 $package = resolve(PackageContract::class)->find($validated['package_id']);
-    
+
                 if ($package && $package->ofIsValidForUser($validated['patient_id'])) {
                     if (isset($validated['doctor_id']) && $validated['doctor_id'] != null && $validated['doctor_id'] != $package->doctor_id) {
                         $validated['is_active'] = true;
@@ -147,6 +154,10 @@ class ConsultationRequest extends FormRequest
             if ($amount > auth()->user()->wallet) {
                 abort(422, __('messages.insufficient_wallet_balance'));
             }
+        }
+
+        if ((int) request('type') === ConsultationTypeConstants::GENERAL_SESSION->value && ! Consultation::patientCanCreateNewGeneralSession(auth()->user())) {
+            abort(422, __('messages.new_general_session_validation'));
         }
     }
 

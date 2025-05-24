@@ -11,5 +11,6 @@ return new class extends SettingsMigration
         $this->migrator->add('general.urgent_grace_period', 0);
         $this->migrator->add('general.normal_grace_period', 0);
         $this->migrator->add('general.tax_percentage', 0);
+        $this->migrator->add('general.general_session_price', 0);
     }
 };

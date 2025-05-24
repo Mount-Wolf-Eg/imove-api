@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'general_session' => 'General Consultation',
+    'general_session_price' => 'General Session Price',
     'refunds' => 'Refunds',
     'manage_refund_requests' => 'Manage Refund Requests',
     'search_by_name_id' => 'Search by name',
@@ -750,7 +752,5 @@ return [
     'the_number_used' => 'The Number Used',
     'no_data' => 'no data',
     'next_appointment_found' => 'the next appointment has been found',
-
-
-
+    "new_general_session_validation" => "You cannot create more than one general session in the same month",
 ];

@@ -36,7 +36,8 @@ class Doctor extends Model
         'with_appointment_consultation_price',
         'request_status',
         'medical_id',
-        'is_active'
+        'is_active',
+        'general_session_enabled',
     ];
     protected array $filters = [
         'keyword',

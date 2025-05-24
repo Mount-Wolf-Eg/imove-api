@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'general_session' => 'استشارة عامة',
+    'general_session_price' => 'سعر اﻹستشارة العامة',
     'refunds' => 'استرداد الأموال',
     'manage_refund_requests' => 'إدارة طلبات استرداد الأموال',
     'search_by_name_id' => 'بحث بواسطة الاسم',
@@ -748,4 +750,6 @@ return [
     'edit_banner'    => 'تعديل',
     'add_banner'     => 'اضافة',
     'the_number_used' => 'العدد المستخدام',
+
+    "new_general_session_validation" => "لايمكنك انشاء اكثر من جلسه عامة واحده في نفس الشهر",
 ];

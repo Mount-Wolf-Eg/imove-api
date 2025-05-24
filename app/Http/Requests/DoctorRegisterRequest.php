@@ -49,6 +49,7 @@ class DoctorRegisterRequest extends FormRequest
             'attachments.*'                         => sprintf(config('validations.model.req'), 'files'),
             'urgent_consultation_enabled'           => config('validations.boolean.null'),
             'with_appointment_consultation_enabled' => config('validations.boolean.null'),
+            'general_session_enabled'               => config('validations.boolean.null'),
         ];
 
         return $rules;

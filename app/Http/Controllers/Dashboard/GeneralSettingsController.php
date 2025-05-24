@@ -23,6 +23,7 @@ class GeneralSettingsController extends Controller
             'urgent_grace_period'    => 'required|numeric|min:0',
             'normal_grace_period'    => 'required|numeric|min:0',
             'tax_percentage'         => 'required|numeric|min:0|max:100',
+            'general_session_price'  => 'required|numeric|min:0',
         ]);
 
         $settings->site_name              = $request->input('site_name');
@@ -30,6 +31,7 @@ class GeneralSettingsController extends Controller
         $settings->urgent_grace_period    = $request->input('urgent_grace_period');
         $settings->normal_grace_period    = $request->input('normal_grace_period');
         $settings->tax_percentage         = $request->input('tax_percentage');
+        $settings->general_session_price  = $request->input('general_session_price');
 
         $settings->save();
 

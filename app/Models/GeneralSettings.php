@@ -17,6 +17,7 @@ class GeneralSettings extends Settings
     public float $urgent_grace_period;
     public float $normal_grace_period;
     public float $tax_percentage;
+    public float $general_session_price;
 
     public static function group(): string
     {

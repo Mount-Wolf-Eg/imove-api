@@ -41,21 +41,21 @@ class DoctorRequest extends FormRequest
     public function rules(): array
     {
         $rules = [
-            'email' => sprintf(config('validations.email.null'), 'users', 'email').','.$this->route('doctor')?->user_id,
+            'email' => sprintf(config('validations.email.null'), 'users', 'email') . ',' . $this->route('doctor')?->user_id,
             'specialities' => config('validations.array.req'),
             'specialities.*' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
             'academic_degree_id' => sprintf(config('validations.model.active_req'), 'academic_degrees'),
             'university' => config('validations.string.null'),
             'name' => config('validations.string.req'),
-            'phone' => config('validations.phone.req').'|unique:users,phone,'.$this->route('doctor')?->user_id,
-            'national_id' => config('validations.string.null').'|unique:doctors,national_id,'.$this->route('doctor')?->id,
-            'medical_id' => config('validations.string.null').'|unique:doctors,medical_id,'.$this->route('doctor')?->id,
+            'phone' => config('validations.phone.req') . '|unique:users,phone,' . $this->route('doctor')?->user_id,
+            'national_id' => config('validations.string.null') . '|unique:doctors,national_id,' . $this->route('doctor')?->id,
+            'medical_id' => config('validations.string.null') . '|unique:doctors,medical_id,' . $this->route('doctor')?->id,
             'urgent_consultation_enabled' => 'nullable|in:on',
-            'with_appointment_consultation_enabled' => 'nullable|in:on'
+            'with_appointment_consultation_enabled' => 'nullable|in:on',
         ];
         if ($this->getMethod() === 'POST') {
             $rules['password'] = config('validations.password.req');
-        }else{
+        } else {
             $rules['password'] = config('validations.password.null');
         }
         return $rules;
@@ -65,7 +65,7 @@ class DoctorRequest extends FormRequest
      * Customizing input names displayed for user
      * @return array
      */
-    public function attributes() : array
+    public function attributes(): array
     {
         return [
             'email' => __('messages.email'),
@@ -86,7 +86,7 @@ class DoctorRequest extends FormRequest
     /**
      * @return array
      */
-    public function messages() : array
+    public function messages(): array
     {
         return [];
     }
