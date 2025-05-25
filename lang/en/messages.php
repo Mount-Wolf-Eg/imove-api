@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'cannot_update_schedule_with_consultation' => 'You cannot update this schedule because it has consultations associated with it.',
+    'cannot_delete_schedule_with_consultation' => 'You cannot delete this schedule because it has consultations associated with it.',
     'general_session' => 'General Consultation',
     'general_session_price' => 'General Session Price',
     'refunds' => 'Refunds',

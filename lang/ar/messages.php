@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'cannot_update_schedule_with_consultation' => 'لا يمكن تحديث الجدول الزمني لأنه يحتوي على استشارة.',
+    'cannot_delete_schedule_with_consultation' => 'لا يمكن حذف الجدول الزمني لأنه يحتوي على استشارة.',
     'general_session' => 'استشارة عامة',
     'general_session_price' => 'سعر اﻹستشارة العامة',
     'refunds' => 'استرداد الأموال',

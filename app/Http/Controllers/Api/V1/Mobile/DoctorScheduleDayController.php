@@ -51,6 +51,9 @@ class DoctorScheduleDayController extends BaseApiController
      */
     public function update(DoctorScheduleDayRequest $request, DoctorScheduleDay $doctorScheduleDay): JsonResponse
     {
+        if ($doctorScheduleDay->scheduleDayShifts()->consultation()->exists()) {
+            return $this->respondWithError(__('messages.cannot_update_schedule_with_consultation'));
+        }
         try {
             $doctorScheduleDay = $this->contract->update($doctorScheduleDay, $request->validated());
             return $this->respondWithModel($doctorScheduleDay);
@@ -65,6 +68,9 @@ class DoctorScheduleDayController extends BaseApiController
      */
     public function destroy(DoctorScheduleDay $doctorScheduleDay): JsonResponse
     {
+        if ($doctorScheduleDay->scheduleDayShifts()->consultation()->exists()) {
+            return $this->respondWithError(__('messages.cannot_delete_schedule_with_consultation'));
+        }
         try {
             $this->contract->remove($doctorScheduleDay);
             return $this->respondWithSuccess(__('messages.actions_messages.delete_success'));

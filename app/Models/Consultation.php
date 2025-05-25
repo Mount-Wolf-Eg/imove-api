@@ -140,8 +140,8 @@ class Consultation extends Model
     public function medicalEquipments(): BelongsToMany
     {
         return $this->belongsToMany(MedicalEquipment::class, 'consultation_medical_equipment')
-                    ->withPivot('doctor_id')
-                    ->withTimestamps();
+            ->withPivot('doctor_id')
+            ->withTimestamps();
     }
 
     public function educationalContents(): BelongsToMany
@@ -150,7 +150,7 @@ class Consultation extends Model
             ->withPivot('doctor_id')
             ->withTimestamps();
     }
-    
+
     public function attachments(): MorphMany
     {
         return $this->morphMany(File::class, 'fileable')
@@ -197,7 +197,7 @@ class Consultation extends Model
     public function consultationQuestions(): BelongsToMany
     {
         return $this->belongsToMany(ConsultationQuestion::class, 'consultation_question', 'consultation_id', 'consultation_question_id')
-                        ->withPivot('answer');
+            ->withPivot('answer');
 
         // return $this->belongsToMany(ConsultationQuestion::class, 'consultation_question')->withPivot('answer');
     }
