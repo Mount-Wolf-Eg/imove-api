@@ -48,7 +48,8 @@ class Doctor extends Model
         'topRated',
         'active',
         'canAcceptUrgentCases',
-        'withUpcomingShifts'
+        'withUpcomingShifts',
+        'generalSessionEnabled',
     ];
     protected array $searchable = ['user.name'];
     protected array $dates = [];
@@ -215,6 +216,13 @@ class Doctor extends Model
             ->when($myUserId, function ($query) use ($myUserId) {
                 $query->where('user_id', '!=', $myUserId);
             })
+            ->ofActive()
+            ->ofRequestStatus(DoctorRequestStatusConstants::APPROVED);
+    }
+
+    public function scopeOfGeneralSessionEnabled($query)
+    {
+        return $query->where('general_session_enabled', true)
             ->ofActive()
             ->ofRequestStatus(DoctorRequestStatusConstants::APPROVED);
     }
