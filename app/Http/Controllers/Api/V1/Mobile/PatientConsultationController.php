@@ -258,7 +258,7 @@ class PatientConsultationController extends BaseApiController
         ]);
     }
 
-    
+
     /**
      * patient_start_at the consultation.
      * @param Consultation $consultation
@@ -269,7 +269,7 @@ class PatientConsultationController extends BaseApiController
         try {
             if (!$consultation->patient_start_at) {
                 $consultation = $this->contract->update($consultation, [
-                    'patient_start_at' => now(), 
+                    'patient_start_at' => now(),
                 ]);
             }
             return $this->respondWithSuccess();
@@ -305,14 +305,14 @@ class PatientConsultationController extends BaseApiController
                         (
                             SELECT STR_TO_DATE(
                                 CONCAT(
-                                    doctor_schedule_days.date, 
-                                    " ", 
+                                    doctor_schedule_days.date,
+                                    " ",
                                     doctor_schedule_day_shifts.from_time
-                                ), 
+                                ),
                                 "%Y-%m-%d %H:%i:%s"
                             )
                             FROM doctor_schedule_day_shifts
-                            JOIN doctor_schedule_days 
+                            JOIN doctor_schedule_days
                                 ON doctor_schedule_days.id = doctor_schedule_day_shifts.doctor_schedule_day_id
                             WHERE doctor_schedule_day_shifts.id = consultations.doctor_schedule_day_shift_id
                         ),
@@ -328,7 +328,7 @@ class PatientConsultationController extends BaseApiController
                 ->first();
 
             if (!$consultation) {
-                return $this->respondWithSuccess(__('messages.no_data'), 200, [
+                return $this->respondWithSuccess(__('messages.no_data'), [
                     'consultation_id' => null,
                     'day_next_appointment' => null,
                     'date_next_appointment' => null,
@@ -353,7 +353,7 @@ class PatientConsultationController extends BaseApiController
             }
 
             if (!$nextAppointment) {
-                return $this->respondWithSuccess(__('messages.no_data'), 200, [
+                return $this->respondWithSuccess(__('messages.no_data'),  [
                     'consultation_id' => $consultation->id,
                     'day_next_appointment' => null,
                     'date_next_appointment' => null,
@@ -361,7 +361,7 @@ class PatientConsultationController extends BaseApiController
                 ]);
             }
 
-            $locale = app()->getLocale(); 
+            $locale = app()->getLocale();
             return $this->respondWithSuccess(__('messages.next_appointment_found'), [
                 'consultation_id' => $consultation->id?? null,
                 // 'day_next_appointment' => $this->getDayName($nextAppointment)?? null,
