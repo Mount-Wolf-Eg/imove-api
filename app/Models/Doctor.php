@@ -220,9 +220,9 @@ class Doctor extends Model
             ->ofRequestStatus(DoctorRequestStatusConstants::APPROVED);
     }
 
-    public function scopeOfGeneralSessionEnabled($query)
+    public function scopeOfGeneralSessionEnabled($query, $value = true)
     {
-        return $query->where('general_session_enabled', true)
+        return $query->where('general_session_enabled', $value)
             ->ofActive()
             ->ofRequestStatus(DoctorRequestStatusConstants::APPROVED);
     }
