@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\DoctorResource;
 use App\Http\Resources\UserResource;
 use App\Models\Doctor;
+use App\Models\GeneralSettings;
 use App\Repositories\Contracts\DoctorContract;
 use Illuminate\Http\JsonResponse;
 
@@ -21,9 +22,24 @@ class DoctorController extends BaseApiController
     {
         parent::__construct($contract, DoctorResource::class);
         $this->defaultScopes = ['requestStatus' => DoctorRequestStatusConstants::APPROVED->value, 'active' => true];
-        $this->relations = ['rates', 'medicalSpecialities', 'city', 'attachments', 'academicDegree', 'consultations',
-            'hospitals', 'universities.academicDegree', 'universities.medicalSpeciality',
-            'universities.university', 'universities.certificate'];
+        $this->relations = [
+            'rates',
+            'medicalSpecialities',
+            'city',
+            'attachments',
+            'academicDegree',
+            'consultations',
+            'hospitals',
+            'universities.academicDegree',
+            'universities.medicalSpeciality',
+            'universities.university',
+            'universities.certificate'
+        ];
+    }
+
+    public function index(array $additional = []): mixed
+    {
+        return parent::index(['general_session_price' => GeneralSettings::getSettingValue('general_session_price')] + $additional);
     }
 
     /**

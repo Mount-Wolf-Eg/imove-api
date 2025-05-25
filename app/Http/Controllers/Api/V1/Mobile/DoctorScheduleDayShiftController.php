@@ -38,7 +38,7 @@ class DoctorScheduleDayShiftController extends BaseApiController
         try {
             $doctorScheduleDayShift = $this->contract->create($request->validated());
             return $this->respondWithModel($doctorScheduleDayShift);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }
@@ -50,12 +50,12 @@ class DoctorScheduleDayShiftController extends BaseApiController
      * @param DoctorScheduleDayShift $doctorScheduleDayShift
      * @return JsonResponse
      */
-    public function update(DoctorScheduleDayShiftRequest $request, DoctorScheduleDayShift $doctorScheduleDayShift) : JsonResponse
+    public function update(DoctorScheduleDayShiftRequest $request, DoctorScheduleDayShift $doctorScheduleDayShift): JsonResponse
     {
         try {
             $doctorScheduleDayShift = $this->contract->update($doctorScheduleDayShift, $request->validated());
             return $this->respondWithModel($doctorScheduleDayShift);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }
@@ -70,7 +70,7 @@ class DoctorScheduleDayShiftController extends BaseApiController
             $doctorScheduleDayShift->slots()->delete();
             $this->contract->remove($doctorScheduleDayShift);
             return $this->respondWithSuccess(__('messages.actions_messages.delete_success'));
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }

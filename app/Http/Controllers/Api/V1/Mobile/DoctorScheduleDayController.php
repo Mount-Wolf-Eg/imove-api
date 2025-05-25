@@ -24,7 +24,7 @@ class DoctorScheduleDayController extends BaseApiController
         parent::__construct($contract, DoctorScheduleDayResource::class);
         $this->relations = ['availableSlots'];
         $this->defaultScopes = ['afterNowDateTime' => true];
-        request()->merge(['order' => ['date'=> 'asc']]);
+        request()->merge(['order' => ['date' => 'asc']]);
     }
 
     /**
@@ -37,7 +37,7 @@ class DoctorScheduleDayController extends BaseApiController
         try {
             $doctorScheduleDay = $this->contract->create($request->validated());
             return $this->respondWithModel($doctorScheduleDay);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }
@@ -49,12 +49,12 @@ class DoctorScheduleDayController extends BaseApiController
      * @param DoctorScheduleDay $doctorScheduleDay
      * @return JsonResponse
      */
-    public function update(DoctorScheduleDayRequest $request, DoctorScheduleDay $doctorScheduleDay) : JsonResponse
+    public function update(DoctorScheduleDayRequest $request, DoctorScheduleDay $doctorScheduleDay): JsonResponse
     {
         try {
-        $doctorScheduleDay = $this->contract->update($doctorScheduleDay, $request->validated());
+            $doctorScheduleDay = $this->contract->update($doctorScheduleDay, $request->validated());
             return $this->respondWithModel($doctorScheduleDay);
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }
@@ -68,7 +68,7 @@ class DoctorScheduleDayController extends BaseApiController
         try {
             $this->contract->remove($doctorScheduleDay);
             return $this->respondWithSuccess(__('messages.actions_messages.delete_success'));
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
         }
     }

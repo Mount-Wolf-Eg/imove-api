@@ -56,7 +56,7 @@ class DoctorScheduleDayShiftRequest extends FormRequest
     {
         $rules = [
             'from_time' => config('validations.time.req'),
-            'to_time' => config('validations.time.req'). '|after:from_time',
+            'to_time' => config('validations.time.req') . '|after:from_time',
         ];
         if ($this->isMethod('post')) {
             $rules['doctor_schedule_day_id'] = sprintf(config('validations.model.req'), 'doctor_schedule_days');
@@ -68,7 +68,7 @@ class DoctorScheduleDayShiftRequest extends FormRequest
      * Customizing input names displayed for user
      * @return array
      */
-    public function attributes() : array
+    public function attributes(): array
     {
         return [];
     }
@@ -76,7 +76,7 @@ class DoctorScheduleDayShiftRequest extends FormRequest
     /**
      * @return array
      */
-    public function messages() : array
+    public function messages(): array
     {
         return [];
     }

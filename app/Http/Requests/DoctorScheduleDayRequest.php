@@ -31,16 +31,17 @@ class DoctorScheduleDayRequest extends FormRequest
     public function prepareForValidation(): void
     {
         $doctor = auth()->user()->doctor;
-        if ($this->method() === 'POST' && request('date')){
+        if ($this->method() === 'POST' && request('date')) {
             $day = resolve(DoctorScheduleDayContract::class)->findByFilters(
-                ['date' => Carbon::parse(request('date')), 'doctor' => $doctor->id]);
-            if ($day){
+                ['date' => Carbon::parse(request('date')), 'doctor' => $doctor->id]
+            );
+            if ($day) {
                 abort(422, __('messages.date_already_exists'));
             }
         }
-        if ($this->method() === 'PUT'){
+        if ($this->method() === 'PUT') {
             $day = $this->route('doctor_schedule_day');
-            if ($day->doctor_id !== $doctor->id){
+            if ($day->doctor_id !== $doctor->id) {
                 abort(422, __('messages.not_allowed'));
             }
         }
@@ -54,7 +55,7 @@ class DoctorScheduleDayRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => config('validations.date.req')."|after:today",
+            'date' => config('validations.date.req') . "|after:today|before_or_equal:" . now()->addMonths(6)->toDateString(),
             'shifts' => config('validations.array.req'),
             'shifts.*.from_time' => config('validations.time.req'),
             'shifts.*.to_time' => config('validations.time.req')
@@ -65,7 +66,7 @@ class DoctorScheduleDayRequest extends FormRequest
      * Customizing input names displayed for user
      * @return array
      */
-    public function attributes() : array
+    public function attributes(): array
     {
         return [];
     }
@@ -73,7 +74,7 @@ class DoctorScheduleDayRequest extends FormRequest
     /**
      * @return array
      */
-    public function messages() : array
+    public function messages(): array
     {
         return [];
     }
