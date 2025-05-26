@@ -108,8 +108,6 @@ class DoctorExerciseController extends BaseApiController
                 $consultation, $request->validated()
             );
 
-            dd($program);
-
             return $this->respondWithModel($program);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
