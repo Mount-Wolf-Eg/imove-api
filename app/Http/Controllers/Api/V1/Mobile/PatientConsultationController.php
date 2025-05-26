@@ -286,7 +286,7 @@ class PatientConsultationController extends BaseApiController
      */
     public function nextAppointment(): JsonResponse
     {
-        try {
+        // try {
             $patientId = auth()->user()->patient?->id;
 
             if (!$patientId) {
@@ -370,14 +370,14 @@ class PatientConsultationController extends BaseApiController
                 'time_next_appointment' => $nextAppointment->format('H:i')?? null,
                 'patient_can_create_general_consultation' => Consultation::patientCanCreateNewGeneralSession(auth()->user()),
             ]);
-        } catch (Exception $e) {
-            \Log::error('Failed to fetch next appointment', [
-                'user_id' => auth()->user()->id,
-                'error' => $e->getMessage(),
-            ]);
-            return $this->respondWithError($e->getMessage(), 500);
-            // return $this->respondWithError(__('messages.error_fetching_appointment'), 500);
-        }
+        // } catch (Exception $e) {
+        //     \Log::error('Failed to fetch next appointment', [
+        //         'user_id' => auth()->user()->id,
+        //         'error' => $e->getMessage(),
+        //     ]);
+        //     return $this->respondWithError($e->getMessage(), 500);
+        //     // return $this->respondWithError(__('messages.error_fetching_appointment'), 500);
+        // }
     }
 
     /**
