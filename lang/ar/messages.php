@@ -754,4 +754,6 @@ return [
     'the_number_used' => 'العدد المستخدام',
 
     "new_general_session_validation" => "لايمكنك انشاء اكثر من جلسه عامة واحده في نفس الشهر",
+    'error_fetching_appointment' => 'خطأ في جلب الموعد',
+
 ];

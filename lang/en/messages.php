@@ -755,4 +755,7 @@ return [
     'no_data' => 'no data',
     'next_appointment_found' => 'the next appointment has been found',
     "new_general_session_validation" => "You cannot create more than one general session in the same month",
+    'error_fetching_appointment' => 'Error Fetching Appointment',
+
+    
 ];

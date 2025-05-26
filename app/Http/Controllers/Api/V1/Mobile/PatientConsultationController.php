@@ -354,7 +354,7 @@ class PatientConsultationController extends BaseApiController
 
             if (!$nextAppointment) {
                 return $this->respondWithSuccess(__('messages.no_data'),  [
-                    'consultation_id' => $consultation->id,
+                    'consultation_id' => $consultation->id?? null,
                     'day_next_appointment' => null,
                     'date_next_appointment' => null,
                     'time_next_appointment' => null
