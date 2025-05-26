@@ -368,7 +368,7 @@ class PatientConsultationController extends BaseApiController
                 'day_next_appointment' => $nextAppointment->locale($locale)->dayName?? null,
                 'date_next_appointment' => $nextAppointment->format('Y-m-d')?? null,
                 'time_next_appointment' => $nextAppointment->format('H:i')?? null,
-                'patient_can_create_general_consultation' => Consultation::patientCanCreateNewGeneralSession(auth()->user()),
+                'patient_can_create_general_consultation' => Consultation::patientCanCreateNewGeneralSession(auth()->user()->patient),
             ]);
         // } catch (Exception $e) {
         //     \Log::error('Failed to fetch next appointment', [
