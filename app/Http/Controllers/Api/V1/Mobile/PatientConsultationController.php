@@ -375,7 +375,8 @@ class PatientConsultationController extends BaseApiController
                 'user_id' => auth()->user()->id,
                 'error' => $e->getMessage(),
             ]);
-            return $this->respondWithError(__('messages.error_fetching_appointment'), 500);
+            return $this->respondWithError($e->getMessage(), 500);
+            // return $this->respondWithError(__('messages.error_fetching_appointment'), 500);
         }
     }
 
