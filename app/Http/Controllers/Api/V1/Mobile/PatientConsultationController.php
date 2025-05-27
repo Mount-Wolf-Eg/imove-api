@@ -287,13 +287,11 @@ class PatientConsultationController extends BaseApiController
     public function nextAppointment(): JsonResponse
     {
         try {
-            $patientId = auth()->user()->patient?->id;
+            // $patientId = auth()->user()->patient?->id;
+            $patient = auth()->user()->patient;
 
-            if (!$patientId) {
-                return $this->respondWithError(__('messages.errors.no_patient_account'), 404);
-            }
-
-            $consultation = Consultation::where('patient_id', $patientId)
+            $patientCanCreateGeneralConsultation = Consultation::patientCanCreateNewGeneralSession($patient);
+            $consultation = Consultation::where('patient_id', $patient->id)
                 ->ofNextConsultation()
                 ->select('id', 'doctor_schedule_day_shift_id')
                 ->with(['doctorScheduleDayShift.day', 'replies' => function ($query) {
@@ -332,7 +330,8 @@ class PatientConsultationController extends BaseApiController
                     'consultation_id' => null,
                     'day_next_appointment' => null,
                     'date_next_appointment' => null,
-                    'time_next_appointment' => null
+                    'time_next_appointment' => null,
+                    'patient_can_create_general_consultation' => $patientCanCreateGeneralConsultation,
                 ]);
             }
 
@@ -354,10 +353,11 @@ class PatientConsultationController extends BaseApiController
 
             if (!$nextAppointment) {
                 return $this->respondWithSuccess(__('messages.no_data'),  [
-                    'consultation_id' => $consultation->id,
+                    'consultation_id' => $consultation->id?? null,
                     'day_next_appointment' => null,
                     'date_next_appointment' => null,
-                    'time_next_appointment' => null
+                    'time_next_appointment' => null,
+                    'patient_can_create_general_consultation' => $patientCanCreateGeneralConsultation,
                 ]);
             }
 
@@ -368,7 +368,7 @@ class PatientConsultationController extends BaseApiController
                 'day_next_appointment' => $nextAppointment->locale($locale)->dayName?? null,
                 'date_next_appointment' => $nextAppointment->format('Y-m-d')?? null,
                 'time_next_appointment' => $nextAppointment->format('H:i')?? null,
-                'patient_can_create_general_consultation' => Consultation::patientCanCreateNewGeneralSession(auth()->user()),
+                'patient_can_create_general_consultation' => $patientCanCreateGeneralConsultation,
             ]);
         } catch (Exception $e) {
             \Log::error('Failed to fetch next appointment', [
@@ -400,6 +400,6 @@ class PatientConsultationController extends BaseApiController
     //     $dayIndex = $date->dayOfWeek;
     //     return "{$dayNames[$dayIndex]['ar']} / {$dayNames[$dayIndex]['en']}";
     // }
-
+ 
 }
 
