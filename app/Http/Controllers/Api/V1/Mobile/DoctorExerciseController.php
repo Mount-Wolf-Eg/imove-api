@@ -39,7 +39,11 @@ class DoctorExerciseController extends BaseApiController
     public function getProgramExercises(Consultation $consultation): JsonResponse
     {
         try {
-            return $this->respondWithResource(new ProgramExercisesResource($consultation->program), 201);
+            $consultation->load(['program.exercises.media', 'program.exercises.mainImage']);    
+            if (!$consultation->program) {
+                return $this->respondWithSuccess(__('messages.no_data'), []);
+            }
+            return $this->respondWithResource(new ProgramExercisesResource($consultation->program), 200);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
         }

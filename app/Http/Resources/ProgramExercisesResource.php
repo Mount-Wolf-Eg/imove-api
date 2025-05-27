@@ -28,8 +28,10 @@ class ProgramExercisesResource extends BaseResource
             // 'num_of_days_of_week' => $this->num_of_days_of_week,
             // 'num_of_weeks' => $this->num_of_weeks,
             // 'break_between_exercises' => $this->break_between_exercises,
-            'exercises' => $this->whenLoaded('program', function () use ($locale) {
-                return $this->program->exercises->map(function ($exercise) use ($locale) {
+            // 'exercises' => $this->whenLoaded('program', function () use ($locale) {
+            //     return $this->program->exercises->map(function ($exercise) use ($locale) {
+            'exercises' => $this->whenLoaded('exercises', function () use ($locale) {
+                return $this->exercises->map(function ($exercise) use ($locale) {
                     return [
                         'id' => $exercise->id,
                         // 'name' => $exercise->getTranslation('name', $locale),
