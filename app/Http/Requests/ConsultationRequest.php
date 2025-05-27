@@ -198,7 +198,7 @@ class ConsultationRequest extends FormRequest
                 'contact_type' => config('validations.integer.null') . '|in:' . implode(',', ConsultationContactTypeConstants::values()),
             ];
 
-            $consultation = resolve(ConsultationContract::class)->find($this->consultation->id);
+            $consultation = resolve(ConsultationContract::class)->find($this->consultation);
 
             if ($consultation && $this->has('doctor_schedule_day_shift_id') && ! $consultation->patientCanReschedule()) {
                 abort(422, __('messages.patient_can_not_reschedule_consultation'));
