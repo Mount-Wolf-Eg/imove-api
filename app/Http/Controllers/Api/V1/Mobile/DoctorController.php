@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\V1\Mobile;
 use App\Constants\DoctorRequestStatusConstants;
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ConsultationResource;
 use App\Http\Resources\DoctorResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\PatientResource;
 use App\Models\Doctor;
+use App\Models\Patient;
 use App\Models\GeneralSettings;
 use App\Repositories\Contracts\DoctorContract;
 use Illuminate\Http\JsonResponse;
@@ -70,24 +72,46 @@ class DoctorController extends BaseApiController
         try {
             $doctor = auth()->user()?->doctor;
             $nameFilter = $request->query('name');
-            $page = $request->input('page', 1);
-            $limit = $request->input('limit', 10);
-            $order = $request->input('order', []);
-
-            $filters = [];
-            $data = array_merge($filters, [
-                'order' => $order,
-                'limit' => $limit,
-                'page' => $page,
-            ]); 
-
+ 
+            $filters = [
+                'limit' => $request->query('per_page', 10),
+                'page'  => $request->query('page', 1),
+                'order' => $request->query('pagordere', 1),
+            ];
             $patients = $this->contract->getPatients($doctor, $nameFilter, $filters);
 
-            return $this->respondWithCollection(PatientResource::collection($patients), 200);
+            return $this->respondWithCollection(PatientResource::collection($patients));
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve patients: ' . $e->getMessage());
             return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
         }
     }
+    
+    /**
+     * Get consultations for a specific patient with the doctor.
+     *
+     * @param Request $request
+     * @param Patient $patient
+     * @return JsonResponse
+     */
+    public function getPatientConsultationsInDoctor(Request $request, Patient $patient): JsonResponse
+    {
+        try {
+            $doctor = auth()->user()?->doctor;
+
+            $filters = [
+                'limit' => $request->query('per_page', 10),
+                'page' => $request->query('page', 1),
+            ];
+
+            $consultations = $this->contract->getPatientConsultations($doctor, $patient->id, $filters);
+
+            return $this->respondWithCollection(ConsultationResource::collection($consultations));
+        } catch (\Exception $e) {
+            \Log::error('Failed to retrieve consultations: ' . $e->getMessage());
+            return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
+
 
 }

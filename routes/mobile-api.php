@@ -190,6 +190,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::get('patients/{id}/consultations', [DoctorConsultationController::class, 'getPatientConsultations']);
 
             Route::get('patients', [DoctorController::class, 'getPatients']);
+            Route::get('patients/get/{patient}/consultations', [DoctorController::class, 'getPatientConsultationsInDoctor']);
     
             Route::controller(DoctorConsultationController::class)->prefix('consultations')->group(static function () {
                 Route::post('/{consultation}/vendor-referral','vendorReferral');

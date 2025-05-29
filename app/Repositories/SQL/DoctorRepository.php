@@ -235,7 +235,33 @@ class DoctorRepository extends BaseRepository implements DoctorContract
         $page = $filters['page'] ?? 1;
         
         return $query->with(['user'])->paginate($limit, ['*'], 'page', $page);
-        // return $query->with(['user'])->paginate($perPage);
     }
     
+    /**
+     * Get consultations for a specific patient with the doctor.
+     *
+     * @param Doctor $doctor
+     * @param int $patientId
+     * @param array $filters
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getPatientConsultations(Doctor $doctor, int $patientId, array $filters = []): LengthAwarePaginator
+    {
+        $query = Consultation::query()
+            ->where('doctor_id', $doctor->id)
+            ->where('patient_id', $patientId)
+            ->where('is_active', true)
+            ->whereNotIn('status', [
+                \App\Constants\ConsultationStatusConstants::PATIENT_CANCELLED->value,
+                \App\Constants\ConsultationStatusConstants::DOCTOR_CANCELLED->value
+            ]);
+
+        $limit = $filters['limit'] ?? 10;
+        $page = $filters['page'] ?? 1;
+
+        return $query->with(['patient.user', 'doctor.user', 'medicalSpeciality'])
+                     ->paginate($limit, ['*'], 'page', $page);
+    }
+
+
 }
