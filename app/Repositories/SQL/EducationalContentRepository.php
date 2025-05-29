@@ -28,10 +28,23 @@ class EducationalContentRepository extends BaseRepository implements Educational
                 $query->ofMedicalSpeciality($filters['medical_speciality_ids']);
             }
             
-            if (!empty($filters['title_starts_with']) && !empty($filters['locale']) && strlen($filters['title_starts_with']) === 1) {
-                $query->ofTitleStartsWith($filters['title_starts_with'], $filters['locale']);
+            // if (!empty($filters['title_starts_with']) && !empty($filters['locale']) && strlen($filters['title_starts_with']) === 1) {
+            //     $query->ofTitleStartsWith($filters['title_starts_with'], $filters['locale']);
+            // }
+            if (!empty($filters['title_starts_with']) && 
+                !empty($filters['locale']) && 
+                is_string($filters['title_starts_with']) && 
+                mb_strlen($filters['title_starts_with']) === 1
+            ) {
+                $locale = $filters['locale'];
+                $letter = $filters['locale'] === 'ar' ? $filters['title_starts_with'] : mb_strtolower($filters['title_starts_with']);
+                \Log::debug("Applying title_starts_with filter: letter=$letter, locale=$locale");
+                $query->whereRaw(
+                    "SUBSTRING(COALESCE(JSON_UNQUOTE(JSON_EXTRACT(title, CONCAT('$.\"', ?, '\"'))), ''), 1, 1) = ?",
+                    [$locale, $letter]
+                );
             }
-
+  
             return $query->with($relations)->get();
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve educational contents: ' . $e->getMessage());

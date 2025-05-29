@@ -83,11 +83,19 @@ class EducationalContent extends Model
         return $query->where('author_id', auth()->id() ?? auth('sanctum')->id());
     }
 
-    public function scopeOfTitleStartsWith($query, $letter, $locale = 'en')
+    // public function scopeOfTitleStartsWith($query, $letter, $locale = 'en')
+    // {
+    //     return $query->whereRaw("LOWER(SUBSTRING(JSON_UNQUOTE(JSON_EXTRACT(title, '$.\"$locale\"')), 1, 1)) = ?", [$letter]);
+    //     // return $query->whereRaw("SUBSTRING(COALESCE(title->>'$locale', ''), 1, 1) = ?", [$letter]); //PostgreSQL
+    //     // return $query->whereRaw("LOWER(SUBSTRING(COALESCE(title->>'$locale', ''), 1, 1)) = ?", [strtolower($letter)]); //PostgreSQL
+    // }
+    public function scopeOfTitleStartsWith($query, $letter, $locale = 'ar')
     {
-        return $query->whereRaw("LOWER(SUBSTRING(JSON_UNQUOTE(JSON_EXTRACT(title, '$.\"$locale\"')), 1, 1)) = ?", [strtolower($letter)]);
-        // return $query->whereRaw("SUBSTRING(COALESCE(title->>'$locale', ''), 1, 1) = ?", [$letter]); //PostgreSQL
-        // return $query->whereRaw("LOWER(SUBSTRING(COALESCE(title->>'$locale', ''), 1, 1)) = ?", [strtolower($letter)]); //PostgreSQL
+        $letter = $locale === 'ar' ? $letter : mb_strtolower($letter);
+        return $query->whereRaw(
+            "SUBSTRING(COALESCE(JSON_UNQUOTE(JSON_EXTRACT(title, ?)), ''), 1, 1) = ?",
+            ["$.$locale", $letter]
+        );
     }
     //---------------------Scopes-------------------------------------
 
