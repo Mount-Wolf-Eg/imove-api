@@ -212,13 +212,38 @@ class DoctorRepository extends BaseRepository implements DoctorContract
      * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
+    // public function getPatients(Doctor $doctor, ?string $nameFilter = null, array $filters = []): LengthAwarePaginator
+    // {
+    //     $query = $this->model->newQuery()
+    //         ->where('id', $doctor->id)
+    //         ->join('consultations', 'doctors.id', '=', 'consultations.doctor_id')
+    //         ->join('patients', 'consultations.patient_id', '=', 'patients.id')
+    //         ->join('users', 'patients.user_id', '=', 'users.id')
+    //         ->where('consultations.is_active', true)
+    //         ->whereNotIn('consultations.status', [
+    //             \App\Constants\ConsultationStatusConstants::PATIENT_CANCELLED->value,
+    //             \App\Constants\ConsultationStatusConstants::DOCTOR_CANCELLED->value
+    //         ])
+    //         ->select('patients.*')
+    //         ->distinct();
+
+    //     if ($nameFilter) {
+    //         $query->where('users.name', 'like', '%' . $nameFilter . '%');
+    //     }
+
+    //     $limit = $filters['limit'] ?? 10;
+    //     $page = $filters['page'] ?? 1;
+        
+    //     return $query->with(['user'])->paginate($limit, ['*'], 'page', $page);
+    // }
+    
     public function getPatients(Doctor $doctor, ?string $nameFilter = null, array $filters = []): LengthAwarePaginator
     {
         $query = $this->model->newQuery()
-            ->where('id', $doctor->id)
+            ->where('doctors.id', $doctor->id) 
             ->join('consultations', 'doctors.id', '=', 'consultations.doctor_id')
             ->join('patients', 'consultations.patient_id', '=', 'patients.id')
-            ->join('users', 'patients.user_id', '=', 'users.id')
+            ->leftJoin('users', 'patients.user_id', '=', 'users.id') 
             ->where('consultations.is_active', true)
             ->whereNotIn('consultations.status', [
                 \App\Constants\ConsultationStatusConstants::PATIENT_CANCELLED->value,
@@ -228,12 +253,13 @@ class DoctorRepository extends BaseRepository implements DoctorContract
             ->distinct();
 
         if ($nameFilter) {
-            $query->where('users.name', 'like', '%' . $nameFilter . '%');
+            $query->whereNotNull('users.name')
+                ->where('users.name', 'like', '%' . $nameFilter . '%');
         }
 
         $limit = $filters['limit'] ?? 10;
         $page = $filters['page'] ?? 1;
-        
+
         return $query->with(['user'])->paginate($limit, ['*'], 'page', $page);
     }
     
