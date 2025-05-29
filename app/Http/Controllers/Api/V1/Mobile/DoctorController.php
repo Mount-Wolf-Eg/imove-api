@@ -83,7 +83,7 @@ class DoctorController extends BaseApiController
             return $this->respondWithCollection(PatientResource::collection($patients));
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve patients: ' . $e->getMessage());
-            return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
+            return $this->respondWithError($e->getMessage(), 422);
         }
     }
     
@@ -109,7 +109,7 @@ class DoctorController extends BaseApiController
             return $this->respondWithCollection(ConsultationResource::collection($consultations));
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve consultations: ' . $e->getMessage());
-            return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
+            return $this->respondWithError($e->getMessage(), 422);
         }
     }
 
