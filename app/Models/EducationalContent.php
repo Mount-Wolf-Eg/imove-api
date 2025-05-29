@@ -85,7 +85,9 @@ class EducationalContent extends Model
 
     public function scopeOfTitleStartsWith($query, $letter, $locale = 'en')
     {
-        return $query->whereRaw("SUBSTRING(COALESCE(title->>'$locale', ''), 1, 1) = ?", [$letter]);
+        return $query->whereRaw("LOWER(SUBSTRING(JSON_UNQUOTE(JSON_EXTRACT(title, '$.\"$locale\"')), 1, 1)) = ?", [strtolower($letter)]);
+        // return $query->whereRaw("SUBSTRING(COALESCE(title->>'$locale', ''), 1, 1) = ?", [$letter]); //PostgreSQL
+        // return $query->whereRaw("LOWER(SUBSTRING(COALESCE(title->>'$locale', ''), 1, 1)) = ?", [strtolower($letter)]); //PostgreSQL
     }
     //---------------------Scopes-------------------------------------
 
