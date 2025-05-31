@@ -12,6 +12,8 @@ use App\Repositories\Contracts\FileContract;
 use App\Repositories\Contracts\UserContract;
 use Illuminate\Database\Eloquent\Model; 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 use function Laravel\Prompts\select;
 
 
@@ -200,6 +202,91 @@ class DoctorRepository extends BaseRepository implements DoctorContract
         }
 
         return true;
+    }
+
+    /**
+     * Get patients associated with the doctor through consultations.
+     *
+     * @param Doctor $doctor
+     * @param string|null $nameFilter
+     * @param int $perPage
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    // public function getPatients(Doctor $doctor, ?string $nameFilter = null, array $filters = []): LengthAwarePaginator
+    // {
+    //     $query = $this->model->newQuery()
+    //         ->where('id', $doctor->id)
+    //         ->join('consultations', 'doctors.id', '=', 'consultations.doctor_id')
+    //         ->join('patients', 'consultations.patient_id', '=', 'patients.id')
+    //         ->join('users', 'patients.user_id', '=', 'users.id')
+    //         ->where('consultations.is_active', true)
+    //         ->whereNotIn('consultations.status', [
+    //             \App\Constants\ConsultationStatusConstants::PATIENT_CANCELLED->value,
+    //             \App\Constants\ConsultationStatusConstants::DOCTOR_CANCELLED->value
+    //         ])
+    //         ->select('patients.*')
+    //         ->distinct();
+
+    //     if ($nameFilter) {
+    //         $query->where('users.name', 'like', '%' . $nameFilter . '%');
+    //     }
+
+    //     $limit = $filters['limit'] ?? 10;
+    //     $page = $filters['page'] ?? 1;
+        
+    //     return $query->with(['user'])->paginate($limit, ['*'], 'page', $page);
+    // }
+    
+    public function getPatients(Doctor $doctor, ?string $nameFilter = null, array $filters = []): LengthAwarePaginator
+    {
+        $query = $this->model->newQuery()
+            ->where('doctors.id', $doctor->id) 
+            ->join('consultations', 'doctors.id', '=', 'consultations.doctor_id')
+            ->join('patients', 'consultations.patient_id', '=', 'patients.id')
+            ->leftJoin('users', 'patients.user_id', '=', 'users.id') 
+            ->where('consultations.is_active', true)
+            ->whereNotIn('consultations.status', [
+                \App\Constants\ConsultationStatusConstants::PATIENT_CANCELLED->value,
+                \App\Constants\ConsultationStatusConstants::DOCTOR_CANCELLED->value
+            ])
+            ->select('patients.*')
+            ->distinct();
+
+        if ($nameFilter) {
+            $query->whereNotNull('users.name')
+                ->where('users.name', 'like', '%' . $nameFilter . '%');
+        }
+
+        $limit = $filters['limit'] ?? 10;
+        $page = $filters['page'] ?? 1;
+
+        return $query->with(['user'])->paginate($limit, ['*'], 'page', $page);
+    }
+    
+    /**
+     * Get consultations for a specific patient with the doctor.
+     *
+     * @param Doctor $doctor
+     * @param int $patientId
+     * @param array $filters
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getPatientConsultations(Doctor $doctor, int $patientId, array $filters = []): LengthAwarePaginator
+    {
+        $query = Consultation::query()
+            ->where('doctor_id', $doctor->id)
+            ->where('patient_id', $patientId)
+            ->where('is_active', true)
+            ->whereNotIn('status', [
+                \App\Constants\ConsultationStatusConstants::PATIENT_CANCELLED->value,
+                \App\Constants\ConsultationStatusConstants::DOCTOR_CANCELLED->value
+            ]);
+
+        $limit = $filters['limit'] ?? 10;
+        $page = $filters['page'] ?? 1;
+
+        return $query->with(['patient.user', 'doctor.user', 'medicalSpeciality'])
+                     ->paginate($limit, ['*'], 'page', $page);
     }
 
 

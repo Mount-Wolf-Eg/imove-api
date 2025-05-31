@@ -291,4 +291,15 @@ class DoctorConsultationController extends BaseApiController
         }
     }
 
+    
+    public function getPatientConsultationsInDocter($patient_id): JsonResponse
+    {
+        try {
+            $consultations = $this->contract->search(['patient' => $patient_id, 'doctor' => ]);
+            return $this->respondWithCollection($consultations);
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage());
+        }
+    }
+
 }
