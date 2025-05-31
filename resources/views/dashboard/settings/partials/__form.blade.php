@@ -69,5 +69,27 @@
         @enderror
     </div>
 
+    {{-- Sessions per specialty --}}
+    <div class="mb-3">
+        <label for="sessions_per_specialty" class="form-label">{{ __('messages.sessions_per_specialty') }}</label>
+        <input type="number" step="0.1" name="sessions_per_specialty" id="sessions_per_specialty"
+            class="form-control @error('sessions_per_specialty') is-invalid @enderror"
+            value="{{ old('sessions_per_specialty', $settings->sessions_per_specialty ?? '') }}">
+        @error('sessions_per_specialty')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
+    {{-- Specialties per sessions --}}
+    <div class="mb-3">
+        <label for="specialties_per_sessions" class="form-label">{{ __('messages.specialties_per_sessions') }}</label>
+        <input type="number" step="0.1" name="specialties_per_sessions" id="specialties_per_sessions"
+            class="form-control @error('specialties_per_sessions') is-invalid @enderror"
+            value="{{ old('specialties_per_sessions', $settings->specialties_per_sessions ?? '') }}">
+        @error('specialties_per_sessions')
+        <div class="invalid-feedback">{{ $message }}</div>
+        @enderror
+    </div>
+
     <button type="submit" class="btn btn-primary">{{ __('messages.save_changes') }}</button>
 </form>

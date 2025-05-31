@@ -143,9 +143,11 @@ class ConsultationRepository extends BaseRepository implements ConsultationContr
 
     public function refundAmount($model): void
     {
+        $payer_id = $model->payment->payer_id;
+
         $model->payment()->create([
             'payer_id'       => $model->doctor?->user_id,
-            'beneficiary_id' => $model->patient->user_id,
+            'beneficiary_id' => $payer_id, // $model->patient->user_id,
             'amount'         => $model->total_amount,
             'transaction_id' => rand(1000000000, 9999999999),
             'currency_id'    => 1,

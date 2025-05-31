@@ -19,6 +19,9 @@ class GeneralSettings extends Settings
     public float $tax_percentage;
     public float $general_session_price;
 
+    public int $sessions_per_specialty;
+    public int $specialties_per_sessions;
+
     public static function group(): string
     {
         return 'general';

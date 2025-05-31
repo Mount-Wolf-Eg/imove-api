@@ -13,12 +13,13 @@ class UserResource extends BaseResource
      * @param Request $request
      * @return array
      */
-    public function toArray(Request $request) : array
+    public function toArray(Request $request): array
     {
         $this->micro = [
             'id' => $this->id,
             'name' => $this->name,
             // 'doctor_is_active' => $this->doctor_is_active
+            'allowed_specialties' => $this->allowed_specialties,
         ];
         $this->mini = [
             'phone' => $this->phone,

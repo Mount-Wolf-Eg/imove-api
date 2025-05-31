@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'sessions_per_specialty'   => 'عدد الجلسات لكل تخصص جديد',
+    'specialties_per_sessions' => 'عدد التخصصات المتاحة بعد تحقيق عدد الجلسات',
+
     'cannot_update_schedule_with_consultation' => 'لا يمكن تحديث الجدول الزمني لأنه يحتوي على استشارة.',
     'cannot_delete_schedule_with_consultation' => 'لا يمكن حذف الجدول الزمني لأنه يحتوي على استشارة.',
     'general_session' => 'استشارة عامة',

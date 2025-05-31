@@ -119,6 +119,33 @@ class User extends Authenticatable
         return $this->is_active && $this->doctor?->is_active && $this->doctor?->request_status->value == 2 ? 1 : 0;
     }
 
+    public function getAllowedSpecialtiesAttribute()
+    {
+        static $requestCache = [];
+
+        $cacheKey = get_class($this) . '_' . $this->id . '_allowed_specialties';
+
+        if (isset($requestCache[$cacheKey])) {
+            return $requestCache[$cacheKey];
+        }
+
+        $doctor = $this->doctor;
+        if (!$doctor) {
+            return $requestCache[$cacheKey] = 2;
+        }
+
+        $totalSessions          = $doctor->consultations()->ofCompleted()->count();
+
+        $sessionsPerSpecialty   = GeneralSettings::getSettingValue('sessions_per_specialty');
+        $specialtiesPerSessions = GeneralSettings::getSettingValue('specialties_per_sessions');
+
+        if ($sessionsPerSpecialty <= 0 || $specialtiesPerSessions <= 0 || $totalSessions <= 0) {
+            return $requestCache[$cacheKey] = 2;
+        }
+
+        return $requestCache[$cacheKey] = (intval($totalSessions / $sessionsPerSpecialty) * $specialtiesPerSessions) + 2;
+    }
+
     public function scopeOfRole($query, $value)
     {
         return $query->whereHas('roles', function ($query) use ($value) {

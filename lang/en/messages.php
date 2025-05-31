@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'sessions_per_specialty'   => 'Number of Sessions per New Specialty',
+    'specialties_per_sessions' => 'Number of Specialties to Unlock per Sessions Completed',
+
     'cannot_update_schedule_with_consultation' => 'You cannot update this schedule because it has consultations associated with it.',
     'cannot_delete_schedule_with_consultation' => 'You cannot delete this schedule because it has consultations associated with it.',
     'general_session' => 'General Consultation',
