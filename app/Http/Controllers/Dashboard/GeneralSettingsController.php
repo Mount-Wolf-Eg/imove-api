@@ -18,12 +18,14 @@ class GeneralSettingsController extends Controller
     public function update(Request $request, GeneralSettings $settings)
     {
         $request->validate([
-            'site_name'              => 'required|string',
-            'app_payment_percentage' => 'required|numeric|min:0',
-            'urgent_grace_period'    => 'required|numeric|min:0',
-            'normal_grace_period'    => 'required|numeric|min:0',
-            'tax_percentage'         => 'required|numeric|min:0|max:100',
-            'general_session_price'  => 'required|numeric|min:0',
+            'site_name'                => 'required|string',
+            'app_payment_percentage'   => 'required|numeric|min:0',
+            'urgent_grace_period'      => 'required|numeric|min:0',
+            'normal_grace_period'      => 'required|numeric|min:0',
+            'tax_percentage'           => 'required|numeric|min:0|max:100',
+            'general_session_price'    => 'required|numeric|min:0',
+            'sessions_per_specialty'   => 'nullable|numeric|min:0',
+            'specialties_per_sessions' => 'nullable|numeric|min:0',
         ]);
 
         $settings->site_name              = $request->input('site_name');
