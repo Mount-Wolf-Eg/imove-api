@@ -28,12 +28,14 @@ class GeneralSettingsController extends Controller
             'specialties_per_sessions' => 'nullable|numeric|min:0',
         ]);
 
-        $settings->site_name              = $request->input('site_name');
-        $settings->app_payment_percentage = $request->input('app_payment_percentage');
-        $settings->urgent_grace_period    = $request->input('urgent_grace_period');
-        $settings->normal_grace_period    = $request->input('normal_grace_period');
-        $settings->tax_percentage         = $request->input('tax_percentage');
-        $settings->general_session_price  = $request->input('general_session_price');
+        $settings->site_name                = $request->input('site_name');
+        $settings->app_payment_percentage   = $request->input('app_payment_percentage');
+        $settings->urgent_grace_period      = $request->input('urgent_grace_period');
+        $settings->normal_grace_period      = $request->input('normal_grace_period');
+        $settings->tax_percentage           = $request->input('tax_percentage');
+        $settings->general_session_price    = $request->input('general_session_price');
+        $settings->sessions_per_specialty   = $request->input('sessions_per_specialty', 0);
+        $settings->specialties_per_sessions = $request->input('specialties_per_sessions', 0);
 
         $settings->save();
 
