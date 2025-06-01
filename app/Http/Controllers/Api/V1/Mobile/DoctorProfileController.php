@@ -13,6 +13,7 @@ use App\Repositories\Contracts\DoctorContract;
 use Illuminate\Http\JsonResponse;
 use App\Models\Doctor;
 use App\Exceptions\CantDeleteModelException;
+use App\Http\Requests\DoctorMedicalSpecialistRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
@@ -62,6 +63,21 @@ class DoctorProfileController extends BaseApiController
         $doctor = auth()->user()->doctor;
         $doctor = $this->contract->update($doctor, $request->validated());
         $user = $doctor->user->load('doctor.scheduleDays.shifts.availableSlots');
+        return $this->respondWithModel($user);
+    }
+
+    public function updateMedicalSpecialties(DoctorMedicalSpecialistRequest $request)
+    {
+        $doctor = auth()->user()->doctor;
+        $doctor = $this->contract->update($doctor, $request->validated());
+        $user = $doctor->user->load(
+            'doctor.medicalSpecialities',
+            'doctor.universities.university',
+            'doctor.hospitals',
+            'doctor.universities.academicDegree',
+            'doctor.universities.certificate',
+            'doctor.universities.medicalSpeciality'
+        );
         return $this->respondWithModel($user);
     }
 
