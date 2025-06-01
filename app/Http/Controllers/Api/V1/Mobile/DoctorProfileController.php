@@ -66,7 +66,7 @@ class DoctorProfileController extends BaseApiController
         return $this->respondWithModel($user);
     }
 
-    public function updateMedicalSpecialties(DoctorMedicalSpecialistRequest $request)
+    public function updateDoctorSpecialties(DoctorMedicalSpecialistRequest $request)
     {
         $doctor = auth()->user()->doctor;
         $doctor = $this->contract->update($doctor, $request->validated());
