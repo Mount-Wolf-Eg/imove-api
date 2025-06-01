@@ -81,6 +81,20 @@ class DoctorProfileController extends BaseApiController
         return $this->respondWithModel($user);
     }
 
+    public function updateGeneralSessionEnabled(Request $request)
+    {
+        $doctor = auth()->user()->doctor;
+        $doctor = $this->contract->update($doctor, $request->only('general_session_enabled'));
+        $user = $doctor->user->load(
+            'doctor.universities.university',
+            'doctor.hospitals',
+            'doctor.universities.academicDegree',
+            'doctor.universities.certificate',
+            'doctor.universities.medicalSpeciality'
+        );
+        return $this->respondWithModel($user);
+    }
+
     public function addUniversity(DoctorUniversityRequest $request)
     {
         $doctor = auth()->user()->doctor;
