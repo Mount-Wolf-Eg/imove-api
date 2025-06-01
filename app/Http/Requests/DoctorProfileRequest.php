@@ -28,6 +28,9 @@ class DoctorProfileRequest extends FormRequest
             'medical_id' => config('validations.string.req'),
             'date_of_birth' => config('validations.date.req'),
             'phone' => config('validations.phone.req'),
+
+            'specialities' => config('validations.array.null'),
+            'specialities.*' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
         ];
     }
 }

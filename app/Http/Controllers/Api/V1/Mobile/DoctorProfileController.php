@@ -16,11 +16,8 @@ use App\Exceptions\CantDeleteModelException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-
-
 class DoctorProfileController extends BaseApiController
 {
-
     /**
      * DoctorProfileController constructor.
      * @param DoctorContract $contract
@@ -50,9 +47,13 @@ class DoctorProfileController extends BaseApiController
     {
         $doctor = auth()->user()->doctor;
         $doctor = $this->contract->update($doctor, $request->validated());
-        $user = $doctor->user->load('doctor.universities.university', 'doctor.hospitals',
-            'doctor.universities.academicDegree', 'doctor.universities.certificate',
-            'doctor.universities.medicalSpeciality');
+        $user = $doctor->user->load(
+            'doctor.universities.university',
+            'doctor.hospitals',
+            'doctor.universities.academicDegree',
+            'doctor.universities.certificate',
+            'doctor.universities.medicalSpeciality'
+        );
         return $this->respondWithModel($user);
     }
 
@@ -68,9 +69,13 @@ class DoctorProfileController extends BaseApiController
     {
         $doctor = auth()->user()->doctor;
         $doctor = $this->contract->update($doctor, $request->validated());
-        $user = $doctor->user->load('doctor.universities.university', 'doctor.hospitals',
-            'doctor.universities.academicDegree', 'doctor.universities.certificate',
-            'doctor.universities.medicalSpeciality');
+        $user = $doctor->user->load(
+            'doctor.universities.university',
+            'doctor.hospitals',
+            'doctor.universities.academicDegree',
+            'doctor.universities.certificate',
+            'doctor.universities.medicalSpeciality'
+        );
         return $this->respondWithModel($user);
     }
 
@@ -78,9 +83,13 @@ class DoctorProfileController extends BaseApiController
     {
         $doctor = auth()->user()->doctor;
         $doctor = $this->contract->update($doctor, $request->validated());
-        $user = $doctor->user->load('doctor.universities.university', 'doctor.hospitals',
-            'doctor.universities.academicDegree', 'doctor.universities.certificate',
-            'doctor.universities.medicalSpeciality');
+        $user = $doctor->user->load(
+            'doctor.universities.university',
+            'doctor.hospitals',
+            'doctor.universities.academicDegree',
+            'doctor.universities.certificate',
+            'doctor.universities.medicalSpeciality'
+        );
         return $this->respondWithModel($user);
     }
 
@@ -88,9 +97,13 @@ class DoctorProfileController extends BaseApiController
     {
         $doctor = auth()->user()->doctor;
         $doctor->universities()->delete($university);
-        $user = $doctor->user->load('doctor.universities.university', 'doctor.hospitals',
-            'doctor.universities.academicDegree', 'doctor.universities.certificate',
-            'doctor.universities.medicalSpeciality');
+        $user = $doctor->user->load(
+            'doctor.universities.university',
+            'doctor.hospitals',
+            'doctor.universities.academicDegree',
+            'doctor.universities.certificate',
+            'doctor.universities.medicalSpeciality'
+        );
         return $this->respondWithModel($user);
     }
 
@@ -101,7 +114,6 @@ class DoctorProfileController extends BaseApiController
         return $this->respondWithSuccess(__('messages.actions_messages.update_success'));
     }
 
-    
     /**
      * Delete the authenticated doctor's account.
      *
@@ -111,7 +123,7 @@ class DoctorProfileController extends BaseApiController
     {
         $user = auth()->user();
         $doctor = $user->doctor;
-        
+
         try {
             $this->contract->remove($doctor);
             return $this->respondWithSuccess(__('messages.actions_messages.delete_success'));
@@ -119,12 +131,11 @@ class DoctorProfileController extends BaseApiController
             return $this->respondWithError($e->getMessage(), 422);
         } catch (\Exception $e) {
             \Log::error('Failed to delete doctor account via API', [
-                'doctor_id' => $doctor->id, 'user_id' => $user->id, 'error' => $e->getMessage(),
+                'doctor_id' => $doctor->id,
+                'user_id' => $user->id,
+                'error' => $e->getMessage(),
             ]);
             return $this->respondWithError(__('messages.actions_messages.delete_failed'), 500);
         }
     }
-
-  
-
 }
