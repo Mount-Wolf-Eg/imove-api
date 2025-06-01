@@ -24,8 +24,8 @@ class DoctorMedicalSpecialistRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'specialities' => config('validations.array.null'),
-            'specialities.*' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
+            'specialities' => config('validations.array.req'),
+            'specialities.*' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
         ];
     }
 }
