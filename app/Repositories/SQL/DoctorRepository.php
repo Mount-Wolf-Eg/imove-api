@@ -10,7 +10,7 @@ use App\Models\Package;
 use App\Repositories\Contracts\DoctorContract;
 use App\Repositories\Contracts\FileContract;
 use App\Repositories\Contracts\UserContract;
-use Illuminate\Database\Eloquent\Model; 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -135,7 +135,7 @@ class DoctorRepository extends BaseRepository implements DoctorContract
         // Log the activity and delete (from BaseRepository)
         return parent::remove($model);
     }
-    
+
     public function canRemove(Model $model): bool
     {
         /** @var Doctor $doctor */
@@ -212,38 +212,13 @@ class DoctorRepository extends BaseRepository implements DoctorContract
      * @param int $perPage
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    // public function getPatients(Doctor $doctor, ?string $nameFilter = null, array $filters = []): LengthAwarePaginator
-    // {
-    //     $query = $this->model->newQuery()
-    //         ->where('id', $doctor->id)
-    //         ->join('consultations', 'doctors.id', '=', 'consultations.doctor_id')
-    //         ->join('patients', 'consultations.patient_id', '=', 'patients.id')
-    //         ->join('users', 'patients.user_id', '=', 'users.id')
-    //         ->where('consultations.is_active', true)
-    //         ->whereNotIn('consultations.status', [
-    //             \App\Constants\ConsultationStatusConstants::PATIENT_CANCELLED->value,
-    //             \App\Constants\ConsultationStatusConstants::DOCTOR_CANCELLED->value
-    //         ])
-    //         ->select('patients.*')
-    //         ->distinct();
-
-    //     if ($nameFilter) {
-    //         $query->where('users.name', 'like', '%' . $nameFilter . '%');
-    //     }
-
-    //     $limit = $filters['limit'] ?? 10;
-    //     $page = $filters['page'] ?? 1;
-        
-    //     return $query->with(['user'])->paginate($limit, ['*'], 'page', $page);
-    // }
-    
     public function getPatients(Doctor $doctor, ?string $nameFilter = null, array $filters = []): LengthAwarePaginator
     {
         $query = $this->model->newQuery()
-            ->where('doctors.id', $doctor->id) 
+            ->where('doctors.id', $doctor->id)
             ->join('consultations', 'doctors.id', '=', 'consultations.doctor_id')
             ->join('patients', 'consultations.patient_id', '=', 'patients.id')
-            ->leftJoin('users', 'patients.user_id', '=', 'users.id') 
+            ->leftJoin('users', 'patients.user_id', '=', 'users.id')
             ->where('consultations.is_active', true)
             ->whereNotIn('consultations.status', [
                 \App\Constants\ConsultationStatusConstants::PATIENT_CANCELLED->value,
@@ -260,9 +235,9 @@ class DoctorRepository extends BaseRepository implements DoctorContract
         $limit = $filters['limit'] ?? 10;
         $page = $filters['page'] ?? 1;
 
-        return $query->with(['user'])->paginate($limit, ['*'], 'page', $page);
+        return $query->with(['user.patient.diseases'])->paginate($limit, ['*'], 'page', $page);
     }
-    
+
     /**
      * Get consultations for a specific patient with the doctor.
      *
