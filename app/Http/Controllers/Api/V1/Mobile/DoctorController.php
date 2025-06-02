@@ -108,14 +108,9 @@ class DoctorController extends BaseApiController
                 'page' => $request->query('page', 1),
             ];
 
-            // $consultations = $this->ConsultationContract->search(['patient' => $patient->id, 'doctor' => $doctor->id],
-            //                             ['patient.parent', 'patient.diseases', 'doctorScheduleDayShift.day', 'doctor.rates', 'attachments', 'program']);
-            // return $this->respondWithCollection($consultations);
-
             $consultations = $this->contract->getPatientConsultations($doctor, $patient->id, $filters);
-            // return $consultations;
-            return $this->respondWithCollection($consultations);
-            // return $this->respondWithCollection(ConsultationResource::collection($consultations));
+
+            return $this->respondWithResource(ConsultationResource::collection($consultations));
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve consultations: ' . $e->getMessage());
             return $this->respondWithError($e->getMessage(), 422);
