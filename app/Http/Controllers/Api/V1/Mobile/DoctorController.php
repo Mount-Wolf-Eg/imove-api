@@ -13,16 +13,19 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\GeneralSettings;
 use App\Repositories\Contracts\DoctorContract;
+use App\Repositories\Contracts\ConsultationContract;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class DoctorController extends BaseApiController
 {
+        private ConsultationContract $ConsultationContract;
+
     /**
      * DoctorController constructor.
      * @param DoctorContract $contract
      */
-    public function __construct(DoctorContract $contract)
+    public function __construct(DoctorContract $contract, ConsultationContract $ConsultationContract)
     {
         parent::__construct($contract, DoctorResource::class);
         $this->defaultScopes = ['requestStatus' => DoctorRequestStatusConstants::APPROVED->value, 'active' => true];
@@ -39,6 +42,7 @@ class DoctorController extends BaseApiController
             'universities.university',
             'universities.certificate'
         ];
+        $this->ConsultationContract = $ConsultationContract;
     }
 
     public function index(array $additional = []): mixed
@@ -104,9 +108,11 @@ class DoctorController extends BaseApiController
                 'page' => $request->query('page', 1),
             ];
 
-            $consultations = $this->contract->getPatientConsultations($doctor, $patient->id, $filters);
-
+            $consultations = $this->ConsultationContract->search(['patient' => $patient->id, 'doctor' => $doctor->id]);
             return $this->respondWithCollection($consultations);
+
+            // $consultations = $this->contract->getPatientConsultations($doctor, $patient->id, $filters);
+            // return $this->respondWithCollection($consultations);
             // return $this->respondWithCollection(ConsultationResource::collection($consultations));
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve consultations: ' . $e->getMessage());
