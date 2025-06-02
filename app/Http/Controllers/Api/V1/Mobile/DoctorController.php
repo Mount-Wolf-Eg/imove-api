@@ -98,7 +98,7 @@ class DoctorController extends BaseApiController
      * @param Patient $patient
      * @return JsonResponse
      */
-    public function getPatientConsultationsInDoctor(Request $request, Patient $patient): JsonResponse
+    public function getPatientConsultationsInDoctor(Request $request, Patient $patient)
     {
         try {
             $doctor = auth()->user()?->doctor;
@@ -108,11 +108,12 @@ class DoctorController extends BaseApiController
                 'page' => $request->query('page', 1),
             ];
 
-            $consultations = $this->ConsultationContract->search(['patient' => $patient->id, 'doctor' => $doctor->id],
-                                        ['patient.parent', 'patient.diseases', 'doctorScheduleDayShift.day', 'doctor.rates', 'attachments', 'program']);
+            // $consultations = $this->ConsultationContract->search(['patient' => $patient->id, 'doctor' => $doctor->id],
+            //                             ['patient.parent', 'patient.diseases', 'doctorScheduleDayShift.day', 'doctor.rates', 'attachments', 'program']);
             // return $this->respondWithCollection($consultations);
 
-            // $consultations = $this->contract->getPatientConsultations($doctor, $patient->id, $filters);
+            $consultations = $this->contract->getPatientConsultations($doctor, $patient->id, $filters);
+            return $consultations;
             // return $this->respondWithCollection($consultations);
             return $this->respondWithCollection(ConsultationResource::collection($consultations));
         } catch (\Exception $e) {
