@@ -108,7 +108,8 @@ class DoctorController extends BaseApiController
                 'page' => $request->query('page', 1),
             ];
 
-            $consultations = $this->ConsultationContract->search(['patient' => $patient->id, 'doctor' => $doctor->id]);
+            $consultations = $this->ConsultationContract->search(['patient' => $patient->id, 'doctor' => $doctor->id],
+                                        ['patient.parent', 'patient.diseases', 'doctorScheduleDayShift.day', 'doctor.rates', 'attachments', 'program']);
             return $this->respondWithCollection($consultations);
 
             // $consultations = $this->contract->getPatientConsultations($doctor, $patient->id, $filters);
