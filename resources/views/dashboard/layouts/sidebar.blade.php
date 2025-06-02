@@ -216,7 +216,7 @@
                     </a>
                 </li>
                 @endif
-                
+
                 @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
                 <li class="nav-item">
                     <a href="{{route('home-care-requests.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('home-care-requests.index', 'home-care-requests.show', 'home-care-requests.edit')])>
@@ -245,7 +245,7 @@
                     </a>
                 </li>
                 @endif
-                
+
                 @if(auth()->user()->can('read-article') || auth()->user()->can('view-all-article'))
                 <li class="nav-item">
                     <a href="{{route('educational-contents.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('educational-contents.index', 'educational-contents.show', 'educational-contents.create', 'educational-contents.edit')])>
@@ -264,14 +264,14 @@
                 </li>
                 @endif
 
-                @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
+                {{-- @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
                 <li class="nav-item">
                     <a href="{{route('contact.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('contacts.index')])>
                         <i class="bi bi-telephone"></i>
                         <span data-key="t-dashboard">{{ __('messages.contacts') }}</span>
                     </a>
                 </li>
-                @endif
+                @endif --}}
 
                 @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
                 <li class="nav-item">
@@ -300,7 +300,7 @@
                 </li>
                 @endif
 
-                
+
                 @if(auth()->user()->can('read-university') || auth()->user()->can('view-all-university'))
                 <li class="nav-item">
                     <a href="{{route('universities.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('universities.index', 'universities.show', 'universities.create', 'universities.edit')])>
@@ -344,7 +344,7 @@
                     </a>
                 </li>
                 @endif
-                
+
                 @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
                 <li class="nav-item">
                     <a href="{{route('setting-consultations.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('setting-consultations.index', 'setting-consultations.show', 'setting-consultations.create', 'setting-consultations.edit')])>
