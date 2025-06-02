@@ -151,7 +151,7 @@ class DoctorConsultationController extends BaseApiController
             return $this->respondWithError($e->getMessage());
         }
     }
-    
+
     /**
      * Approve medical report for the consultation.
      * @param Consultation $consultation
@@ -231,7 +231,7 @@ class DoctorConsultationController extends BaseApiController
             if (!$consultation->doctorCanReschedule()) abort(422, __('messages.doctor_cancel_validation', ['status' => $consultation->status->label()]));
 
             $consultation = $this->contract->update($consultation, [
-                'reschedule_notes' => $request->reschedule_notes, 
+                'reschedule_notes' => $request->reschedule_notes,
                 'status'           => ConsultationStatusConstants::NEEDS_RESCHEDULE->value
             ]);
 
@@ -271,7 +271,7 @@ class DoctorConsultationController extends BaseApiController
         try {
             if (!$consultation->doctor_start_at) {
                 $consultation = $this->contract->update($consultation, [
-                    'doctor_start_at' => now(), 
+                    'doctor_start_at' => now(),
                 ]);
             }
             return $this->respondWithSuccess();
@@ -280,7 +280,7 @@ class DoctorConsultationController extends BaseApiController
         }
     }
 
-       
+
     public function settingConsultation()
     {
         try {
@@ -291,11 +291,11 @@ class DoctorConsultationController extends BaseApiController
         }
     }
 
-    
+
     public function getPatientConsultationsInDocter($patient_id): JsonResponse
     {
         try {
-            $consultations = $this->contract->search(['patient' => $patient_id, 'doctor' => ]);
+            $consultations = $this->contract->search(['patient' => $patient_id]);
             return $this->respondWithCollection($consultations);
         } catch (Exception $e) {
             return $this->respondWithError($e->getMessage());
