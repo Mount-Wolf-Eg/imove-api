@@ -181,6 +181,10 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::delete('universities/{university}', [DoctorProfileController::class, 'deleteUniversity']);
             Route::put('deactivate', [DoctorProfileController::class, 'deactivate']);
             Route::delete('delete-account', [DoctorProfileController::class, 'deleteAccount']);
+
+            Route::put('update-doctor-specialties', [DoctorProfileController::class, 'updateDoctorSpecialties']);
+            Route::put('update-general-session-enabled', [DoctorProfileController::class, 'updateGeneralSessionEnabled']);
+
             Route::apiResource('articles', ArticleController::class)->only('store', 'update', 'destroy');
             Route::put('articles/{article}/change-activation', [ArticleController::class, 'changeActivation'])->name('articles.active');
             Route::apiResource('vendors', VendorController::class)->only('index');

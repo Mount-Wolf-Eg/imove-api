@@ -40,7 +40,8 @@ class DoctorResource extends BaseResource
             'general_session_enabled' => $this->general_session_enabled,
             'experience_years' => $this->experience_years,
             'price' => $this->with_appointment_consultation_price ?? 0,
-            'reminder_before_consultation' => $this->reminder_before_consultation,
+            'reminder_before_consultation' => $this->user?->reminder_before_consultation ?? 20,
+            'urgent_reminder_before_consultation' => $this->user?->urgent_reminder_before_consultation ?? 20,
             'consultation_period' => $this->consultation_period,
         ];
         $this->relations = [

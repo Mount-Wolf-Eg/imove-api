@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Constants\RoleNameConstants;
 use Illuminate\Foundation\Http\FormRequest;
 
-class DoctorProfileRequest extends FormRequest
+class DoctorMedicalSpecialistRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -24,13 +24,8 @@ class DoctorProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'national_id' => config('validations.string.req') . '|regex:/^[1-4]/',
-            'medical_id' => config('validations.string.req'),
-            'date_of_birth' => config('validations.date.req'),
-            'phone' => config('validations.phone.req'),
-
-            'specialities' => config('validations.array.null'),
-            'specialities.*' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
+            'specialities' => config('validations.array.req'),
+            'specialities.*' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
         ];
     }
 }
