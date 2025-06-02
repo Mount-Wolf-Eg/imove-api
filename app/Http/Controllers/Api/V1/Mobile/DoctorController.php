@@ -72,7 +72,7 @@ class DoctorController extends BaseApiController
         try {
             $doctor = auth()->user()?->doctor;
             $nameFilter = $request->query('name');
- 
+
             $filters = [
                 'limit' => $request->query('per_page', 10),
                 'page'  => $request->query('page', 1),
@@ -86,7 +86,7 @@ class DoctorController extends BaseApiController
             return $this->respondWithError($e->getMessage(), 422);
         }
     }
-    
+
     /**
      * Get consultations for a specific patient with the doctor.
      *
@@ -106,7 +106,8 @@ class DoctorController extends BaseApiController
 
             $consultations = $this->contract->getPatientConsultations($doctor, $patient->id, $filters);
 
-            return $this->respondWithCollection(ConsultationResource::collection($consultations));
+            return $this->respondWithCollection($consultations);
+            // return $this->respondWithCollection(ConsultationResource::collection($consultations));
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve consultations: ' . $e->getMessage());
             return $this->respondWithError($e->getMessage(), 422);
