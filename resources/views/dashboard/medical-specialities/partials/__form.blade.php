@@ -34,14 +34,14 @@
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
-                    <div class="col-lg-6">
+                    <!-- <div class="col-lg-6">
                         {{Form::label('percentage', __('messages.percentage'), ['class' => 'form-label'])}}
                         <span class="text-danger fw-bold">*</span>
                         {!! Form::number('percentage' , $medicalSpeciality->percentage ?? '', ['class' => 'form-control', 'min' => '1', 'max' => '100', 'pattern' => '[0-9]', 'onkeypress' => 'return isNumberKey(event)']) !!}
                         @error("percentage")
                         <span class="text-danger">{{$message}}</span>
                         @enderror
-                    </div>
+                    </div> -->
                     <div class="col-lg-12">
                         <div class="{{app()->getLocale() == 'ar' ? 'text-start' : 'text-end'}}">
                             <button type="submit" class="btn btn-primary">{{__('messages.save')}}</button>

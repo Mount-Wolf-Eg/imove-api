@@ -16,10 +16,10 @@
                             <div class="col-6">{{__('messages.description')}}</div>
                             <div class="col-6">{{$resource->description ?  : __('messages.no_description')}}</div>
                         </div>
-                        <div class="row py-2">
+                        <!-- <div class="row py-2">
                             <div class="col-6">{{__('messages.percentage')}}</div>
                             <div class="col-6">{{$resource->percentage}}</div>
-                        </div>
+                        </div> -->
                         <div class="row py-2">
                             <div class="col-6">{{__('messages.created')}}</div>
                             <div class="col-6">{{$resource->created_at?->format('Y-m-d')}}</div>

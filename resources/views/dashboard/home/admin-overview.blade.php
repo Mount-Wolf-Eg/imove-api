@@ -19,12 +19,14 @@
         <div class="row row-cols-xxl-4 row-cols-md-2 row-cols-1">
             <x-overview-card title="{{__('messages.patients')}}" icon="bi bi-person-badge" color="info" count="{{$patientsCount}}" />
             <x-overview-card title="{{__('messages.doctors')}}" icon="bi bi-journal-plus" color="info" count="{{$doctorsCount}}" />
-            <x-overview-card title="{{__('messages.vendors')}}" icon="bi bi-houses" color="info" count="{{$vendorsCount}}" />
+
+            {{-- <x-overview-card title="{{__('messages.vendors')}}" icon="bi bi-houses" color="info" count="{{$vendorsCount}}" />
             <x-overview-card title="{{__('messages.hospitals')}}" icon="bi bi-hospital" color="info" count="{{$hospitalsCount}}" />
             <x-overview-card title="{{__('messages.clinics')}}" icon="bi bi-clipboard-pulse" color="info" count="{{$clinicsCount}}" />
             <x-overview-card title="{{__('messages.pharmacies')}}" icon="bi bi-prescription2" color="info" count="{{$pharmaciesCount}}" />
             <x-overview-card title="{{__('messages.Home_cares')}}" icon="bi bi-chat-heart" color="info" count="{{$homeCaresCount}}" />
-            <x-overview-card title="{{__('messages.labs')}}" icon="bi bi-stack" color="info" count="{{$labsCount}}" />
+            <x-overview-card title="{{__('messages.labs')}}" icon="bi bi-stack" color="info" count="{{$labsCount}}" /> --}}
+            
             <x-overview-card title="{{__('messages.total_transactions')}}" icon="bi bi-currency-exchange" color="info" count="{{$totalTransactions}}" />
             <x-overview-card title="{{__('messages.total_revenues')}}" icon="bi bi-wallet" color="info" count="{{$totalRevenues}}" />
         </div>

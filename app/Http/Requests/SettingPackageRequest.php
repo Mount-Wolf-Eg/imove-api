@@ -29,7 +29,7 @@ class SettingPackageRequest extends FormRequest
     {
         return [
             'num_of_sessions' => Rule::unique('setting_packages', 'num_of_sessions')->ignore($this->route('setting_package')),
-            'duration' => config('validations.tiny_int.null'),
+            'duration' => config('validations.integer.null'),
         ];
     }
 

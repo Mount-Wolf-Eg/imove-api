@@ -173,14 +173,14 @@
                     </li>
                 @endif -->
 
-                @if(auth()->user()->can('read-referral') || auth()->user()->can('view-all-referral'))
+                <!-- @if(auth()->user()->can('read-referral') || auth()->user()->can('view-all-referral'))
                 <li class="nav-item">
                     <a href="{{route('referrals.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('referrals.index', 'referrals.show')])>
                         <i class="bi bi-tv"></i>
                         <span data-key="t-dashboard">{{ __('messages.referrals') }}</span>
                     </a>
                 </li>
-                @endif
+                @endif -->
 
                 @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
                 <li class="nav-item">
