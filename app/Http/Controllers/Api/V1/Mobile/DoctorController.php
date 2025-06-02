@@ -6,6 +6,7 @@ use App\Constants\DoctorRequestStatusConstants;
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ConsultationResource;
+use App\Http\Resources\ConsultationInDoctorResource;
 use App\Http\Resources\DoctorResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\PatientResource;
@@ -110,7 +111,7 @@ class DoctorController extends BaseApiController
 
             $consultations = $this->contract->getPatientConsultations($doctor, $patient->id, $filters);
 
-            return $this->respondWithResource(ConsultationResource::collection($consultations));
+            return $this->respondWithResource(ConsultationInDoctorResource::collection($consultations));
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve consultations: ' . $e->getMessage());
             return $this->respondWithError($e->getMessage(), 422);
