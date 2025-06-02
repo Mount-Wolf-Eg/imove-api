@@ -260,7 +260,7 @@ class DoctorRepository extends BaseRepository implements DoctorContract
         $limit = $filters['limit'] ?? 10;
         $page = $filters['page'] ?? 1;
 
-        return $query->with(['patient.user', 'doctor.user', 'medicalSpeciality'])
+        return $query->with(['patient.user', 'doctor.user', 'medicalSpeciality', 'doctorScheduleDayShift.day', 'doctor.rates','replies'])
                      ->paginate($limit, ['*'], 'page', $page);
     }
 
