@@ -33,6 +33,7 @@ use App\Http\Controllers\Api\V1\Mobile\ExerciseController;
 use App\Http\Controllers\Api\V1\Mobile\PatientProgramController;
 use App\Http\Controllers\Api\V1\Mobile\DoctorExerciseController;
 use App\Http\Controllers\Api\V1\Mobile\BannerController;
+use App\Http\Controllers\Api\V1\Mobile\doctorProgramController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => 'locale'], static function () {
@@ -141,7 +142,7 @@ Route::group(['middleware' => 'locale'], static function () {
 
             // technical support patient
             Route::post('technical-support', [TechnicalSupportController::class, 'createForUser']);
-            
+
             // HomeCareRequest
             Route::controller(HomeCareRequestController::class)->group(function () {
                 Route::post('home-care-request/store', 'store');
@@ -195,7 +196,7 @@ Route::group(['middleware' => 'locale'], static function () {
 
             Route::get('patients', [DoctorController::class, 'getPatients']);
             Route::get('patients/get/{patient}/consultations', [DoctorController::class, 'getPatientConsultationsInDoctor']);
-    
+
             Route::controller(DoctorConsultationController::class)->prefix('consultations')->group(static function () {
                 Route::post('/{consultation}/vendor-referral','vendorReferral');
                 Route::post('/{consultation}/doctor-referral','doctorReferral');
@@ -236,7 +237,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::patch('packages/{package}/change-activation', [DoctorPackageController::class, 'changeActivation'])->name('packages.active');
             Route::get('get-setting-package', [DoctorPackageController::class, 'getSettingPackage']);
 
-  
+
             // medical-equipments
             Route::post('consultation/{consultation}/assign-medical-equipments', [MedicalEquipmentController::class, 'assignToConsultation']);
             Route::post('consultation/{consultation}/remove-medical-equipments', [MedicalEquipmentController::class, 'removeFromConsultation']);
@@ -244,6 +245,7 @@ Route::group(['middleware' => 'locale'], static function () {
             // programs
             Route::controller(doctorProgramController::class)->prefix('programs')->group(function () {
                 Route::get('/{program}/program-report', 'getProgramReport');
+                Route::get('/{program}/show', 'show');
                 Route::get('/session/{sessionId}/session-analytics', 'getSessionAnalytics');
             });
 
