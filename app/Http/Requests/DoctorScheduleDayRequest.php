@@ -30,13 +30,10 @@ class DoctorScheduleDayRequest extends FormRequest
         if (isset($validated['schedule_repeat_from']) && isset($validated['schedule_repeat_to'])) {
             $validated['schedule_days'] = collect(CarbonPeriod::between(request('schedule_repeat_from'), request('schedule_repeat_to')))->map(function ($date) {
                 $dayName = strtolower($date->format('l'));
-                if (in_array($dayName, array_column(request('schedule_days'), 'day'))) {
-                    return [
-                        'date'   => $date->format('Y-m-d'),
-                        'shifts' => collect(request('schedule_days'))->firstWhere('day', $dayName)['shifts'],
-                    ];
-                }
-                return null;
+                return [
+                    'date'   => $date->format('Y-m-d'),
+                    'shifts' => collect(request('schedule_days'))->firstWhere('day', $dayName)['shifts'],
+                ];
             })->whereNotNull()->values()->toArray();
         }
 
