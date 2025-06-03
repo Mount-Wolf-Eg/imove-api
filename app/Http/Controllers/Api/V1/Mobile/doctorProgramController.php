@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1\Mobile;
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Resources\ProgramResource;
 use App\Http\Resources\SessionAnalyticsResource;
+use App\Http\Resources\ProgramDetailsResource;
 use App\Repositories\Contracts\ProgramContract;
 use App\Models\{Program, PatientSession};
 use Exception;
@@ -61,4 +62,14 @@ class doctorProgramController extends BaseApiController
         }
     }
 
+
+    public function show(Program $program): JsonResponse
+    {
+        try {
+            return $this->respondWithResource(new ProgramDetailsResource($program));
+        } catch (Exception $e) {
+            return $this->respondWithError($e->getMessage(), $e->getCode() ?: 422);
+        }
+    }
+    
 }
