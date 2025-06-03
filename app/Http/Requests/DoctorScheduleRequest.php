@@ -68,8 +68,8 @@ class DoctorScheduleRequest extends FormRequest
             'schedule_days.*.shifts.*.to_time'   => config('validations.time.req'),
             'schedule_repeat_from'               => config('validations.date.null') . '|after_or_equal:today',
             'schedule_repeat_to'                 => config('validations.date.null') . '|after:schedule_repeat_from',
-            'reminder_before_consultation'       => config('validations.integer.req'),
-            'price'                              => config('validations.integer.req')
+            'reminder_before_consultation'       => config('validations.integer.null'),
+            'price'                              => config('validations.integer.null')
         ];
     }
 }
