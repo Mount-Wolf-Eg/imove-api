@@ -8,9 +8,9 @@
         <div class="col-md-12">
             <div class="card p-2">
                 <div class="card-body">
-                    
+
                     <h5 class="card-title py-2">
-                        @lang('messages.status')  &nbsp; &nbsp;: &nbsp; &nbsp;                 
+                        @lang('messages.status')  &nbsp; &nbsp;: &nbsp; &nbsp;
                         @if ($homeCareRequest->status == 1)
                             {{ucfirst( __('messages.The request is being reviewed'))}}
                         @elseif ($homeCareRequest->status == 2)
@@ -29,10 +29,10 @@
                         <div class="col-2">{{__('messages.phone')}}</div>
                         <div class="col-10">{{$homeCareRequest->patient?->user->phone}}</div>
                     </div>
-                    <div class="row py-2">
+                    {{-- <div class="row py-2">
                         <div class="col-2">{{__('messages.speciality')}}</div>
                         <div class="col-10">{{$homeCareRequest->medicalSpeciality?->name}}</div>
-                    </div>
+                    </div> --}}
                     <div class="row py-2">
                         <div class="col-2">{{__('messages.modelSingle.city')}}</div>
                         <div class="col-10">{{$homeCareRequest->city?->name}}</div>

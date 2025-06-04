@@ -7,15 +7,14 @@ use App\Traits\ModelTrait;
 use App\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
 class HomeCareRequest extends Model
-{  
+{
     use ModelTrait, SearchTrait, HasTranslations; // SoftDeletes
-    public const ADDITIONAL_PERMISSIONS = [];    
+    public const ADDITIONAL_PERMISSIONS = [];
     protected $table = "home_care_requests";
     protected $fillable = [
         'status','patient_id','city_id','medical_speciality_id','address','description',
@@ -46,7 +45,7 @@ class HomeCareRequest extends Model
     }
 
     //---------------------relations-------------------------------------
-  
+
     //---------------------Scopes-------------------------------------
 
     public function scopeOfMedicalSpeciality($query, $medicalSpecialityId)

@@ -17,7 +17,7 @@ class StoreHomeCareRequest extends FormRequest
     public function authorize(): bool
     {
         return true;
-        // return auth()->check() && auth()->user()->patient; 
+        // return auth()->check() && auth()->user()->patient;
     }
 
     /**
@@ -29,7 +29,7 @@ class StoreHomeCareRequest extends FormRequest
     {
         return [
             'city_id' => 'required|exists:cities,id',
-            'medical_speciality_id' => 'required|exists:medical_specialities,id',
+            // 'medical_speciality_id' => 'required|exists:medical_specialities,id',
             'address' => 'required|string|max:255',
             'description' => 'required|string|max:1000',
         ];
