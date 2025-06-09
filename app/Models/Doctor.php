@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ConsultationStatusConstants;
 use App\Constants\DoctorConsultationPeriodConstants;
 use App\Constants\DoctorRequestStatusConstants;
 use App\Constants\FileConstants;
@@ -146,24 +147,11 @@ class Doctor extends Model
     //---------------------Scopes-------------------------------------
     public function scopeOfWithUpcomingShifts($query)
     {
-        // $now   = \Carbon\Carbon::now()->format('H:i');
-        // $today = \Carbon\Carbon::today()->toDateString();
         $now         = now();
         $today       = $now->toDateString();
         $currentTime = $now->toTimeString();
 
         return $query
-            // ->whereHas('scheduleDays.shifts', function ($subQuery) use ($now, $today) {
-            //     $subQuery->where(function ($q) use ($now, $today) {
-            //         $q->whereHas('day', function ($dayQuery) use ($today) {
-            //             $dayQuery->where('date', '>', $today);
-            //         })->orWhere(function ($q) use ($now, $today) {
-            //             $q->whereHas('day', function ($dayQuery) use ($today) {
-            //                 $dayQuery->where('date', $today);
-            //             })->where('from_time', '>=', $now);
-            //         });
-            //     })->ofAvailableSlots();
-            // })
             ->whereHas('scheduleDays.shifts', function ($subQuery) use ($currentTime, $today) {
                 $subQuery->where(function ($q) use ($currentTime, $today) {
                     $q->whereHas('day', function ($dayQuery) use ($today) {
@@ -173,23 +161,36 @@ class Doctor extends Model
                             $dayQuery->where('date', $today);
                         })->whereTime('from_time', '>=', $currentTime);
                     });
-                })->ofAvailableSlots();
+                })
+                    // Fixed consultation logic - only available slots
+                    ->where(function ($query) {
+                        $query->whereDoesntHave('consultation')
+                            ->orWhereHas('consultation', function ($q) {
+                                $q->where(function ($subQ) {
+                                    // Only cancelled or inactive consultations make slots available
+                                    $subQ->where('is_active', false)
+                                        ->orWhere('status', ConsultationStatusConstants::PATIENT_CANCELLED->value)
+                                        ->orWhere('status', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
+                                });
+                            });
+                    })
+                    ->whereNotNull('parent_id');
             })
-            ->with(['scheduleDays' => function ($query) use ($now, $today) {
+            ->with(['scheduleDays' => function ($query) use ($currentTime, $today) {
                 $query
-                    ->where(function ($q) use ($now, $today) {
+                    ->where(function ($q) use ($currentTime, $today) {
                         $q->where('date', '>', $today)
-                            ->orWhere(function ($q) use ($now, $today) {
+                            ->orWhere(function ($q) use ($currentTime, $today) {
                                 $q->where('date', $today)
-                                    ->whereHas('shifts', function ($subQuery) use ($now) {
-                                        $subQuery->where('from_time', '>=', $now);
+                                    ->whereHas('shifts', function ($subQuery) use ($currentTime) {
+                                        $subQuery->whereTime('from_time', '>=', $currentTime);
                                     });
                             });
                     })
                     ->orderBy('date')
-                    ->with(['shifts' => function ($shiftQuery) use ($now) {
+                    ->with(['shifts' => function ($shiftQuery) use ($currentTime) {
                         $shiftQuery
-                            ->where('from_time', '>=', $now)
+                            ->whereTime('from_time', '>=', $currentTime)
                             ->orderBy('from_time')
                             ->limit(1);
                     }])
