@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class HomeCareRequestRepository extends BaseRepository implements HomeCareRequestContract
 {
-    
+
     /**
      * HomeCareRequestRepository constructor.
      * @param HomeCareRequest $model
@@ -51,7 +51,7 @@ class HomeCareRequestRepository extends BaseRepository implements HomeCareReques
             $page = $filters['page'] ?? 1;
 
 
-            return $query->with($relations)->paginate($limit, ['*'], 'page', $page);
+            return $query->with($relations)->orderBy('id', 'desc')->paginate($limit, ['*'], 'page', $page);
         } catch (\Exception $e) {
             \Log::error('Failed to retrieve home care requests: ' . $e->getMessage());
             return new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10, 1, [
