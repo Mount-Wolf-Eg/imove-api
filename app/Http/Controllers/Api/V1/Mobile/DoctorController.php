@@ -41,7 +41,8 @@ class DoctorController extends BaseApiController
             'universities.academicDegree',
             'universities.medicalSpeciality',
             'universities.university',
-            'universities.certificate'
+            'universities.certificate',
+            'scheduleDays',
         ];
         $this->ConsultationContract = $ConsultationContract;
     }
