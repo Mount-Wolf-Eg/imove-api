@@ -160,7 +160,7 @@ class Doctor extends Model
                             $dayQuery->where('date', $today);
                         })->where('from_time', '>=', $now);
                     });
-                });
+                })->ofAvailableSlots();
             })
             ->with(['scheduleDays' => function ($query) use ($now, $today) {
                 $query
