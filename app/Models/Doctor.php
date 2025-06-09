@@ -161,20 +161,20 @@ class Doctor extends Model
                             $dayQuery->where('date', $today);
                         })->whereTime('from_time', '>=', $currentTime);
                     });
-                })
+                });
                     // Fixed consultation logic - only available slots
-                    ->where(function ($query) {
-                        $query->whereDoesntHave('consultation')
-                            ->orWhereHas('consultation', function ($q) {
-                                $q->where(function ($subQ) {
-                                    // Only cancelled or inactive consultations make slots available
-                                    $subQ->where('is_active', false)
-                                        ->orWhere('status', ConsultationStatusConstants::PATIENT_CANCELLED->value)
-                                        ->orWhere('status', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
-                                });
-                            });
-                    })
-                    ->whereNotNull('parent_id');
+                    // ->where(function ($query) {
+                    //     $query->whereDoesntHave('consultation')
+                    //         ->orWhereHas('consultation', function ($q) {
+                    //             $q->where(function ($subQ) {
+                    //                 // Only cancelled or inactive consultations make slots available
+                    //                 $subQ->where('is_active', false)
+                    //                     ->orWhere('status', ConsultationStatusConstants::PATIENT_CANCELLED->value)
+                    //                     ->orWhere('status', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
+                    //             });
+                    //         });
+                    // })
+                    // ->whereNotNull('parent_id');
             })
             ->with(['scheduleDays' => function ($query) use ($currentTime, $today) {
                 $query
