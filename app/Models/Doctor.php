@@ -149,13 +149,14 @@ class Doctor extends Model
         $now   = \Carbon\Carbon::now()->format('H:i');
         $today = \Carbon\Carbon::today()->toDateString();
 
+
         return $query
             ->whereHas('scheduleDays.shifts', function ($subQuery) use ($now, $today) {
                 $subQuery->where(function ($q) use ($now, $today) {
-                    $q->whereHas('scheduleDay', function ($dayQuery) use ($today) {
+                    $q->whereHas('day', function ($dayQuery) use ($today) {
                         $dayQuery->where('date', '>', $today);
                     })->orWhere(function ($q) use ($now, $today) {
-                        $q->whereHas('scheduleDay', function ($dayQuery) use ($today) {
+                        $q->whereHas('day', function ($dayQuery) use ($today) {
                             $dayQuery->where('date', $today);
                         })->where('from_time', '>=', $now);
                     });
@@ -173,7 +174,7 @@ class Doctor extends Model
                             });
                     })
                     ->orderBy('date')
-                    ->with(['shifts' => function ($shiftQuery) use ($now, $today) {
+                    ->with(['shifts' => function ($shiftQuery) use ($now) {
                         $shiftQuery
                             ->where('from_time', '>=', $now)
                             ->orderBy('from_time')
