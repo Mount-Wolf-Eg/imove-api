@@ -146,19 +146,32 @@ class Doctor extends Model
     //---------------------Scopes-------------------------------------
     public function scopeOfWithUpcomingShifts($query)
     {
-        $now   = \Carbon\Carbon::now()->format('H:i');
-        $today = \Carbon\Carbon::today()->toDateString();
-
+        // $now   = \Carbon\Carbon::now()->format('H:i');
+        // $today = \Carbon\Carbon::today()->toDateString();
+        $now         = now();
+        $today       = $now->toDateString();
+        $currentTime = $now->toTimeString();
 
         return $query
-            ->whereHas('scheduleDays.shifts', function ($subQuery) use ($now, $today) {
-                $subQuery->where(function ($q) use ($now, $today) {
+            // ->whereHas('scheduleDays.shifts', function ($subQuery) use ($now, $today) {
+            //     $subQuery->where(function ($q) use ($now, $today) {
+            //         $q->whereHas('day', function ($dayQuery) use ($today) {
+            //             $dayQuery->where('date', '>', $today);
+            //         })->orWhere(function ($q) use ($now, $today) {
+            //             $q->whereHas('day', function ($dayQuery) use ($today) {
+            //                 $dayQuery->where('date', $today);
+            //             })->where('from_time', '>=', $now);
+            //         });
+            //     })->ofAvailableSlots();
+            // })
+            ->whereHas('scheduleDays.shifts', function ($subQuery) use ($currentTime, $today) {
+                $subQuery->where(function ($q) use ($currentTime, $today) {
                     $q->whereHas('day', function ($dayQuery) use ($today) {
                         $dayQuery->where('date', '>', $today);
-                    })->orWhere(function ($q) use ($now, $today) {
+                    })->orWhere(function ($q) use ($currentTime, $today) {
                         $q->whereHas('day', function ($dayQuery) use ($today) {
                             $dayQuery->where('date', $today);
-                        })->where('from_time', '>=', $now);
+                        })->whereTime('from_time', '>=', $currentTime);
                     });
                 })->ofAvailableSlots();
             })
