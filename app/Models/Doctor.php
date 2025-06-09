@@ -146,11 +146,11 @@ class Doctor extends Model
     //---------------------Scopes-------------------------------------
     public function scopeOfWithUpcomingShifts($query)
     {
-        $now = \Carbon\Carbon::now()->format('H:i'); // Current time
-        $today = \Carbon\Carbon::today()->toDateString(); // Current date
+        $now   = \Carbon\Carbon::now()->format('H:i');
+        $today = \Carbon\Carbon::today()->toDateString();
 
-        return $query->whereHas('scheduleDays', function ($query) use ($now, $today) {
-            $query->whereHas('shifts', function ($subQuery) use ($now, $today) {
+        return $query
+            ->whereHas('scheduleDays.shifts', function ($subQuery) use ($now, $today) {
                 $subQuery->where(function ($q) use ($now, $today) {
                     $q->where('doctor_schedule_days.date', '>', $today)
                         ->orWhere(function ($q) use ($now, $today) {
@@ -158,25 +158,58 @@ class Doctor extends Model
                                 ->where('doctor_schedule_day_shifts.from_time', '>=', $now);
                         });
                 });
-            });
-        })
+            })
             ->with(['scheduleDays' => function ($query) use ($now, $today) {
-                $query->whereHas('shifts', function ($q) use ($now, $today) {
-                    $q->where(function ($subQuery) use ($now, $today) {
-                        $subQuery->where('doctor_schedule_days.date', '>', $today)
-                            ->orWhere(function ($subQuery) use ($now, $today) {
-                                $subQuery->where('doctor_schedule_days.date', $today)
-                                    ->where('doctor_schedule_day_shifts.from_time', '>=', $now);
-                            });
-                    });
+                $query->where(function ($q) use ($now, $today) {
+                    $q->where('doctor_schedule_days.date', '>', $today)
+                        ->orWhere(function ($q) use ($now, $today) {
+                            $q->where('doctor_schedule_days.date', $today)
+                                ->whereHas('shifts', function ($subQuery) use ($now) {
+                                    $subQuery->where('from_time', '>=', $now);
+                                });
+                        });
                 })
                     ->orderBy('doctor_schedule_days.date')
-                    ->with(['shifts' => function ($shiftQuery) {
-                        $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time')->limit(1); // Get only the first shift
+                    ->with(['shifts' => function ($shiftQuery) use ($now, $today) {
+                        $shiftQuery->where(function ($q) use ($now, $today) {
+                            $q->where('doctor_schedule_days.date', '>', $today)
+                                ->orWhere(function ($q) use ($now, $today) {
+                                    $q->where('doctor_schedule_days.date', $today)
+                                        ->where('doctor_schedule_day_shifts.from_time', '>=', $now);
+                                });
+                        })
+                            ->orderBy('doctor_schedule_day_shifts.from_time')
+                            ->limit(1);
                     }])
-                    ->limit(1); // Get only the first nearest day
+                    ->limit(1);
             }]);
     }
+    
+    // public function scopeOrderByClosestSlot($query)
+    // {
+    //     $now   = \Carbon\Carbon::now()->format('H:i');
+    //     $today = \Carbon\Carbon::today()->toDateString();
+
+    //     return $query->leftJoin('doctor_schedule_days', 'doctors.id', '=', 'doctor_schedule_days.doctor_id')
+    //         ->leftJoin('doctor_schedule_day_shifts', 'doctor_schedule_days.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
+    //         ->select('doctors.*')
+    //         ->selectRaw('MIN(
+    //         CASE 
+    //             WHEN doctor_schedule_days.date > ? THEN CONCAT(doctor_schedule_days.date, " ", doctor_schedule_day_shifts.from_time)
+    //             WHEN doctor_schedule_days.date = ? AND doctor_schedule_day_shifts.from_time >= ? THEN CONCAT(doctor_schedule_days.date, " ", doctor_schedule_day_shifts.from_time)
+    //             ELSE NULL
+    //         END
+    //     ) as closest_slot', [$today, $today, $now])
+    //         ->where(function ($q) use ($today, $now) {
+    //             $q->where('doctor_schedule_days.date', '>', $today)
+    //                 ->orWhere(function ($q) use ($today, $now) {
+    //                     $q->where('doctor_schedule_days.date', $today)
+    //                         ->where('doctor_schedule_day_shifts.from_time', '>=', $now);
+    //                 });
+    //         })
+    //         ->groupBy('doctors.id')
+    //         ->orderByRaw('closest_slot ASC NULLS LAST');
+    // }
 
     public function scopeOfRequestStatus($query, $value)
     {

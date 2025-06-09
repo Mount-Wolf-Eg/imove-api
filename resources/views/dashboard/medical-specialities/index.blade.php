@@ -6,12 +6,12 @@
     <x-breadcrumb title="{{__('messages.manage_medical_specialities')}}"
                   pagetitle="{{__('messages.medical_specialities')}}"
                   route="{{route('medical-specialities.index')}}"/>
-    {{-- <div class="d-flex justify-content-sm-end">
+    <div class="d-flex justify-content-sm-end">
         <a href="{{route('medical-specialities.create')}}">
             <i class="bi bi-plus-circle"></i>
             {{__('messages.add_new')}}
         </a>
-    </div> --}}
+    </div>
     <x-filter/>
     <div class="row">
         <div class="col-12">
