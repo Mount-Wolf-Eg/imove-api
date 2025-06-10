@@ -152,18 +152,18 @@ class Doctor extends Model
         $currentTime = $now->toTimeString();
 
         return $query
-            ->whereHas('scheduleDays', function ($subQuery) use ($currentTime, $today) {
-                $subQuery
-                    ->where(function ($q) use ($currentTime, $today) {
-                        $q->where('date', '>', $today)
-                            ->orWhere(function ($q) use ($currentTime, $today) {
-                                $q->where('date', $today)
-                                    ->whereHas('shifts', function ($subQuery) use ($currentTime) {
-                                        $subQuery->whereTime('from_time', '>=', $currentTime);
-                                    });
-                            });
-                    });
-            })
+            // ->whereHas('scheduleDays', function ($subQuery) use ($currentTime, $today) {
+            //     $subQuery
+            //         ->where(function ($q) use ($currentTime, $today) {
+            //             $q->where('date', '>', $today)
+            //                 ->orWhere(function ($q) use ($currentTime, $today) {
+            //                     $q->where('date', $today)
+            //                         ->whereHas('shifts', function ($subQuery) use ($currentTime) {
+            //                             $subQuery->whereTime('from_time', '>=', $currentTime);
+            //                         });
+            //                 });
+            //         });
+            // })
             ->whereHas('scheduleDaysShifts', function ($query) use ($currentTime) {
                 $query
                     // ->whereTime('from_time', '>=', $currentTime)
@@ -171,15 +171,15 @@ class Doctor extends Model
             })
             ->with(['scheduleDays' => function ($query) use ($currentTime, $today) {
                 $query
-                    ->where(function ($q) use ($currentTime, $today) {
-                        $q->where('date', '>', $today)
-                            ->orWhere(function ($q) use ($currentTime, $today) {
-                                $q->where('date', $today)
-                                    ->whereHas('shifts', function ($subQuery) use ($currentTime) {
-                                        $subQuery->whereTime('from_time', '>=', $currentTime);
-                                    });
-                            });
-                    })
+                    // ->where(function ($q) use ($currentTime, $today) {
+                    //     $q->where('date', '>', $today)
+                    //         ->orWhere(function ($q) use ($currentTime, $today) {
+                    //             $q->where('date', $today)
+                    //                 ->whereHas('shifts', function ($subQuery) use ($currentTime) {
+                    //                     $subQuery->whereTime('from_time', '>=', $currentTime);
+                    //                 });
+                    //         });
+                    // })
                     ->orderBy('date')
                     ->with(['shifts' => function ($shiftQuery) use ($currentTime) {
                         $shiftQuery
