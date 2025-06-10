@@ -59,8 +59,8 @@ class DoctorScheduleDayShift extends Model
             $query->whereDoesntHave('consultation')
                 ->orWhereHas('consultation', function ($q) {
                     $q->where('is_active', false)
-                        ->orWhere('status', '!=', ConsultationStatusConstants::PATIENT_CANCELLED->value)
-                        ->orWhere('status', '!=', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
+                        ->where('status', '!=', ConsultationStatusConstants::PATIENT_CANCELLED->value)
+                        ->where('status', '!=', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
                 });
         })
             ->whereNotNull('parent_id')
@@ -72,7 +72,6 @@ class DoctorScheduleDayShift extends Model
                     });
             });
     }
-
     //---------------------Scopes-------------------------------------
 
 }
