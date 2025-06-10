@@ -152,29 +152,20 @@ class Doctor extends Model
         $currentTime = $now->toTimeString();
 
         return $query
-            ->whereHas('scheduleDays.shifts', function ($subQuery) use ($currentTime, $today) {
-                $subQuery->where(function ($q) use ($currentTime, $today) {
-                    $q->whereHas('day', function ($dayQuery) use ($today) {
-                        $dayQuery->where('date', '>', $today);
-                    })->orWhere(function ($q) use ($currentTime, $today) {
-                        $q->whereHas('day', function ($dayQuery) use ($today) {
-                            $dayQuery->where('date', $today);
-                        })->whereTime('from_time', '>=', $currentTime);
+            ->whereHas('scheduleDays', function ($subQuery) use ($currentTime, $today) {
+                $subQuery
+                    ->where(function ($q) use ($currentTime, $today) {
+                        $q->where('date', '>', $today)
+                            ->orWhere(function ($q) use ($currentTime, $today) {
+                                $q->where('date', $today)
+                                    ->whereHas('shifts', function ($subQuery) use ($currentTime) {
+                                        $subQuery->whereTime('from_time', '>=', $currentTime);
+                                    });
+                            });
                     });
-                });
-                    // Fixed consultation logic - only available slots
-                    // ->where(function ($query) {
-                    //     $query->whereDoesntHave('consultation')
-                    //         ->orWhereHas('consultation', function ($q) {
-                    //             $q->where(function ($subQ) {
-                    //                 // Only cancelled or inactive consultations make slots available
-                    //                 $subQ->where('is_active', false)
-                    //                     ->orWhere('status', ConsultationStatusConstants::PATIENT_CANCELLED->value)
-                    //                     ->orWhere('status', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
-                    //             });
-                    //         });
-                    // })
-                    // ->whereNotNull('parent_id');
+            })
+            ->whereHas('scheduleDaysShifts', function ($query) use ($currentTime) {
+                $query->whereTime('from_time', '>=', $currentTime)->available();
             })
             ->with(['scheduleDays' => function ($query) use ($currentTime, $today) {
                 $query
@@ -191,6 +182,7 @@ class Doctor extends Model
                     ->with(['shifts' => function ($shiftQuery) use ($currentTime) {
                         $shiftQuery
                             ->whereTime('from_time', '>=', $currentTime)
+                            ->available()
                             ->orderBy('from_time')
                             ->limit(1);
                     }])
