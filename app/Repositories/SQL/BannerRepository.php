@@ -39,7 +39,7 @@ class BannerRepository extends BaseRepository implements BannerContract
     public static function syncRelations($model, $attributes)
     {
         if (isset($attributes['main_image'])) {
-            if ($model->mainImage && $model->mainImage?->id != $attributes['main_image'])
+            if ($model->mainImage)
                 resolve(FileContract::class)->remove($model->mainImage);
             if (is_file($attributes['main_image'])) {
                 $file = resolve(FileContract::class)->create([
@@ -53,6 +53,7 @@ class BannerRepository extends BaseRepository implements BannerContract
         }
         return $model;
     }
+
 
 
 }
