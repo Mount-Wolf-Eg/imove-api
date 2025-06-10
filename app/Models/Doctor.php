@@ -189,12 +189,13 @@ class Doctor extends Model
                                         ->where('status', '!=', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
                                 });
                         })
-                        ->whereNull('parent_id');
+                        ->whereNotNull('parent_id');
                 })
                     ->orderBy('doctor_schedule_days.date')
-                    ->limit(1)
+                    // ->limit(1)
                     ->with(['shifts' => function ($shiftQuery) {
-                        $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time')->limit(1);
+                        $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time')->whereNotNull('parent_id');
+                        // ->limit(1);
                     }]);
             }]);
     }
