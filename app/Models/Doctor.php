@@ -192,8 +192,9 @@ class Doctor extends Model
                         ->whereNull('parent_id');
                 })
                     ->orderBy('doctor_schedule_days.date')
+                    ->limit(1)
                     ->with(['shifts' => function ($shiftQuery) {
-                        $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time');
+                        $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time')->limit(1);
                     }]);
             }]);
     }
