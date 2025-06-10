@@ -27,6 +27,8 @@ class DoctorScheduleDayRequest extends FormRequest
         $validated              = parent::validated($key, $default);
         $validated['doctor_id'] = auth()->user()->doctor->id;
 
+        info($validated);
+
         if (isset($validated['schedule_repeat_from']) && isset($validated['schedule_repeat_to'])) {
             $validated['schedule_days'] = collect(CarbonPeriod::between(request('schedule_repeat_from'), request('schedule_repeat_to')))->map(function ($date) use ($validated) {
                 $originalShifts = $validated['shifts'];
