@@ -155,7 +155,7 @@ class Doctor extends Model
                 $query->orderBy('date')
                     ->with(['shifts' => function ($shiftQuery) {
                         $shiftQuery
-                            // ->ofAvailableSlots()
+                            ->ofAvailableSlots()
                             ->orderBy('from_time')
                             ->limit(1);
                     }])
