@@ -657,7 +657,7 @@ return [
     'link'    => 'Link',
     'add_medicalEquipment' => 'Add Medical Equipment',
     'medicalEquipments'    => 'Medical Equipments',
-    
+
     'terms_and_conditions_patient' => 'Terms And Conditions Patient',
     'terms_and_conditions_doctor'  => 'Terms And Conditions Doctor',
     'page' => 'Page',
@@ -687,7 +687,7 @@ return [
     'home-care-requests' => 'Home Care Requests',
     'manage_home-care-requests'  => 'Manage Home Care Requests',
     'home-care-requests_details' => 'Home Care Requests Details',
-    
+
     'confirm_reject' => 'Confirm Reject ?',
     'confirm_visited' => 'Confirm Visited ?',
     'actions_messages' => [
@@ -748,7 +748,7 @@ return [
     'questions' => 'Questions',
     'consultation-questions_details' => 'Consultation Questions Details',
     'The coupon can be used with' => 'The coupon can be used with',
- 
+
     'banner'   => 'Banner',
     'banners'  => 'Banners',
     'manage_banners' => 'Manage Banners',
@@ -759,6 +759,7 @@ return [
     'next_appointment_found' => 'the next appointment has been found',
     "new_general_session_validation" => "You cannot create more than one general session in the same month",
     'error_fetching_appointment' => 'Error Fetching Appointment',
+    'medical-equipments' => 'Medical Equipments',
 
-    
+
 ];
