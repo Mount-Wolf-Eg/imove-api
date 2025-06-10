@@ -150,37 +150,46 @@ class Doctor extends Model
         $now = \Carbon\Carbon::now()->format('H:i'); // Current time
         $today = \Carbon\Carbon::today()->toDateString(); // Current date
 
-        return $query->whereHas('scheduleDays', function ($query) use ($now, $today) {
-            $query->whereHas('shifts', function ($subQuery) use ($now, $today) {
-                $subQuery->where(function ($q) use ($now, $today) {
-                    $q->where('doctor_schedule_days.date', '>', $today)
-                        ->orWhere(function ($q) use ($now, $today) {
-                            $q->where('doctor_schedule_days.date', $today)
-                                ->where('doctor_schedule_day_shifts.from_time', '>=', $now);
-                        });
-                })->whereDoesntHave('consultation')
-                    ->orWhereHas('consultation', function ($q) {
-                        $q->where('is_active', false)
-                            ->where('status', '!=', ConsultationStatusConstants::PATIENT_CANCELLED->value)
-                            ->where('status', '!=', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
+        return $query
+            ->whereHas('scheduleDays', function ($query) use ($now, $today) {
+                $query
+                    ->whereHas('shifts', function ($subQuery) use ($now, $today) {
+                        $subQuery
+                            ->where(function ($q) use ($now, $today) {
+                                $q->where('doctor_schedule_days.date', '>', $today)
+                                    ->orWhere(function ($q) use ($now, $today) {
+                                        $q->where('doctor_schedule_days.date', $today)
+                                            ->where('doctor_schedule_day_shifts.from_time', '>=', $now);
+                                    });
+                            })
+                            ->whereDoesntHave('consultation')
+                            ->orWhereHas('consultation', function ($q) {
+                                $q->where('is_active', false)
+                                    ->where('status', '!=', ConsultationStatusConstants::PATIENT_CANCELLED->value)
+                                    ->where('status', '!=', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
+                            })
+                            ->whereNull('parent_id');
                     });
-            });
-        })
+            })
             ->with(['scheduleDays' => function ($query) use ($now, $today) {
-                $query->whereHas('shifts', function ($q) use ($now, $today) {
-                    $q->where(function ($subQuery) use ($now, $today) {
-                        $subQuery->where('doctor_schedule_days.date', '>', $today)
-                            ->orWhere(function ($subQuery) use ($now, $today) {
-                                $subQuery->where('doctor_schedule_days.date', $today)
-                                    ->where('doctor_schedule_day_shifts.from_time', '>=', $now);
-                            });
-                    })->whereDoesntHave('consultation')
-                        ->orWhereHas('consultation', function ($q) {
-                            $q->where('is_active', false)
-                                ->where('status', '!=', ConsultationStatusConstants::PATIENT_CANCELLED->value)
-                                ->where('status', '!=', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
-                        });
-                })
+                $query
+                    ->whereHas('shifts', function ($q) use ($now, $today) {
+                        $q
+                            ->where(function ($subQuery) use ($now, $today) {
+                                $subQuery->where('doctor_schedule_days.date', '>', $today)
+                                    ->orWhere(function ($subQuery) use ($now, $today) {
+                                        $subQuery->where('doctor_schedule_days.date', $today)
+                                            ->where('doctor_schedule_day_shifts.from_time', '>=', $now);
+                                    });
+                            })
+                            ->whereDoesntHave('consultation')
+                            ->orWhereHas('consultation', function ($q) {
+                                $q->where('is_active', false)
+                                    ->where('status', '!=', ConsultationStatusConstants::PATIENT_CANCELLED->value)
+                                    ->where('status', '!=', ConsultationStatusConstants::DOCTOR_CANCELLED->value);
+                            })
+                            ->whereNull('parent_id');
+                    })
                     ->orderBy('doctor_schedule_days.date')
                     ->with(['shifts' => function ($shiftQuery) {
                         $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time')->limit(1); // Get only the first shift
