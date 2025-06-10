@@ -147,44 +147,14 @@ class Doctor extends Model
     //---------------------Scopes-------------------------------------
     public function scopeOfWithUpcomingShifts($query)
     {
-        $now         = now();
-        $today       = $now->toDateString();
-        $currentTime = $now->toTimeString();
-
         return $query
-            // ->whereHas('scheduleDays', function ($subQuery) use ($currentTime, $today) {
-            //     $subQuery
-            //         ->where(function ($q) use ($currentTime, $today) {
-            //             $q->where('date', '>', $today)
-            //                 ->orWhere(function ($q) use ($currentTime, $today) {
-            //                     $q->where('date', $today)
-            //                         ->whereHas('shifts', function ($subQuery) use ($currentTime) {
-            //                             $subQuery->whereTime('from_time', '>=', $currentTime);
-            //                         });
-            //                 });
-            //         });
-            // })
-            ->whereHas('scheduleDaysShifts', function ($query) use ($currentTime) {
-                $query
-                    // ->whereTime('from_time', '>=', $currentTime)
-                    ->ofAvailableSlots();
+            ->whereHas('scheduleDaysShifts', function ($query) {
+                $query->ofAvailableSlots();
             })
-            ->with(['scheduleDays' => function ($query) use ($currentTime, $today) {
-                $query
-                    // ->where(function ($q) use ($currentTime, $today) {
-                    //     $q->where('date', '>', $today)
-                    //         ->orWhere(function ($q) use ($currentTime, $today) {
-                    //             $q->where('date', $today)
-                    //                 ->whereHas('shifts', function ($subQuery) use ($currentTime) {
-                    //                     $subQuery->whereTime('from_time', '>=', $currentTime);
-                    //                 });
-                    //         });
-                    // })
-                    ->orderBy('date')
-                    ->with(['shifts' => function ($shiftQuery) use ($currentTime) {
-                        $shiftQuery
-                            // ->whereTime('from_time', '>=', $currentTime)
-                            ->ofAvailableSlots()
+            ->with(['scheduleDays' => function ($query) {
+                $query->orderBy('date')
+                    ->with(['shifts' => function ($shiftQuery) {
+                        $shiftQuery->ofAvailableSlots()
                             ->orderBy('from_time')
                             ->limit(1);
                     }])
