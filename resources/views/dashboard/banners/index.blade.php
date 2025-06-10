@@ -27,8 +27,10 @@
                         <th scope="row">
                             <a href="#" class="fw-semibold">#{{$loop->iteration}}</a>
                         </th>
-                        <td><img src="{{ $banner->mainImage->asset_url ?? asset('assets/images/logo-sm.png') }}" alt="" class="rounded avatar-md"></td>
-                        
+                        <td>
+                            <img src="{{ $resource->mainImage->asset_url ?? asset('assets/images/logo-sm.png') }}" alt="" class="rounded avatar-md">
+                        </td>
+
                         @include('dashboard.partials.__table-actions', ['resource' => $resource, 'route' => 'banners', 'hideActive' => true, 'showModel' => false])
                     </tr>
                 @endforeach
@@ -38,5 +40,5 @@
         </div>
     </div>
 
-  
+
 @endsection
