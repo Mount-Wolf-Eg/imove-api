@@ -167,7 +167,7 @@ class Doctor extends Model
             ->whereHas('scheduleDaysShifts', function ($query) use ($currentTime) {
                 $query
                     // ->whereTime('from_time', '>=', $currentTime)
-                    ->availableSlots();
+                    ->ofAvailableSlots();
             })
             ->with(['scheduleDays' => function ($query) use ($currentTime, $today) {
                 $query
@@ -184,7 +184,7 @@ class Doctor extends Model
                     ->with(['shifts' => function ($shiftQuery) use ($currentTime) {
                         $shiftQuery
                             // ->whereTime('from_time', '>=', $currentTime)
-                            ->availableSlots()
+                            ->ofAvailableSlots()
                             ->orderBy('from_time')
                             ->limit(1);
                     }])
