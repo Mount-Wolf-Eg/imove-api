@@ -165,7 +165,9 @@ class Doctor extends Model
                     });
             })
             ->whereHas('scheduleDaysShifts', function ($query) use ($currentTime) {
-                $query->whereTime('from_time', '>=', $currentTime)->available();
+                $query
+                    // ->whereTime('from_time', '>=', $currentTime)
+                    ->availableSlots();
             })
             ->with(['scheduleDays' => function ($query) use ($currentTime, $today) {
                 $query
@@ -181,8 +183,8 @@ class Doctor extends Model
                     ->orderBy('date')
                     ->with(['shifts' => function ($shiftQuery) use ($currentTime) {
                         $shiftQuery
-                            ->whereTime('from_time', '>=', $currentTime)
-                            ->available()
+                            // ->whereTime('from_time', '>=', $currentTime)
+                            ->availableSlots()
                             ->orderBy('from_time')
                             ->limit(1);
                     }])
