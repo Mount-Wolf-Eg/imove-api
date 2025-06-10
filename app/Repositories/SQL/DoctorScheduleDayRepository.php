@@ -20,9 +20,11 @@ class DoctorScheduleDayRepository extends BaseRepository implements DoctorSchedu
 
     public function syncRelations($model, $attributes)
     {
-        // if (isset($attributes['schedule_days'])) {
-        //     resolve(DoctorContract::class)::syncScheduleDays($model->doctor, $attributes['schedule_days']);
-        // }
+        if (isset($attributes['schedule_days'])) {
+            foreach ($attributes['schedule_days'] as $day) {
+                $this->create($day);
+            }
+        }
 
         if (isset($attributes['shifts'])) {
             $model->scheduleDayShifts()->delete();
@@ -31,6 +33,7 @@ class DoctorScheduleDayRepository extends BaseRepository implements DoctorSchedu
                 resolve(DoctorScheduleDayShiftContract::class)->create($shift);
             }
         }
+
         return $model;
     }
 }

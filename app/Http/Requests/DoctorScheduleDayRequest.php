@@ -24,15 +24,16 @@ class DoctorScheduleDayRequest extends FormRequest
 
     public function validated($key = null, $default = null)
     {
-        $validated = parent::validated($key, $default);
+        $validated              = parent::validated($key, $default);
         $validated['doctor_id'] = auth()->user()->doctor->id;
 
         if (isset($validated['schedule_repeat_from']) && isset($validated['schedule_repeat_to'])) {
-            $validated['schedule_days'] = collect(CarbonPeriod::between(request('schedule_repeat_from'), request('schedule_repeat_to')))->map(function ($date) {
-                $dayName = strtolower($date->format('l'));
+            $validated['schedule_days'] = collect(CarbonPeriod::between(request('schedule_repeat_from'), request('schedule_repeat_to')))->map(function ($date) use ($validated) {
+                $originalShifts = $validated['shifts'];
                 return [
-                    'date'   => $date->format('Y-m-d'),
-                    'shifts' => collect(request('schedule_days'))->firstWhere('day', $dayName)['shifts'],
+                    'date'      => $date->format('Y-m-d'),
+                    'doctor_id' => $validated['doctor_id'],
+                    'shifts'    => $originalShifts,
                 ];
             })->whereNotNull()->values()->toArray();
         }
