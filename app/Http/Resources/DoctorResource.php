@@ -52,7 +52,7 @@ class DoctorResource extends BaseResource
             'rates_count' => $this->relationLoaded('rates') ? $this->rates->count() : 0,
             'rates_avg' => $this->relationLoaded('rates') ? $this->rates->avg('value') : 0,
             'universities' => $this->relationLoaded('universities') ? DoctorUniversityResource::collection($this->universities) : [],
-            
+
             'schedule_days' => $this->relationLoaded('scheduleDays') ? DoctorScheduleDayResource::collection($this->scheduleDays) : [],
 
             'first_schedule_day' => $this->relationLoaded('scheduleDays') ? new DoctorScheduleDayResource($this->scheduleDays->first()) : null,

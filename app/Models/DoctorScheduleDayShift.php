@@ -50,6 +50,11 @@ class DoctorScheduleDayShift extends Model
     {
         return $this->slots()->whereDoesntHave('consultation');
     }
+
+    public function firstAvailableSlot(): HasOne
+    {
+        return $this->availableSlots()->oldest();
+    }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------

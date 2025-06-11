@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
@@ -149,22 +150,20 @@ class Doctor extends Model
     {
         return $query
             ->where(function ($query) {
-                $query->whereHas('scheduleDays.availableSlots');
+                $query->whereHas('scheduleDays.nearestAvailableSlot');
             })
             ->with([
                 'scheduleDays' => function ($query) {
                     $query
                         ->where(function ($query) {
                             $query
-                                ->whereHas('availableSlots')
+                                ->whereHas('nearestAvailableSlot')
                                 ->orderBy('doctor_schedule_days.date');
-                                // ->limit(1);
                         });
                 },
-                'scheduleDays.availableSlots' => function ($shiftQuery) {
+                'scheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
                     $shiftQuery
                         ->orderBy('doctor_schedule_day_shifts.from_time');
-                        // ->limit(1);
                 }
             ]);
     }
