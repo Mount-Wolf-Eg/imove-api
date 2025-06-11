@@ -167,8 +167,8 @@ class Doctor extends Model
                     // ->limit(1)
                     ->with(['availableSlots' => function ($shiftQuery) {
                         $shiftQuery
-                            ->orderBy('doctor_schedule_day_shifts.from_time')
-                            ->limit(1);
+                            ->orderBy('doctor_schedule_day_shifts.from_time');
+                            // ->limit(1);
                     }]);
                     // });
             }]);
