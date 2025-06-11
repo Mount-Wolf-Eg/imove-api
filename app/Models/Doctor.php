@@ -128,11 +128,11 @@ class Doctor extends Model
 
     public function getHasUpcomingShiftsAttribute()
     {
-        $now = \Carbon\Carbon::now()->format('H:i'); // Current time
+        $now   = \Carbon\Carbon::now()->format('H:i'); // Current time
         $today = \Carbon\Carbon::today()->toDateString(); // Current date
 
         return $this->scheduleDays()
-            ->whereHas('shifts', function ($query) use ($now, $today) {
+            ->whereHas('slots', function ($query) use ($now, $today) {
                 $query->where(function ($q) use ($now, $today) {
                     $q->where('doctor_schedule_days.date', '>', $today)
                         ->orWhere(function ($q) use ($now, $today) {
@@ -147,21 +147,18 @@ class Doctor extends Model
     //---------------------Scopes-------------------------------------
     public function scopeOfWithUpcomingShifts($query)
     {
-        $now   = \Carbon\Carbon::now()->format('H:i'); // Current time
-        $today = \Carbon\Carbon::today()->toDateString(); // Current date
-
         return $query
-            ->where(function ($query) use ($now, $today) {
+            ->where(function ($query) {
                 $query
-                    ->whereHas('scheduleDays', function ($query) use ($now, $today) {
+                    ->whereHas('scheduleDays', function ($query) {
                         $query
                             ->whereHas('availableSlots');
                     });
             })
-            ->with(['scheduleDays' => function ($query) use ($now, $today) {
+            ->with(['scheduleDays' => function ($query) {
                 $query
-                    // ->where(function ($query) use ($now, $today) {
-                    //     $query
+                    ->where(function ($query) {
+                        $query
                             ->whereHas('availableSlots')
                             ->orderBy('doctor_schedule_days.date')
                             ->first()
@@ -170,7 +167,7 @@ class Doctor extends Model
                                     ->orderBy('doctor_schedule_day_shifts.from_time')
                                     ->first();
                             }]);
-                    // });
+                    });
             }]);
     }
 
