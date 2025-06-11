@@ -103,5 +103,4 @@ class DoctorScheduleDay extends Model
             return $this->date->translatedFormat('l');
         });
     }
-
 }
