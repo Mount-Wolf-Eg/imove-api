@@ -165,11 +165,11 @@ class Doctor extends Model
             ->with([
                 'firstScheduleDays' => function ($query) {
                     $query
-                        // ->where(function ($query) {
-                            // $query
+                        ->where(function ($query) {
+                            $query
                                 ->whereHas('nearestAvailableSlot')
                                 ->orderBy('doctor_schedule_days.date');
-                        // });
+                        });
                 },
                 'firstScheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
                     $shiftQuery
