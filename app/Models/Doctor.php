@@ -164,7 +164,7 @@ class Doctor extends Model
                     //     $query
                     ->whereHas('availableSlots')
                     ->orderBy('doctor_schedule_days.date')
-                    ->limit(1)
+                    // ->limit(1)
                     ->with(['availableSlots' => function ($shiftQuery) {
                         $shiftQuery
                             ->orderBy('doctor_schedule_day_shifts.from_time')
