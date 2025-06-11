@@ -111,6 +111,11 @@ class Doctor extends Model
         return $this->hasOne(DoctorScheduleDay::class);
     }
 
+    public function firstScheduleDays(): HasMany
+    {
+        return $this->hasMany(DoctorScheduleDay::class);
+    }
+
     public function scheduleDaysShifts(): HasManyThrough
     {
         return $this->hasManyThrough(DoctorScheduleDayShift::class, DoctorScheduleDay::class);
@@ -155,10 +160,10 @@ class Doctor extends Model
     {
         return $query
             ->where(function ($query) {
-                $query->whereHas('firstScheduleDay.nearestAvailableSlot');
+                $query->whereHas('firstScheduleDays.nearestAvailableSlot');
             })
             ->with([
-                'firstScheduleDay' => function ($query) {
+                'firstScheduleDays' => function ($query) {
                     $query
                         ->where(function ($query) {
                             $query
@@ -166,7 +171,7 @@ class Doctor extends Model
                                 ->orderBy('doctor_schedule_days.date');
                         });
                 },
-                'firstScheduleDay.nearestAvailableSlot' => function ($shiftQuery) {
+                'firstScheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
                     $shiftQuery
                         ->orderBy('doctor_schedule_day_shifts.from_time');
                 }
