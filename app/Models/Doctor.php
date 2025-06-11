@@ -159,7 +159,7 @@ class Doctor extends Model
                             $query
                                 ->whereHas('nearestAvailableSlot')
                                 ->orderBy('doctor_schedule_days.date');
-                        });
+                        })->limit(1);
                 },
                 'scheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
                     $shiftQuery
