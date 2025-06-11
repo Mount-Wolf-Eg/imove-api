@@ -160,8 +160,8 @@ class Doctor extends Model
             })
             ->with(['scheduleDays' => function ($query) use ($now, $today) {
                 $query
-                    ->where(function ($query) use ($now, $today) {
-                        $query
+                    // ->where(function ($query) use ($now, $today) {
+                    //     $query
                             ->whereHas('availableSlots')
                             ->orderBy('doctor_schedule_days.date')
                             ->first()
@@ -170,7 +170,7 @@ class Doctor extends Model
                                     ->orderBy('doctor_schedule_day_shifts.from_time')
                                     ->first();
                             }]);
-                    });
+                    // });
             }]);
     }
 
