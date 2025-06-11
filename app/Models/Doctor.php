@@ -145,30 +145,47 @@ class Doctor extends Model
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
+    // public function scopeOfWithUpcomingShifts($query)
+    // {
+    //     return $query
+    //         ->where(function ($query) {
+    //             $query
+    //                 ->whereHas('scheduleDays', function ($query) {
+    //                     $query
+    //                         ->whereHas('availableSlots');
+    //                 });
+    //         })
+    //         ->with(['scheduleDays' => function ($query) {
+    //             $query
+    //                 ->where(function ($query) {
+    //                     $query
+    //                         ->whereHas('availableSlots')
+    //                         ->orderBy('doctor_schedule_days.date')
+    //                         ->first()
+    //                         ->with(['availableSlots' => function ($shiftQuery) {
+    //                             $shiftQuery
+    //                                 ->orderBy('doctor_schedule_day_shifts.from_time')
+    //                                 ->first();
+    //                         }]);
+    //                 });
+    //         }]);
+    // }
+
     public function scopeOfWithUpcomingShifts($query)
     {
         return $query
-            ->where(function ($query) {
-                $query
-                    ->whereHas('scheduleDays', function ($query) {
-                        $query
-                            ->whereHas('availableSlots');
-                    });
-            })
-            ->with(['scheduleDays' => function ($query) {
-                $query
-                    ->where(function ($query) {
-                        $query
-                            ->whereHas('availableSlots')
-                            ->orderBy('doctor_schedule_days.date')
-                            ->first()
-                            ->with(['availableSlots' => function ($shiftQuery) {
-                                $shiftQuery
-                                    ->orderBy('doctor_schedule_day_shifts.from_time')
-                                    ->first();
-                            }]);
-                    });
-            }]);
+            ->whereHas('scheduleDays.availableSlots')
+            ->with([
+                'scheduleDays' => function ($query) {
+                    $query
+                        ->whereHas('availableSlots')
+                        ->orderBy('date')
+                        ->limit(1);  // Get only the earliest date
+                },
+                'scheduleDays.availableSlots' => function ($query) {
+                    $query->orderBy('from_time')->limit(1);  // Get only the earliest time
+                }
+            ]);
     }
 
     public function scopeOfRequestStatus($query, $value)
