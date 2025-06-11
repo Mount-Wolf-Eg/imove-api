@@ -53,6 +53,9 @@ class DoctorResource extends BaseResource
             'rates_avg' => $this->relationLoaded('rates') ? $this->rates->avg('value') : 0,
             'universities' => $this->relationLoaded('universities') ? DoctorUniversityResource::collection($this->universities) : [],
             'schedule_days' => $this->relationLoaded('scheduleDays') ? DoctorScheduleDayResource::collection($this->scheduleDays) : [],
+
+            'nearest_available_slot' => new DoctorScheduleDayShiftResource($this->scheduleDays?->flatMap->availableSlots->sortBy('from_time')->first()),
+
             'first_schedule_day' => $this->relationLoaded('scheduleDays') ? new DoctorScheduleDayResource($this->scheduleDays->first()) : null,
             'last_schedule_day' => $this->relationLoaded('scheduleDays') ? new DoctorScheduleDayResource($this->scheduleDays->sortByDesc('date')->first()) : null,
             'hospitals' => $this->relationLoaded('hospitals') ? HospitalResource::collection($this->hospitals) : [],
