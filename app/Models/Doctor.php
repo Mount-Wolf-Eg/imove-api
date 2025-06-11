@@ -145,45 +145,26 @@ class Doctor extends Model
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
-    // public function scopeOfWithUpcomingShifts($query)
-    // {
-    //     return $query
-    //         ->where(function ($query) {
-    //             $query
-    //                 ->whereHas('scheduleDays', function ($query) {
-    //                     $query
-    //                         ->whereHas('availableSlots');
-    //                 });
-    //         })
-    //         ->with(['scheduleDays' => function ($query) {
-    //             $query
-    //                 ->where(function ($query) {
-    //                     $query
-    //                         ->whereHas('availableSlots')
-    //                         ->orderBy('doctor_schedule_days.date')
-    //                         ->first()
-    //                         ->with(['availableSlots' => function ($shiftQuery) {
-    //                             $shiftQuery
-    //                                 ->orderBy('doctor_schedule_day_shifts.from_time')
-    //                                 ->first();
-    //                         }]);
-    //                 });
-    //         }]);
-    // }
-
     public function scopeOfWithUpcomingShifts($query)
     {
         return $query
-            ->whereHas('scheduleDays.availableSlots')
+            ->where(function ($query) {
+                $query->whereHas('scheduleDays.availableSlots');
+            })
             ->with([
                 'scheduleDays' => function ($query) {
                     $query
-                        ->whereHas('availableSlots')
-                        ->orderBy('date')
-                        ->limit(1);  // Get only the earliest date
+                        ->where(function ($query) {
+                            $query
+                                ->whereHas('availableSlots')
+                                ->orderBy('doctor_schedule_days.date')
+                                ->limit(1);
+                        });
                 },
-                'scheduleDays.availableSlots' => function ($query) {
-                    $query->orderBy('from_time')->limit(1);  // Get only the earliest time
+                'scheduleDays.availableSlots' => function ($shiftQuery) {
+                    $shiftQuery
+                        ->orderBy('doctor_schedule_day_shifts.from_time')
+                        ->limit(1);
                 }
             ]);
     }
