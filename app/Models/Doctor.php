@@ -158,8 +158,22 @@ class Doctor extends Model
                     $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time');
                 }
             ])
-            ->orderBy('scheduleDays.date', 'asc')
-            ->orderBy('scheduleDays.nearestAvailableSlot.from_time', 'asc');
+            ->join('doctor_schedule_days', 'doctors.id', '=', 'doctor_schedule_days.doctor_id')
+            ->join('doctor_schedule_day_shifts', 'doctor_schedule_days.id', '=', 'doctor_schedule_day_shifts.parent_id')
+            ->where('doctor_schedule_day_shifts.id', function ($subQuery) {
+                $subQuery->select('dss.id')
+                    ->from('doctor_schedule_day_shifts as dss')
+                    ->join('doctor_schedule_days as dsd', 'dss.parent_id', '=', 'dsd.id')
+                    ->whereColumn('dsd.doctor_id', 'doctors.id')
+                    ->whereRaw('dss.id IN (SELECT id FROM doctor_schedule_day_shifts WHERE parent_id = dsd.id)')
+                    ->orderBy('dsd.date')
+                    ->orderBy('dss.from_time')
+                    ->limit(1);
+            })
+            ->orderBy('doctor_schedule_days.date')
+            ->orderBy('doctor_schedule_day_shifts.from_time')
+            ->select('doctors.*')
+            ->distinct();
     }
 
     public function scopeOfRequestStatus($query, $value)
