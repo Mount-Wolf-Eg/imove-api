@@ -74,30 +74,6 @@ class DoctorScheduleDayShift extends Model
                     });
             });
     }
-
-    public function scopeOfFirstAvailableSlots(Builder $query): Builder
-    {
-        return $query
-            ->where(function ($query) {
-                $query->whereDoesntHave('consultation')
-                    ->orWhereHas('consultation', function ($q) {
-                        $q->where('is_active', false)
-                            ->whereNotIn('status', [
-                                ConsultationStatusConstants::PATIENT_CANCELLED->value,
-                                ConsultationStatusConstants::DOCTOR_CANCELLED->value
-                            ]);
-                    });
-            })
-            ->whereNotNull('parent_id')
-            ->whereHas('day', function (Builder $query) {
-                $query->whereDate('date', '>', now()->toDateString())
-                    ->orWhere(function ($q) {
-                        $q->whereDate('date', now()->toDateString())
-                            ->whereTime('from_time', '>=', now()->format('H:i:s'));
-                    });
-            })
-            ->limit(1);
-    }
     //---------------------Scopes-------------------------------------
 
 }
