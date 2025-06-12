@@ -70,6 +70,7 @@ Route::group([
     Route::get('contact-us', [ContactUsController::class, 'index'])->name('front.contact');
     Route::middleware(['guest'])->group(function () {
         // Login
+        Route::get('/', [AuthController::class, 'login'])->name('front.home');
         Route::get('login', [AuthController::class, 'login'])->name('login');
         Route::post('check-credentials', [AuthController::class, 'checkCredentials'])->name('checkCredentials');
         // Reset Password
@@ -82,7 +83,7 @@ Route::group([
         });
     });
 
-    Route::get('/', OverviewController::class)->name('front.home');
+    // Route::get('/', OverviewController::class)->name('front.home');
 
     Route::middleware(['auth'])->prefix('dashboard')->group(function () {
         Route::resource('files', FileController::class)->only(['store', 'destroy']);
