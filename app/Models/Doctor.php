@@ -157,6 +157,9 @@ class Doctor extends Model
                 'scheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
                     $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time');
                 }
+            ])->orderBy([
+                'schedule_days.date' => 'asc',
+                'schedule_days.nearest_available_slot.from_time' => 'asc'
             ]);
     }
 
