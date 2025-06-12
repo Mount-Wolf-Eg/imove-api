@@ -53,7 +53,7 @@ class DoctorScheduleDay extends Model
 
     public function nearestAvailableSlot(): HasOne
     {
-        return $this->hasOne(DoctorScheduleDayShift::class)->ofAvailableSlots();
+        return $this->hasMany(DoctorScheduleDayShift::class)->ofFirstAvailableSlots();
     }
     //---------------------relations-------------------------------------
 
