@@ -6,12 +6,12 @@
     <x-breadcrumb title="{{__('messages.manage_cities')}}"
                   pagetitle="{{__('messages.cities')}}"
                   route="{{route('cities.index')}}"/>
-    <div class="d-flex justify-content-sm-end">
+    <!-- <div class="d-flex justify-content-sm-end">
         <a href="{{route('cities.create')}}">
             <i class="bi bi-plus-circle"></i>
             {{__('messages.add_new')}}
         </a>
-    </div>
+    </div> -->
     <x-filter>
         
     </x-filter>
@@ -35,7 +35,7 @@
                         </th>
                         <td>{{$resource->name}}</td>
                         <td>{{$resource->region?->name}}</td>
-                        @include('dashboard.partials.__table-actions', ['resource' => $resource, 'route' => 'cities', 'showModel' => false])
+                        @include('dashboard.partials.__table-actions', ['resource' => $resource, 'route' => 'cities', 'showModel' => false, 'disableDelete' => true])
                     </tr>
                 @endforeach
                 </tbody>

@@ -26,15 +26,6 @@
             {{__('messages.edit')}} <i class="bi bi-pencil-fill"></i>
         </a>
     @endif
-    @if(!isset($disableDelete) || !$disableDelete)
-        <a class="link-danger delete-resource cursor-pointer px-2" data-id="{{$resource->id}}">
-            {{__('messages.delete')}} <i class="bi bi-trash-fill"></i>
-        </a>
-        <form action="{{route("$route.destroy", $resource->id)}}" class="d-inline" method="POST" id="deleteResourceForm-{{$resource->id}}">
-            @csrf
-            @method('DELETE')
-        </form>
-    @endif
 </td>
 
 @push('scripts')
