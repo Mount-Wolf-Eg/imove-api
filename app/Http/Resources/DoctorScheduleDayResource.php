@@ -13,7 +13,7 @@ class DoctorScheduleDayResource extends BaseResource
      * @param Request $request
      * @return array
      */
-    public function toArray(Request $request) : array
+    public function toArray(Request $request): array
     {
         $this->micro = [
             'id' => $this->id,
@@ -25,8 +25,7 @@ class DoctorScheduleDayResource extends BaseResource
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),
         ];
-        $this->full = [
-        ];
+        $this->full = [];
         $this->relations = [
             'shifts' => $this->relationLoaded('shifts') ? DoctorScheduleDayShiftResource::collection($this->shifts) : null,
             'available_slots' => $this->relationLoaded('availableSlots') ? DoctorScheduleDayShiftResource::collection($this->availableSlots) : null,
