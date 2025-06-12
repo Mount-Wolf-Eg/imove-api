@@ -149,12 +149,12 @@ class Doctor extends Model
     public function scopeOfWithUpcomingShifts($query)
     {
         return $query
-            ->whereHas('scheduleDays.availableSlots') // Use availableSlots instead
+            ->whereHas('scheduleDays.nearestAvailableSlot') // Use nearestAvailableSlot instead
             ->with([
                 'scheduleDays' => function ($query) {
-                    $query->whereHas('availableSlots')->orderBy('doctor_schedule_days.date');
+                    $query->whereHas('nearestAvailableSlot')->orderBy('doctor_schedule_days.date');
                 },
-                'scheduleDays.availableSlots' => function ($shiftQuery) {
+                'scheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
                     $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time');
                 }
             ]);
