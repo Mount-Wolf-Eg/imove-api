@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Imove Dashboard'),
+    'name' => env('APP_NAME', 'Virtual-Touch'),
 
     /*
     |--------------------------------------------------------------------------
