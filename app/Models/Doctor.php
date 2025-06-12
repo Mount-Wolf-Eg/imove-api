@@ -143,35 +143,20 @@ class Doctor extends Model
                 });
             })->exists();
     }
-
-    public function nearestScheduleDay(): HasOne
-    {
-        return $this->hasOne(DoctorScheduleDay::class)
-            ->whereHas('availableSlots')
-            ->orderBy('date');
-    }
-
-    public function nearestAvailableSlot(): HasOne
-    {
-        return $this->hasOne(DoctorScheduleDayShift::class)
-            ->ofAvailableSlots()
-            ->join('doctor_schedule_days', 'doctor_schedule_day_shifts.parent_id', '=', 'doctor_schedule_days.id')
-            ->orderBy('doctor_schedule_days.date')
-            ->orderBy('doctor_schedule_day_shifts.from_time');
-    }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
     public function scopeOfWithUpcomingShifts($query)
     {
         return $query
-            ->whereHas('scheduleDays.availableSlots')
+            ->whereHas('scheduleDays.availableSlots') // Use availableSlots instead
             ->with([
-                'nearestScheduleDay' => function ($query) {
-                    $query->whereHas('availableSlots')
-                        ->orderBy('doctor_schedule_days.date');
+                'scheduleDays' => function ($query) {
+                    $query->whereHas('availableSlots')->orderBy('doctor_schedule_days.date');
                 },
-                'nearestScheduleDay.nearestAvailableSlot'
+                'scheduleDays.availableSlots' => function ($shiftQuery) {
+                    $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time');
+                }
             ]);
     }
 
