@@ -64,25 +64,25 @@ Route::group([
     'middleware' => ['localeSessionRedirect', 'localizationRedirect', 'localeViewPath']
 ], function () {
     // Route::get('/', [HomeController::class, 'index'])->name('front.home');
-    // Route::get('about-us', [AboutController::class, 'index'])->name('front.about');
-    // Route::get('doctors', [DoctorsController::class, 'index'])->name('front.doctors');
-    // Route::get('doctor-details', [DoctorsController::class, 'view'])->name('front.doctorDetails');
-    // Route::get('contact-us', [ContactUsController::class, 'index'])->name('front.contact');
-    // Route::middleware(['guest'])->group(function () {
-    //     // Login
-    //     Route::get('login', [AuthController::class, 'login'])->name('login');
-    //     Route::post('check-credentials', [AuthController::class, 'checkCredentials'])->name('checkCredentials');
-    //     // Reset Password
-    //     Route::prefix('password')->group(function () {
-    //         Route::get('request', [ForgetPasswordController::class, 'requestPassword'])->name('password.request');
-    //         Route::post('email', [ForgetPasswordController::class, 'sendEmailPassword'])->name('password.email');
-    //         Route::get('reset-sent-successfully', [ForgetPasswordController::class, 'emailSentSuccessfully'])->name('resetEmailSentSuccessfully');
-    //         Route::get('reset', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
-    //         Route::post('update', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
-    //     });
-    // });
+    Route::get('about-us', [AboutController::class, 'index'])->name('front.about');
+    Route::get('doctors', [DoctorsController::class, 'index'])->name('front.doctors');
+    Route::get('doctor-details', [DoctorsController::class, 'view'])->name('front.doctorDetails');
+    Route::get('contact-us', [ContactUsController::class, 'index'])->name('front.contact');
+    Route::middleware(['guest'])->group(function () {
+        // Login
+        Route::get('login', [AuthController::class, 'login'])->name('login');
+        Route::post('check-credentials', [AuthController::class, 'checkCredentials'])->name('checkCredentials');
+        // Reset Password
+        Route::prefix('password')->group(function () {
+            Route::get('request', [ForgetPasswordController::class, 'requestPassword'])->name('password.request');
+            Route::post('email', [ForgetPasswordController::class, 'sendEmailPassword'])->name('password.email');
+            Route::get('reset-sent-successfully', [ForgetPasswordController::class, 'emailSentSuccessfully'])->name('resetEmailSentSuccessfully');
+            Route::get('reset', [ResetPasswordController::class, 'resetPassword'])->name('password.reset');
+            Route::post('update', [ResetPasswordController::class, 'updatePassword'])->name('password.update');
+        });
+    });
 
-    Route::get('/', OverviewController::class);
+    Route::get('/', OverviewController::class)->name('front.home');
 
     Route::middleware(['auth'])->prefix('dashboard')->group(function () {
         Route::resource('files', FileController::class)->only(['store', 'destroy']);
