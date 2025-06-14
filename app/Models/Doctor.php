@@ -152,7 +152,7 @@ class Doctor extends Model
             ->whereHas('scheduleDays.nearestAvailableSlot') // Use nearestAvailableSlot instead
             ->with([
                 'scheduleDays' => function ($query) {
-                    $query->whereHas('nearestAvailableSlot')->orderBy('doctor_schedule_days.date')->limit(1);
+                    $query->whereHas('nearestAvailableSlot')->orderBy('doctor_schedule_days.date');
                 },
                 'scheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
                     $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time');
