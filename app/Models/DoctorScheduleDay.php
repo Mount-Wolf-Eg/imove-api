@@ -55,6 +55,13 @@ class DoctorScheduleDay extends Model
     {
         return $this->hasMany(DoctorScheduleDayShift::class)->ofAvailableSlots();
     }
+
+    public function firstAvailableSlot(): HasOne
+    {
+        return $this->hasOne(DoctorScheduleDayShift::class)
+            ->ofAvailableSlots()
+            ->orderBy('from_time');
+    }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------

@@ -143,30 +143,39 @@ class Doctor extends Model
                 });
             })->exists();
     }
+
+    public function firstAvailableScheduleDay(): HasOne
+    {
+        return $this->hasOne(DoctorScheduleDay::class)
+            ->whereHas('nearestAvailableSlot')
+            ->orderBy('date');
+    }
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
-    public function scopeOfWithUpcomingShifts($query)
+    public function scopeOfWithUpcomingShiftsSimple($query)
     {
         return $query
             ->whereHas('scheduleDays.nearestAvailableSlot')
             ->with([
-                'scheduleDays' => function ($query) {
-                    $query->whereHas('nearestAvailableSlot')->orderBy('doctor_schedule_days.date');
+                'firstAvailableScheduleDay' => function ($query) {
+                    $query->whereHas('nearestAvailableSlot')
+                        ->orderBy('date');
                 },
-                'scheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
-                    $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time');
+                'firstAvailableScheduleDay.firstAvailableSlot' => function ($shiftQuery) {
+                    $shiftQuery->orderBy('from_time');
                 }
             ])
-            ->orderByRaw('(
-            SELECT MIN(doctor_schedule_days.date) 
-            FROM doctor_schedule_days 
-            WHERE doctor_schedule_days.doctor_id = doctors.id 
-            AND EXISTS (
-                SELECT 1 FROM doctor_schedule_day_shifts 
-                WHERE doctor_schedule_day_shifts.doctor_schedule_day_id = doctor_schedule_days.id
-            )
-        )');
+            ->get()
+            ->sortBy(function ($doctor) {
+                $firstDay = $doctor->firstAvailableScheduleDay;
+                if (!$firstDay) return null;
+
+                $firstSlot = $firstDay->firstAvailableSlot;
+                if (!$firstSlot) return null;
+
+                return $firstDay->date . ' ' . $firstSlot->from_time;
+            });
     }
 
     public function scopeOfRequestStatus($query, $value)
