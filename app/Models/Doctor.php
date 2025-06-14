@@ -158,24 +158,82 @@ class Doctor extends Model
         return $query
             ->whereHas('scheduleDays.nearestAvailableSlot')
             ->with([
-                'firstAvailableScheduleDay' => function ($query) {
+                'scheduleDays' => function ($query) {
                     $query->whereHas('nearestAvailableSlot')
-                        ->orderBy('date');
+                        ->orderBy('doctor_schedule_days.date')
+                        ->limit(1);
                 },
-                'firstAvailableScheduleDay.firstAvailableSlot' => function ($shiftQuery) {
-                    $shiftQuery->orderBy('from_time');
+                'scheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
+                    $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time')
+                        ->limit(1);
                 }
             ])
-            ->get()
-            ->sortBy(function ($doctor) {
-                $firstDay = $doctor->firstAvailableScheduleDay;
-                if (!$firstDay) return null;
-
-                $firstSlot = $firstDay->firstAvailableSlot;
-                if (!$firstSlot) return null;
-
-                return $firstDay->date . ' ' . $firstSlot->from_time;
-            });
+            ->orderByRaw('(
+            SELECT CONCAT(
+                MIN(doctor_schedule_days.date), 
+                " ", 
+                (SELECT MIN(doctor_schedule_day_shifts.from_time) 
+                 FROM doctor_schedule_day_shifts 
+                 WHERE doctor_schedule_day_shifts.doctor_schedule_day_id = (
+                     SELECT id FROM doctor_schedule_days d2 
+                     WHERE d2.doctor_id = doctors.id 
+                     AND EXISTS (
+                         SELECT 1 FROM doctor_schedule_day_shifts ds 
+                         WHERE ds.doctor_schedule_day_id = d2.id 
+                         AND ds.parent_id IS NOT NULL
+                         AND (
+                             NOT EXISTS (
+                                 SELECT 1 FROM consultations c 
+                                 WHERE c.doctor_schedule_day_shift_id = ds.id 
+                                 AND c.deleted_at IS NULL 
+                                 AND c.is_active = 1
+                             )
+                             OR EXISTS (
+                                 SELECT 1 FROM consultations c 
+                                 WHERE c.doctor_schedule_day_shift_id = ds.id 
+                                 AND c.is_active = 0 
+                                 AND c.status NOT IN (6, 7) 
+                                 AND c.deleted_at IS NULL
+                             )
+                         )
+                         AND (
+                             (DATE(d2.date) > CURDATE()) 
+                             OR (DATE(d2.date) = CURDATE() AND TIME(ds.from_time) >= CURTIME())
+                         )
+                     ) 
+                     ORDER BY d2.date LIMIT 1
+                 )
+                 AND doctor_schedule_day_shifts.parent_id IS NOT NULL
+                 ORDER BY doctor_schedule_day_shifts.from_time LIMIT 1
+                )
+            ) 
+            FROM doctor_schedule_days 
+            WHERE doctor_schedule_days.doctor_id = doctors.id 
+            AND EXISTS (
+                SELECT 1 FROM doctor_schedule_day_shifts 
+                WHERE doctor_schedule_day_shifts.doctor_schedule_day_id = doctor_schedule_days.id
+                AND doctor_schedule_day_shifts.parent_id IS NOT NULL
+                AND (
+                    NOT EXISTS (
+                        SELECT 1 FROM consultations c 
+                        WHERE c.doctor_schedule_day_shift_id = doctor_schedule_day_shifts.id 
+                        AND c.deleted_at IS NULL 
+                        AND c.is_active = 1
+                    )
+                    OR EXISTS (
+                        SELECT 1 FROM consultations c 
+                        WHERE c.doctor_schedule_day_shift_id = doctor_schedule_day_shifts.id 
+                        AND c.is_active = 0 
+                        AND c.status NOT IN (6, 7) 
+                        AND c.deleted_at IS NULL
+                    )
+                )
+                AND (
+                    (DATE(doctor_schedule_days.date) > CURDATE()) 
+                    OR (DATE(doctor_schedule_days.date) = CURDATE() AND TIME(doctor_schedule_day_shifts.from_time) >= CURTIME())
+                )
+            )
+        )');
     }
 
     public function scopeOfRequestStatus($query, $value)
