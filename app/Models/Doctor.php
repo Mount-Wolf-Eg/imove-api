@@ -153,7 +153,7 @@ class Doctor extends Model
     //---------------------relations-------------------------------------
 
     //---------------------Scopes-------------------------------------
-    public function scopeOfWithUpcomingShiftsSimple($query)
+    public function scopeOfWithUpcomingShifts($query)
     {
         return $query
             ->whereHas('scheduleDays.nearestAvailableSlot')
