@@ -154,29 +154,29 @@ class Doctor extends Model
         ];
 
         return $query
-            ->whereHas('scheduleDays.nearestAvailableSlot', function ($q) {
-                $q->whereTime('from_time', '>=', now()->format('H:i:s'))
-                    ->whereHas('day', function ($q2) {
-                        $q2->whereDate('date', '>=', now()->toDateString());
-                    });
-            })
-            ->with([
-                'scheduleDays' => function ($query) {
-                    $query->whereHas('nearestAvailableSlot', function ($q) {
-                        $q->whereTime('from_time', '>=', now()->format('H:i:s'))
-                            ->whereHas('day', function ($q2) {
-                                $q2->whereDate('date', '>=', now()->toDateString());
-                            });
-                    })
-                        ->orderBy('date')
-                        ->limit(1);
-                },
-                'scheduleDays.nearestAvailableSlot' => function ($query) {
-                    $query->whereTime('from_time', '>=', now()->format('H:i:s'))
-                        ->orderBy('from_time')
-                        ->limit(1);
-                },
-            ])
+            // ->whereHas('scheduleDays.nearestAvailableSlot', function ($q) {
+            //     $q->whereTime('from_time', '>=', now()->format('H:i:s'))
+            //         ->whereHas('day', function ($q2) {
+            //             $q2->whereDate('date', '>=', now()->toDateString());
+            //         });
+            // })
+            // ->with([
+            //     'scheduleDays' => function ($query) {
+            //         $query->whereHas('nearestAvailableSlot', function ($q) {
+            //             $q->whereTime('from_time', '>=', now()->format('H:i:s'))
+            //                 ->whereHas('day', function ($q2) {
+            //                     $q2->whereDate('date', '>=', now()->toDateString());
+            //                 });
+            //         })
+            //             ->orderBy('date')
+            //             ->limit(1);
+            //     },
+            //     'scheduleDays.nearestAvailableSlot' => function ($query) {
+            //         $query->whereTime('from_time', '>=', now()->format('H:i:s'))
+            //             ->orderBy('from_time')
+            //             ->limit(1);
+            //     },
+            // ])
             ->orderByRaw('(
             SELECT MIN(CONCAT(doctor_schedule_days.date, " ", doctor_schedule_day_shifts.from_time))
             FROM doctor_schedule_days
