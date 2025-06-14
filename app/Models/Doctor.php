@@ -148,6 +148,11 @@ class Doctor extends Model
     //---------------------Scopes-------------------------------------
     public function scopeOfWithUpcomingShifts($query)
     {
+        $cancelledStatuses = [
+            ConsultationStatusConstants::PATIENT_CANCELLED->value,
+            ConsultationStatusConstants::DOCTOR_CANCELLED->value,
+        ];
+
         return $query
             ->whereHas('scheduleDays.nearestAvailableSlot') // Ensure doctor has at least 1 available slot
             ->with([
@@ -170,27 +175,27 @@ class Doctor extends Model
                 },
             ])
             ->orderByRaw('(
-            SELECT MIN(doctor_schedule_days.date)
-            FROM doctor_schedule_days
-            WHERE doctor_schedule_days.doctor_id = doctors.id
-            AND EXISTS (
-                SELECT 1 FROM doctor_schedule_day_shifts
-                WHERE doctor_schedule_day_shifts.doctor_schedule_day_id = doctor_schedule_days.id
-                AND doctor_schedule_day_shifts.parent_id IS NOT NULL
-                AND (
-                    NOT EXISTS (
-                        SELECT 1 FROM consultations
-                        WHERE consultations.doctor_schedule_day_shift_id = doctor_schedule_day_shifts.id
-                    )
-                    OR EXISTS (
-                        SELECT 1 FROM consultations
-                        WHERE consultations.doctor_schedule_day_shift_id = doctor_schedule_day_shifts.id
-                        AND consultations.is_active = false
-                        AND consultations.status NOT IN ('PATIENT_CANCELLED', 'DOCTOR_CANCELLED')
+                SELECT MIN(doctor_schedule_days.date)
+                FROM doctor_schedule_days
+                WHERE doctor_schedule_days.doctor_id = doctors.id
+                AND EXISTS (
+                    SELECT 1 FROM doctor_schedule_day_shifts
+                    WHERE doctor_schedule_day_shifts.doctor_schedule_day_id = doctor_schedule_days.id
+                    AND doctor_schedule_day_shifts.parent_id IS NOT NULL
+                    AND (
+                        NOT EXISTS (
+                            SELECT 1 FROM consultations
+                            WHERE consultations.doctor_schedule_day_shift_id = doctor_schedule_day_shifts.id
+                        )
+                        OR EXISTS (
+                            SELECT 1 FROM consultations
+                            WHERE consultations.doctor_schedule_day_shift_id = doctor_schedule_day_shifts.id
+                            AND consultations.is_active = false
+                            AND consultations.status NOT IN (?, ?)
+                        )
                     )
                 )
-            )
-        ) ASC');
+            ) ASC', $cancelledStatuses);
     }
 
     public function scopeOfRequestStatus($query, $value)
