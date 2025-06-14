@@ -30,9 +30,8 @@ class DoctorScheduleDayResource extends BaseResource
             'shifts' => $this->relationLoaded('shifts') ? DoctorScheduleDayShiftResource::collection($this->shifts) : null,
             'available_slots' => $this->relationLoaded('availableSlots') ? DoctorScheduleDayShiftResource::collection($this->availableSlots) : null,
             // 'nearest_available_slot' => $this->relationLoaded('nearestAvailableSlot') ? new DoctorScheduleDayShiftResource($this->nearestAvailableSlot->first()) : null,
-            'nearest_available_slot' => $this->relationLoaded('nearestAvailableSlot')
-                ? new DoctorScheduleDayShiftResource($this->nearestAvailableSlot->first())
-                : null,
+            'nearest_available_slot' => new DoctorScheduleDayShiftResource($this->nearestAvailableSlot->first()),
+
         ];
         return $this->getResource();
     }
