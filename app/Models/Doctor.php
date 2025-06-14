@@ -154,12 +154,12 @@ class Doctor extends Model
         ];
 
         return $query
-            // ->whereHas('scheduleDays.nearestAvailableSlot', function ($q) {
-            //     $q->whereTime('from_time', '>=', now()->format('H:i:s'))
-            //         ->whereHas('day', function ($q2) {
-            //             $q2->whereDate('date', '>=', now()->toDateString());
-            //         });
-            // })
+            ->whereHas('scheduleDays.nearestAvailableSlot', function ($q) {
+                $q->whereTime('from_time', '>=', now()->format('H:i:s'))
+                    ->whereHas('day', function ($q2) {
+                        $q2->whereDate('date', '>=', now()->toDateString());
+                    });
+            })
             // ->with([
             //     'scheduleDays' => function ($query) {
             //         $query->whereHas('nearestAvailableSlot', function ($q) {
