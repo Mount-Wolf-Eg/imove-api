@@ -149,7 +149,16 @@ class Doctor extends Model
     public function scopeOfWithUpcomingShifts($query)
     {
         return $query
-            ->whereHas('scheduleDays.nearestAvailableSlot') // Use nearestAvailableSlot instead
+            ->select('doctors.*')
+            ->whereHas('scheduleDays.nearestAvailableSlot')
+            ->join('doctor_schedule_days', 'doctors.id', '=', 'doctor_schedule_days.doctor_id')
+            ->whereExists(function ($subQuery) {
+                $subQuery->select(\DB::raw(1))
+                    ->from('doctor_schedule_day_shifts')
+                    ->whereColumn('doctor_schedule_day_shifts.doctor_schedule_day_id', 'doctor_schedule_days.id');
+            })
+            ->groupBy('doctors.id')
+            ->orderBy(\DB::raw('MIN(doctor_schedule_days.date)'))
             ->with([
                 'scheduleDays' => function ($query) {
                     $query->whereHas('nearestAvailableSlot')->orderBy('doctor_schedule_days.date');
@@ -157,18 +166,7 @@ class Doctor extends Model
                 'scheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
                     $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time');
                 }
-            ])->orderBy(
-                \DB::table('doctor_schedule_days')
-                    ->select('date')
-                    ->whereColumn('doctor_id', 'doctors.id')
-                    ->whereExists(function ($shiftQuery) {
-                        $shiftQuery->select('id')
-                            ->from('doctor_schedule_day_shifts')
-                            ->whereColumn('doctor_schedule_day_id', 'doctor_schedule_days.id');
-                    })
-                    ->orderBy('date')
-                    ->limit(1)
-            );
+            ]);
     }
 
     public function scopeOfRequestStatus($query, $value)
