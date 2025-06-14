@@ -157,7 +157,18 @@ class Doctor extends Model
                 'scheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
                     $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time');
                 }
-            ]);
+            ])->orderBy(
+                \DB::table('doctor_schedule_days')
+                    ->select('date')
+                    ->whereColumn('doctor_id', 'doctors.id')
+                    ->whereExists(function ($shiftQuery) {
+                        $shiftQuery->select('id')
+                            ->from('doctor_schedule_day_shifts')
+                            ->whereColumn('doctor_schedule_day_id', 'doctor_schedule_days.id');
+                    })
+                    ->orderBy('date')
+                    ->limit(1)
+            );
     }
 
     public function scopeOfRequestStatus($query, $value)
