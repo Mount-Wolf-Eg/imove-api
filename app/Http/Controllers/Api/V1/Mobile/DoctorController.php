@@ -19,6 +19,7 @@ use App\Repositories\Contracts\DoctorContract;
 use App\Repositories\Contracts\ConsultationContract;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DoctorController extends BaseApiController
 {
@@ -68,14 +69,18 @@ class DoctorController extends BaseApiController
                 'attachments',
                 'rates'
             ])
-            ->leftJoin('schedule_days', 'doctors.id', '=', 'schedule_days.doctor_id')
-            ->leftJoin('available_slots', 'schedule_days.id', '=', 'available_slots.schedule_day_id')
-            ->where('schedule_days.date', '>=', now()->toDateString())
-            ->where(\DB::raw('CONCAT(schedule_days.date, " ", available_slots.from_time)'), '>=', now())
-            ->select('doctors.*')
-            ->orderBy('schedule_days.date', 'asc')
-            ->orderBy('available_slots.from_time', 'asc')
-            ->distinct()
+            ->whereHas('scheduleDays.availableSlots')
+            ->orderBy(function ($query) {
+                $query->select(DB::raw('CONCAT(doctor_schedule_days.date, " ", doctor_schedule_day_shifts.from_time)'))
+                    ->from('doctor_schedule_days')
+                    ->join('doctor_schedule_day_shifts', 'doctor_schedule_days.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
+                    ->whereColumn('doctor_schedule_days.doctor_id', 'doctors.id')
+                    ->where('doctor_schedule_days.date', '>=', now()->toDateString())
+                    ->where(DB::raw('CONCAT(doctor_schedule_days.date, " ", doctor_schedule_day_shifts.from_time)'), '>=', now())
+                    ->orderBy('doctor_schedule_days.date', 'asc')
+                    ->orderBy('doctor_schedule_day_shifts.from_time', 'asc')
+                    ->limit(1);
+            }, 'asc')
             ->paginate();
 
         return CustomDoctorResource::collection($doctors);
