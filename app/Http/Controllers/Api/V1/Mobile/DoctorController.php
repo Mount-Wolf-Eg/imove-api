@@ -44,7 +44,6 @@ class DoctorController extends BaseApiController
             'universities.certificate',
         ];
         $this->ConsultationContract = $ConsultationContract;
-        dd('DoctorController constructor called.');
     }
 
     public function index(array $additional = []): mixed
@@ -54,7 +53,7 @@ class DoctorController extends BaseApiController
 
     public function customIndex()
     {
-        dd('customIndex method called');
+        dd('customIndex method called..');
         $doctors = Doctor::ofWithUpcomingShifts()->paginate(10);
             
         return DoctorResource::collection($doctors);
