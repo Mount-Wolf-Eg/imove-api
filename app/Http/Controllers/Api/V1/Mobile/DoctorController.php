@@ -28,8 +28,8 @@ class DoctorController extends BaseApiController
      */
     public function __construct(DoctorContract $contract, ConsultationContract $ConsultationContract)
     {
-        dd('DoctorController constructor called');
         parent::__construct($contract, DoctorResource::class);
+        dd('DoctorController constructor called');
         $this->defaultScopes = ['requestStatus' => DoctorRequestStatusConstants::APPROVED->value, 'active' => true];
         $this->relations = [
             'rates',
