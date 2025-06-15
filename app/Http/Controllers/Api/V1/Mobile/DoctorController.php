@@ -59,7 +59,9 @@ class DoctorController extends BaseApiController
         $doctors = Doctor::query()
             ->with([
                 'scheduleDays' => function ($query) {
-                    $query->whereHas('availableSlots')->ofAfterNowDateTime()->orderBy('date', 'asc');
+                    $query->whereHas('availableSlots')
+                        ->ofAfterNowDateTime()
+                        ->orderBy('date', 'asc');
                 },
                 'scheduleDays.availableSlots' => function ($query) {
                     $query->orderBy('from_time', 'asc');
@@ -70,17 +72,32 @@ class DoctorController extends BaseApiController
                 'rates'
             ])
             ->whereHas('scheduleDays.availableSlots')
-            ->orderBy(function ($query) {
-                $query->select(DB::raw('CONCAT(doctor_schedule_days.date, " ", doctor_schedule_day_shifts.from_time)'))
-                    ->from('doctor_schedule_days')
-                    ->join('doctor_schedule_day_shifts', 'doctor_schedule_days.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
+            ->addSelect([
+                'next_available_at' => DB::table('doctor_schedule_day_shifts')
+                    ->selectRaw('MIN(CONCAT(doctor_schedule_days.date, " ", doctor_schedule_day_shifts.from_time))')
+                    ->join('doctor_schedule_days', 'doctor_schedule_day_shifts.doctor_schedule_day_id', '=', 'doctor_schedule_days.id')
+                    ->leftJoin('consultations', 'consultations.doctor_schedule_day_shift_id', '=', 'doctor_schedule_day_shifts.id')
+                    ->where(function ($query) {
+                        $query->whereNull('consultations.id')
+                            ->orWhere(function ($q) {
+                                $q->where('consultations.is_active', false)
+                                    ->whereNotIn('consultations.status', [
+                                        ConsultationStatusConstants::PATIENT_CANCELLED->value,
+                                        ConsultationStatusConstants::DOCTOR_CANCELLED->value
+                                    ]);
+                            });
+                    })
+                    ->whereNotNull('doctor_schedule_day_shifts.parent_id')
+                    ->where(function ($query) {
+                        $query->whereDate('doctor_schedule_days.date', '>', now()->toDateString())
+                            ->orWhere(function ($q) {
+                                $q->whereDate('doctor_schedule_days.date', now()->toDateString())
+                                    ->whereTime('doctor_schedule_day_shifts.from_time', '>=', now()->format('H:i:s'));
+                            });
+                    })
                     ->whereColumn('doctor_schedule_days.doctor_id', 'doctors.id')
-                    ->where('doctor_schedule_days.date', '>=', now()->toDateString())
-                    ->where(DB::raw('CONCAT(doctor_schedule_days.date, " ", doctor_schedule_day_shifts.from_time)'), '>=', now())
-                    ->orderBy('doctor_schedule_days.date', 'asc')
-                    ->orderBy('doctor_schedule_day_shifts.from_time', 'asc')
-                    ->limit(1);
-            }, 'asc')
+            ])
+            ->orderBy('next_available_at', 'asc')
             ->paginate();
 
         return CustomDoctorResource::collection($doctors);
