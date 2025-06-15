@@ -251,6 +251,16 @@ class Doctor extends Model
     //         ]);
     // }
 
+    public function firstUpcomingScheduleDay()
+    {
+        return $this->hasOne(\App\Models\DoctorScheduleDay::class)
+            ->whereHas('availableSlots', function ($q) {
+                $q->join('doctor_schedule_days as dsd', 'dsd.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
+                    ->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', doctor_schedule_day_shifts.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()]);
+            })
+            ->orderBy('date');
+    }
+
     public function scopeOfWithUpcomingShiftsOptimized($query)
     {
         return $query
@@ -273,18 +283,7 @@ class Doctor extends Model
             ->havingRaw('nearest_datetime IS NOT NULL')
             ->orderBy('nearest_datetime')
             ->with([
-                'scheduleDays' => function ($query) {
-                    $query->whereHas('availableSlots', function ($q) {
-                        $q->join('doctor_schedule_days as dsd', 'dsd.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
-                            ->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', doctor_schedule_day_shifts.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()]);
-                    })
-                        ->orderBy('date');
-                },
-                'scheduleDays.availableSlots' => function ($query) {
-                    $query->join('doctor_schedule_days as dsd', 'dsd.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
-                        ->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', doctor_schedule_day_shifts.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()])
-                        ->orderBy('from_time');
-                }
+                'firstUpcomingScheduleDay.nearestAvailableSlot'
             ]);
     }
 

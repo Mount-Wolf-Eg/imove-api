@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Constants\ConsultationStatusConstants;
 use App\Traits\ModelTrait;
 use App\Traits\SearchTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -54,6 +55,25 @@ class DoctorScheduleDay extends Model
     public function nearestAvailableSlot(): HasMany
     {
         return $this->hasMany(DoctorScheduleDayShift::class)->ofAvailableSlots();
+    }
+
+    public function firstNearestAvailableSlot()
+    {
+        return $this->hasOne(\App\Models\DoctorScheduleDayShift::class, 'doctor_schedule_day_id')
+            ->join('doctor_schedule_days as dsd', 'dsd.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
+            ->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', doctor_schedule_day_shifts.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()])
+            ->whereNotNull('parent_id')
+            ->where(function ($q) {
+                $q->whereDoesntHave('consultation')
+                    ->orWhereHas('consultation', function ($q2) {
+                        $q2->where('is_active', false)
+                            ->whereNotIn('status', [
+                                ConsultationStatusConstants::PATIENT_CANCELLED->value,
+                                ConsultationStatusConstants::DOCTOR_CANCELLED->value
+                            ]);
+                    });
+            })
+            ->orderBy('from_time');
     }
     //---------------------relations-------------------------------------
 
