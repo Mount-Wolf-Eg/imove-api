@@ -60,6 +60,7 @@ class DoctorController extends BaseApiController
             ->ofRequestStatus(DoctorRequestStatusConstants::APPROVED)
             ->ofActive()
             ->when(request()->has('keyword'), function($query) {
+                dd('147');
                 $query->ofKeyword(request('keyword'));
             })
             ->when(request()->has('medicalSpeciality'), function ($query) {
