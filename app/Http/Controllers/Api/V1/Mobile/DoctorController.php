@@ -54,7 +54,23 @@ class DoctorController extends BaseApiController
 
     public function newIndex()
     {
-        $doctors = Doctor::ofWithUpcomingShiftsOptimized()->paginate(10);
+        $doctors = Doctor::query()
+            ->with([
+                'scheduleDays' => function ($query) {
+                    $query->afterNowDateTime()->orderBy('date', 'asc');
+                },
+                'scheduleDays.availableSlots' => function ($query) {
+                    $query->afterNowDateTime()->orderBy('from_time', 'asc');
+                },
+                'medicalSpecialities',
+                'academicDegree',
+                'attachments',
+                'rates'
+            ])
+            ->whereHas('scheduleDays.availableSlots', function ($query) {
+                $query->afterNowDateTime();
+            })
+            ->paginate();
 
         return DoctorResource::collection($doctors);
     }
