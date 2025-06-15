@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1\Mobile;
 
+use App\Constants\ConsultationStatusConstants;
 use App\Constants\DoctorRequestStatusConstants;
 use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Controllers\Controller;
@@ -53,8 +54,30 @@ class DoctorController extends BaseApiController
 
     public function newIndex()
     {
-        $doctors = Doctor::ofWithUpcomingShiftsOptimized()->paginate(10);
-            
+        $doctors = Doctor::join('doctor_schedule_days as dsd', 'doctors.id', '=', 'dsd.doctor_id')
+            ->join('doctor_schedule_day_shifts as dsds', 'dsd.id', '=', 'dsds.doctor_schedule_day_id')
+            ->leftJoin('consultations as c', function ($join) {
+                $join->on('dsds.id', '=', 'c.doctor_schedule_day_shift_id')
+                    ->where('c.is_active', true)
+                    ->whereNotIn('c.status', [
+                        ConsultationStatusConstants::PATIENT_CANCELLED->value,
+                        ConsultationStatusConstants::DOCTOR_CANCELLED->value
+                    ]);
+            })
+            ->whereNull('c.id')
+            ->whereNotNull('dsds.parent_id')
+            ->where(function ($q) {
+                $q->whereDate('dsd.date', '>', now()->toDateString())
+                    ->orWhere(function ($subQ) {
+                        $subQ->whereDate('dsd.date', now()->toDateString())
+                            ->whereTime('dsds.from_time', '>=', now()->format('H:i:s'));
+                    });
+            })
+            ->select('doctors.*', DB::raw('MIN(dsd.date) as nearest_date'))
+            ->groupBy('doctors.id')
+            ->orderBy('nearest_date')
+            ->paginate(10);
+
         return DoctorResource::collection($doctors);
     }
 
@@ -124,6 +147,4 @@ class DoctorController extends BaseApiController
             return $this->respondWithError($e->getMessage(), 422);
         }
     }
-
-
 }
