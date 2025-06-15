@@ -57,6 +57,17 @@ class DoctorController extends BaseApiController
     public function newIndex()
     {
         $doctors = Doctor::query()
+            ->ofRequestStatus(DoctorRequestStatusConstants::APPROVED)
+            ->ofActive()
+            ->when(request()->has('keyword'), function($query) {
+                $query->ofKeyword(request('keyword'));
+            })
+            ->when(request()->has('medicalSpeciality'), function ($query) {
+                $query->ofMedicalSpeciality(request('medicalSpeciality'));
+            })
+            ->when(request()->has('topRated'), function ($query) {
+                $query->ofTopRated(request('city'));
+            })
             ->with([
                 'scheduleDays' => function ($query) {
                     $query->whereHas('availableSlots')
