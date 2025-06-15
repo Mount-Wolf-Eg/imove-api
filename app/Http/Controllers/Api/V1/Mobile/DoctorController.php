@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\BaseApiController;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ConsultationResource;
 use App\Http\Resources\ConsultationInDoctorResource;
+use App\Http\Resources\CustomDoctorResource;
 use App\Http\Resources\DoctorResource;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\PatientResource;
@@ -70,7 +71,7 @@ class DoctorController extends BaseApiController
             ->whereHas('scheduleDays.availableSlots')
             ->paginate();
 
-        return DoctorResource::collection($doctors);
+        return CustomDoctorResource::collection($doctors);
     }
 
     /**
