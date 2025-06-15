@@ -231,8 +231,8 @@ class Doctor extends Model
                     });
             })
             ->select('doctors.*')
-            ->addSelect(DB::raw('MIN(dsd.date) as nearest_date'))
-            ->addSelect(DB::raw('MIN(dsds.from_time) as nearest_time'))
+            ->addSelect(\DB::raw('MIN(dsd.date) as nearest_date'))
+            ->addSelect(\DB::raw('MIN(dsds.from_time) as nearest_time'))
             ->groupBy('doctors.id')
             ->orderBy('nearest_date')
             ->orderBy('nearest_time')
