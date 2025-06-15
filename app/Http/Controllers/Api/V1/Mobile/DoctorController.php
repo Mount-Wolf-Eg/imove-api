@@ -29,7 +29,6 @@ class DoctorController extends BaseApiController
     public function __construct(DoctorContract $contract, ConsultationContract $ConsultationContract)
     {
         parent::__construct($contract, DoctorResource::class);
-        dd('DoctorController constructor called');
         $this->defaultScopes = ['requestStatus' => DoctorRequestStatusConstants::APPROVED->value, 'active' => true];
         $this->relations = [
             'rates',
@@ -45,6 +44,7 @@ class DoctorController extends BaseApiController
             'universities.certificate',
         ];
         $this->ConsultationContract = $ConsultationContract;
+        dd('DoctorController constructor called.');
     }
 
     public function index(array $additional = []): mixed
