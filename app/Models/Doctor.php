@@ -278,14 +278,12 @@ class Doctor extends Model
                         $q->join('doctor_schedule_days as dsd', 'dsd.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
                             ->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', doctor_schedule_day_shifts.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()]);
                     })
-                        ->orderBy('date')
-                        ->limit(1);
+                        ->orderBy('date');
                 },
                 'scheduleDays.availableSlots' => function ($query) {
                     $query->join('doctor_schedule_days as dsd', 'dsd.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
                         ->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', doctor_schedule_day_shifts.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()])
-                        ->orderBy('from_time')
-                        ->limit(1);
+                        ->orderBy('from_time');
                 }
             ]);
     }
