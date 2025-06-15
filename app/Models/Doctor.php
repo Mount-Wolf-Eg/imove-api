@@ -222,31 +222,26 @@ class Doctor extends Model
                     ]);
             })
             ->whereNull('c.id') // لا يوجد استشارة نشطة
-            ->whereNotNull('dsds.parent_id') // فقط الساعات الفرعية (slots)
+            ->whereNotNull('dsds.parent_id') // فقط الشيفتات الفرعية (slots)
             ->where(function ($q) {
-                $q->whereDate('dsd.date', '>', now()->toDateString())
-                    ->orWhere(function ($subQ) {
-                        $subQ->whereDate('dsd.date', now()->toDateString())
-                            ->whereTime('dsds.from_time', '>=', now()->format('H:i:s'));
-                    });
+                $q->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', dsds.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()]);
             })
             ->select('doctors.*')
-            ->addSelect(\DB::raw('MIN(dsd.date) as nearest_date'))
-            ->addSelect(\DB::raw('MIN(dsds.from_time) as nearest_time'))
+            ->addSelect(\DB::raw('MIN(STR_TO_DATE(CONCAT(dsd.date, " ", dsds.from_time), "%Y-%m-%d %H:%i:%s")) as nearest_datetime'))
             ->groupBy('doctors.id')
-            ->orderBy('nearest_date')
-            ->orderBy('nearest_time')
+            ->orderBy('nearest_datetime')
             ->with([
                 'scheduleDays' => function ($query) {
-                    $query->whereDate('date', '>=', now()->toDateString())
-                        ->whereHas('availableSlots', function ($q) {
-                            $q->whereTime('from_time', '>=', now()->format('H:i:s'));
-                        })
-                        ->orderBy('date');
+                    $query->whereHas('availableSlots', function ($q) {
+                        $q->whereRaw("STR_TO_DATE(CONCAT(doctor_schedule_days.date, ' ', from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()]);
+                    })
+                        ->orderBy('date')
+                        ->limit(1);
                 },
                 'scheduleDays.availableSlots' => function ($query) {
-                    $query->whereTime('from_time', '>=', now()->format('H:i:s'))
-                        ->orderBy('from_time');
+                    $query->whereRaw("STR_TO_DATE(CONCAT(doctor_schedule_days.date, ' ', from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()])
+                        ->orderBy('from_time')
+                        ->limit(1);
                 }
             ]);
     }
