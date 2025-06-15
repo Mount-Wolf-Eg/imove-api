@@ -68,7 +68,14 @@ class DoctorController extends BaseApiController
                 'attachments',
                 'rates'
             ])
-            ->whereHas('scheduleDays.availableSlots')
+            ->leftJoin('schedule_days', 'doctors.id', '=', 'schedule_days.doctor_id')
+            ->leftJoin('available_slots', 'schedule_days.id', '=', 'available_slots.schedule_day_id')
+            ->where('schedule_days.date', '>=', now()->toDateString())
+            ->where(\DB::raw('CONCAT(schedule_days.date, " ", available_slots.from_time)'), '>=', now())
+            ->select('doctors.*')
+            ->orderBy('schedule_days.date', 'asc')
+            ->orderBy('available_slots.from_time', 'asc')
+            ->distinct()
             ->paginate();
 
         return CustomDoctorResource::collection($doctors);
