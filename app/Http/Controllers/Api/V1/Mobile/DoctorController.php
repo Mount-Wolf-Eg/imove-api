@@ -73,7 +73,7 @@ class DoctorController extends BaseApiController
                             ->whereTime('dsds.from_time', '>=', now()->format('H:i:s'));
                     });
             })
-            ->select('doctors.*', DB::raw('MIN(dsd.date) as nearest_date'))
+            ->select('doctors.*', \DB::raw('MIN(dsd.date) as nearest_date'))
             ->groupBy('doctors.id')
             ->orderBy('nearest_date')
             ->paginate(10);
