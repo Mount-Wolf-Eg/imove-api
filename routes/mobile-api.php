@@ -228,7 +228,7 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('store', 'update', 'destroy');
             Route::apiResource('doctor-schedule-day-shifts', DoctorScheduleDayShiftController::class)->only( 'store', 'update', 'destroy');
             Route::get('nearest-doctor-schedule-day/{doctor}', [DoctorScheduleDayController::class, 'nearestAvailableDay']);
-            Route::get('doctors-order-by-upcoming-shifts', [DoctorController::class, 'customIndex']);
+            Route::get('doctors-order-by-upcoming-shifts', [DoctorController::class, 'newIndex']);
 
             // technical support doctor
             Route::post('technical-support', [TechnicalSupportController::class, 'createForDoctor']);

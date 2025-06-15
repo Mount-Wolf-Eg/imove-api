@@ -51,7 +51,7 @@ class DoctorController extends BaseApiController
         return parent::index(['general_session_price' => GeneralSettings::getSettingValue('general_session_price')] + $additional);
     }
 
-    public function customIndex()
+    public function newIndex()
     {
         dd('customIndex method called..');
         $doctors = Doctor::ofWithUpcomingShifts()->paginate(10);
