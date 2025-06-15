@@ -208,6 +208,66 @@ class Doctor extends Model
         ) ASC', $cancelledStatuses);
     }
 
+    public function scopeOfWithUpcomingShiftsOptimized($query)
+    {
+        return $query
+            ->join('doctor_schedule_days as dsd', 'doctors.id', '=', 'dsd.doctor_id')
+            ->join('doctor_schedule_day_shifts as dsds', 'dsd.id', '=', 'dsds.doctor_schedule_day_id')
+            ->leftJoin('consultations as c', function ($join) {
+                $join->on('dsds.id', '=', 'c.doctor_schedule_day_shift_id')
+                    ->where('c.is_active', true)
+                    ->whereNotIn('c.status', [
+                        ConsultationStatusConstants::PATIENT_CANCELLED->value,
+                        ConsultationStatusConstants::DOCTOR_CANCELLED->value
+                    ]);
+            })
+            ->whereNull('c.id') // No active consultation
+            ->whereNotNull('dsds.parent_id') // Only slots, not shifts
+            ->where(function ($q) {
+                $q->whereDate('dsd.date', '>', now()->toDateString())
+                    ->orWhere(function ($subQ) {
+                        $subQ->whereDate('dsd.date', now()->toDateString())
+                            ->whereTime('dsds.from_time', '>=', now()->format('H:i:s'));
+                    });
+            })
+            ->select('doctors.*')
+            ->selectRaw('MIN(dsd.date) as nearest_date')
+            ->selectRaw('MIN(
+            CASE WHEN dsd.date = (
+                SELECT MIN(dsd2.date) 
+                FROM doctor_schedule_days dsd2 
+                JOIN doctor_schedule_day_shifts dsds2 ON dsd2.id = dsds2.doctor_schedule_day_id
+                LEFT JOIN consultations c2 ON dsds2.id = c2.doctor_schedule_day_shift_id 
+                    AND c2.is_active = true 
+                    AND c2.status NOT IN (?, ?)
+                WHERE dsd2.doctor_id = doctors.id 
+                AND dsds2.parent_id IS NOT NULL
+                AND c2.id IS NULL
+                AND (
+                    dsd2.date > CURDATE() 
+                    OR (dsd2.date = CURDATE() AND dsds2.from_time >= CURTIME())
+                )
+            ) THEN dsds.from_time END
+        ) as nearest_time', [
+                ConsultationStatusConstants::PATIENT_CANCELLED->value,
+                ConsultationStatusConstants::DOCTOR_CANCELLED->value
+            ])
+            ->groupBy('doctors.id')
+            ->orderBy('nearest_date')
+            ->orderBy('nearest_time')
+            ->with([
+                'scheduleDays' => function ($query) {
+                    $query->whereHas('availableSlots')
+                        ->whereDate('date', '>=', now()->toDateString())
+                        ->orderBy('date')
+                        ->limit(1); // Only first available day
+                },
+                'scheduleDays.availableSlots' => function ($shiftQuery) {
+                    $shiftQuery->orderBy('from_time')
+                        ->limit(1); // Only first available slot
+                }
+            ]);
+    }
 
     public function scopeOfRequestStatus($query, $value)
     {

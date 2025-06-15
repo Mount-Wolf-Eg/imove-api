@@ -51,6 +51,13 @@ class DoctorController extends BaseApiController
         return parent::index(['general_session_price' => GeneralSettings::getSettingValue('general_session_price')] + $additional);
     }
 
+    public function customIndex()
+    {
+        $doctors = Doctor::ofWithUpcomingShiftsOptimized()->paginate(10);
+            
+        return DoctorResource::collection($doctors);
+    }
+
     /**
      *  get specified doctor full details
      *
