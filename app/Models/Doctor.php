@@ -208,6 +208,49 @@ class Doctor extends Model
         ) ASC', $cancelledStatuses);
     }
 
+    // public function scopeOfWithUpcomingShiftsOptimized($query)
+    // {
+    //     return $query
+    //         ->join('doctor_schedule_days as dsd', 'doctors.id', '=', 'dsd.doctor_id')
+    //         ->join('doctor_schedule_day_shifts as dsds', 'dsd.id', '=', 'dsds.doctor_schedule_day_id')
+    //         ->leftJoin('consultations as c', function ($join) {
+    //             $join->on('dsds.id', '=', 'c.doctor_schedule_day_shift_id')
+    //                 ->where('c.is_active', true)
+    //                 ->whereNotIn('c.status', [
+    //                     ConsultationStatusConstants::PATIENT_CANCELLED->value,
+    //                     ConsultationStatusConstants::DOCTOR_CANCELLED->value
+    //                 ]);
+    //         })
+    //         ->whereNull('c.id') // لا يوجد استشارة نشطة
+    //         ->whereNotNull('dsds.parent_id') // فقط الساعات الفرعية (slots)
+    //         ->where(function ($q) {
+    //             $q->whereDate('dsd.date', '>', now()->toDateString())
+    //                 ->orWhere(function ($subQ) {
+    //                     $subQ->whereDate('dsd.date', now()->toDateString())
+    //                         ->whereTime('dsds.from_time', '>=', now()->format('H:i:s'));
+    //                 });
+    //         })
+    //         ->select('doctors.*')
+    //         ->addSelect(\DB::raw('MIN(dsd.date) as nearest_date'))
+    //         ->addSelect(\DB::raw('MIN(dsds.from_time) as nearest_time'))
+    //         ->groupBy('doctors.id')
+    //         ->orderBy('nearest_date')
+    //         ->orderBy('nearest_time')
+    //         ->with([
+    //             'scheduleDays' => function ($query) {
+    //                 $query->whereDate('date', '>=', now()->toDateString())
+    //                     ->whereHas('availableSlots', function ($q) {
+    //                         $q->whereTime('from_time', '>=', now()->format('H:i:s'));
+    //                     })
+    //                     ->orderBy('date');
+    //             },
+    //             'scheduleDays.availableSlots' => function ($query) {
+    //                 $query->whereTime('from_time', '>=', now()->format('H:i:s'))
+    //                     ->orderBy('from_time');
+    //             }
+    //         ]);
+    // }
+
     public function scopeOfWithUpcomingShiftsOptimized($query)
     {
         return $query
@@ -221,25 +264,26 @@ class Doctor extends Model
                         ConsultationStatusConstants::DOCTOR_CANCELLED->value
                     ]);
             })
-            ->whereNull('c.id') // لا يوجد استشارة نشطة
-            ->whereNotNull('dsds.parent_id') // فقط الشيفتات الفرعية (slots)
-            ->where(function ($q) {
-                $q->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', dsds.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()]);
-            })
+            ->whereNull('c.id')
+            ->whereNotNull('dsds.parent_id')
+            ->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', dsds.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()])
             ->select('doctors.*')
-            ->addSelect(\DB::raw('MIN(STR_TO_DATE(CONCAT(dsd.date, " ", dsds.from_time), "%Y-%m-%d %H:%i:%s")) as nearest_datetime'))
+            ->addSelect(DB::raw("MIN(STR_TO_DATE(CONCAT(dsd.date, ' ', dsds.from_time), '%Y-%m-%d %H:%i:%s')) as nearest_datetime"))
             ->groupBy('doctors.id')
+            ->havingRaw('nearest_datetime IS NOT NULL')
             ->orderBy('nearest_datetime')
             ->with([
                 'scheduleDays' => function ($query) {
                     $query->whereHas('availableSlots', function ($q) {
-                        $q->whereRaw("STR_TO_DATE(CONCAT(doctor_schedule_days.date, ' ', from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()]);
+                        $q->join('doctor_schedule_days as dsd', 'dsd.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
+                            ->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', doctor_schedule_day_shifts.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()]);
                     })
                         ->orderBy('date')
                         ->limit(1);
                 },
                 'scheduleDays.availableSlots' => function ($query) {
-                    $query->whereRaw("STR_TO_DATE(CONCAT(doctor_schedule_days.date, ' ', from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()])
+                    $query->join('doctor_schedule_days as dsd', 'dsd.id', '=', 'doctor_schedule_day_shifts.doctor_schedule_day_id')
+                        ->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', doctor_schedule_day_shifts.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()])
                         ->orderBy('from_time')
                         ->limit(1);
                 }
