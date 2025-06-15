@@ -820,7 +820,7 @@ abstract class BaseRepository implements BaseContract
                 $query = $query->orderBy($orderBy, $orderDir);
             }
         } else {
-            // $query = $query->latest();
+            $query = $query->latest();
         }
         if (config('app.query_debug')) {
             info($query->toSql());

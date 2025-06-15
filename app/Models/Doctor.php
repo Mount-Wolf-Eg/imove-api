@@ -148,123 +148,14 @@ class Doctor extends Model
     //---------------------Scopes-------------------------------------
     public function scopeOfWithUpcomingShifts($query)
     {
-        $cancelledStatuses = [
-            ConsultationStatusConstants::PATIENT_CANCELLED->value,
-            ConsultationStatusConstants::DOCTOR_CANCELLED->value,
-        ];
-
         return $query
-            ->whereHas('scheduleDays.nearestAvailableSlot', function ($q) {
-                $q->whereHas('day', function ($q2) {
-                    $q2->where(function ($q3) {
-                        $q3->whereDate('date', '>', now()->toDateString())
-                            ->orWhere(function ($q4) {
-                                $q4->whereDate('date', now()->toDateString())
-                                    ->whereTime('from_time', '>=', now()->format('H:i:s'));
-                            });
-                    });
-                });
-            })
-            // ->with([
-            //     'scheduleDays' => function ($query) {
-            //         $query->whereHas('nearestAvailableSlot', function ($q) {
-            //             $q->whereTime('from_time', '>=', now()->format('H:i:s'))
-            //                 ->whereHas('day', function ($q2) {
-            //                     $q2->whereDate('date', '>=', now()->toDateString());
-            //                 });
-            //         })
-            //             ->orderBy('date')
-            //             ->limit(1);
-            //     },
-            //     'scheduleDays.nearestAvailableSlot' => function ($query) {
-            //         $query->whereTime('from_time', '>=', now()->format('H:i:s'))
-            //             ->orderBy('from_time')
-            //             ->limit(1);
-            //     },
-            // ])
-            ->orderByRaw('(
-            SELECT MIN(CONCAT(doctor_schedule_days.date, " ", doctor_schedule_day_shifts.from_time))
-            FROM doctor_schedule_days
-            INNER JOIN doctor_schedule_day_shifts
-                ON doctor_schedule_day_shifts.doctor_schedule_day_id = doctor_schedule_days.id
-            WHERE doctor_schedule_days.doctor_id = doctors.id
-              AND doctor_schedule_day_shifts.parent_id IS NOT NULL
-              AND (
-                  NOT EXISTS (
-                      SELECT 1 FROM consultations
-                      WHERE consultations.doctor_schedule_day_shift_id = doctor_schedule_day_shifts.id
-                  )
-                  OR EXISTS (
-                      SELECT 1 FROM consultations
-                      WHERE consultations.doctor_schedule_day_shift_id = doctor_schedule_day_shifts.id
-                        AND consultations.is_active = false
-                        AND consultations.status NOT IN (?, ?)
-                  )
-              )
-              AND (
-                  doctor_schedule_days.date > CURDATE()
-                  OR (doctor_schedule_days.date = CURDATE() AND doctor_schedule_day_shifts.from_time >= CURTIME())
-              )
-        ) ASC', $cancelledStatuses);
-    }
-
-    public function scopeOfWithUpcomingShiftsOptimized($query)
-    {
-        return $query
-            ->join('doctor_schedule_days as dsd', 'doctors.id', '=', 'dsd.doctor_id')
-            ->join('doctor_schedule_day_shifts as dsds', 'dsd.id', '=', 'dsds.doctor_schedule_day_id')
-            ->leftJoin('consultations as c', function ($join) {
-                $join->on('dsds.id', '=', 'c.doctor_schedule_day_shift_id')
-                    ->where('c.is_active', true)
-                    ->whereNotIn('c.status', [
-                        ConsultationStatusConstants::PATIENT_CANCELLED->value,
-                        ConsultationStatusConstants::DOCTOR_CANCELLED->value
-                    ]);
-            })
-            ->whereNull('c.id') // No active consultation
-            ->whereNotNull('dsds.parent_id') // Only slots, not shifts
-            ->where(function ($q) {
-                $q->whereDate('dsd.date', '>', now()->toDateString())
-                    ->orWhere(function ($subQ) {
-                        $subQ->whereDate('dsd.date', now()->toDateString())
-                            ->whereTime('dsds.from_time', '>=', now()->format('H:i:s'));
-                    });
-            })
-            ->select('doctors.*')
-            ->selectRaw('MIN(dsd.date) as nearest_date')
-            ->selectRaw('MIN(
-            CASE WHEN dsd.date = (
-                SELECT MIN(dsd2.date) 
-                FROM doctor_schedule_days dsd2 
-                JOIN doctor_schedule_day_shifts dsds2 ON dsd2.id = dsds2.doctor_schedule_day_id
-                LEFT JOIN consultations c2 ON dsds2.id = c2.doctor_schedule_day_shift_id 
-                    AND c2.is_active = true 
-                    AND c2.status NOT IN (?, ?)
-                WHERE dsd2.doctor_id = doctors.id 
-                AND dsds2.parent_id IS NOT NULL
-                AND c2.id IS NULL
-                AND (
-                    dsd2.date > CURDATE() 
-                    OR (dsd2.date = CURDATE() AND dsds2.from_time >= CURTIME())
-                )
-            ) THEN dsds.from_time END
-        ) as nearest_time', [
-                ConsultationStatusConstants::PATIENT_CANCELLED->value,
-                ConsultationStatusConstants::DOCTOR_CANCELLED->value
-            ])
-            ->groupBy('doctors.id')
-            ->orderBy('nearest_date')
-            ->orderBy('nearest_time')
+            ->whereHas('scheduleDays.nearestAvailableSlot') // Use nearestAvailableSlot instead
             ->with([
                 'scheduleDays' => function ($query) {
-                    $query->whereHas('availableSlots')
-                        ->whereDate('date', '>=', now()->toDateString())
-                        ->orderBy('date')
-                        ->limit(1); // Only first available day
+                    $query->whereHas('nearestAvailableSlot')->orderBy('doctor_schedule_days.date');
                 },
-                'scheduleDays.availableSlots' => function ($shiftQuery) {
-                    $shiftQuery->orderBy('from_time')
-                        ->limit(1); // Only first available slot
+                'scheduleDays.nearestAvailableSlot' => function ($shiftQuery) {
+                    $shiftQuery->orderBy('doctor_schedule_day_shifts.from_time');
                 }
             ]);
     }
