@@ -45,7 +45,7 @@ class CustomDoctorResource extends BaseResource
             'consultation_period' => $this->consultation_period,
         ];
         $this->relations = [
-            // 'user' => $this->relationLoaded('user') ? new UserResource($this->user) : null,
+            'user' => $this->relationLoaded('user') ? new CustomUserResource($this->user) : null,
             'medical_specialities' => $this->relationLoaded('medicalSpecialities') ? MedicalSpecialityResource::collection($this->medicalSpecialities) : [],
             'academic_degree' => $this->relationLoaded('academicDegree') ? new AcademicDegreeResource($this->academicDegree) : null,
             'attachments' => $this->relationLoaded('attachments') ? FileResource::collection($this->attachments) : [],

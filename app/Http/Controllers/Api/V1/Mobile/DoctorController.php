@@ -69,7 +69,13 @@ class DoctorController extends BaseApiController
                 'medicalSpecialities',
                 'academicDegree',
                 'attachments',
-                'rates'
+                'rates',
+                'city',
+                'hospitals',
+                'universities.academicDegree',
+                'universities.medicalSpeciality',
+                'universities.university',
+                'universities.certificate',
             ])
             ->whereHas('scheduleDays.availableSlots')
             ->addSelect([
