@@ -59,7 +59,7 @@ class DoctorController extends BaseApiController
         $doctors = Doctor::query()
             ->with([
                 'scheduleDays' => function ($query) {
-                    $query->ofAfterNowDateTime()->orderBy('date', 'asc');
+                    $query->whereHas('availableSlots')->ofAfterNowDateTime()->orderBy('date', 'asc');
                 },
                 'scheduleDays.availableSlots' => function ($query) {
                     $query->orderBy('from_time', 'asc');
