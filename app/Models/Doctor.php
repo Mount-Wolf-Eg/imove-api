@@ -221,8 +221,8 @@ class Doctor extends Model
                         ConsultationStatusConstants::DOCTOR_CANCELLED->value
                     ]);
             })
-            ->whereNull('c.id') // No active consultation
-            ->whereNotNull('dsds.parent_id') // Only slots, not shifts
+            ->whereNull('c.id') // لا يوجد استشارة نشطة
+            ->whereNotNull('dsds.parent_id') // فقط الساعات الفرعية (slots)
             ->where(function ($q) {
                 $q->whereDate('dsd.date', '>', now()->toDateString())
                     ->orWhere(function ($subQ) {
@@ -231,40 +231,24 @@ class Doctor extends Model
                     });
             })
             ->select('doctors.*')
-            ->selectRaw('MIN(dsd.date) as nearest_date')
-            ->selectRaw('MIN(
-            CASE WHEN dsd.date = (
-                SELECT MIN(dsd2.date) 
-                FROM doctor_schedule_days dsd2 
-                JOIN doctor_schedule_day_shifts dsds2 ON dsd2.id = dsds2.doctor_schedule_day_id
-                LEFT JOIN consultations c2 ON dsds2.id = c2.doctor_schedule_day_shift_id 
-                    AND c2.is_active = true 
-                    AND c2.status NOT IN (?, ?)
-                WHERE dsd2.doctor_id = doctors.id 
-                AND dsds2.parent_id IS NOT NULL
-                AND c2.id IS NULL
-                AND (
-                    dsd2.date > CURDATE() 
-                    OR (dsd2.date = CURDATE() AND dsds2.from_time >= CURTIME())
-                )
-            ) THEN dsds.from_time END
-        ) as nearest_time', [
-                ConsultationStatusConstants::PATIENT_CANCELLED->value,
-                ConsultationStatusConstants::DOCTOR_CANCELLED->value
-            ])
+            ->addSelect(DB::raw('MIN(dsd.date) as nearest_date'))
+            ->addSelect(DB::raw('MIN(dsds.from_time) as nearest_time'))
             ->groupBy('doctors.id')
             ->orderBy('nearest_date')
             ->orderBy('nearest_time')
             ->with([
                 'scheduleDays' => function ($query) {
-                    $query->whereHas('availableSlots')
-                        ->whereDate('date', '>=', now()->toDateString())
+                    $query->whereDate('date', '>=', now()->toDateString())
+                        ->whereHas('availableSlots', function ($q) {
+                            $q->whereTime('from_time', '>=', now()->format('H:i:s'));
+                        })
                         ->orderBy('date')
-                        ->limit(1); // Only first available day
+                        ->limit(1);
                 },
-                'scheduleDays.availableSlots' => function ($shiftQuery) {
-                    $shiftQuery->orderBy('from_time')
-                        ->limit(1); // Only first available slot
+                'scheduleDays.availableSlots' => function ($query) {
+                    $query->whereTime('from_time', '>=', now()->format('H:i:s'))
+                        ->orderBy('from_time')
+                        ->limit(1);
                 }
             ]);
     }
