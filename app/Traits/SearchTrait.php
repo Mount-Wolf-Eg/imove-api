@@ -9,6 +9,7 @@ trait SearchTrait
         $withRelations = array_filter($this->searchable, static fn($col)=>str_contains($col,'.'));
         $columnsArr = array_filter($this->searchable, static fn($col)=>!in_array($col, $withRelations, true));
         $columns = implode(',', $columnsArr ?? []);
+        dd($keyword);
         return $query
             ->when(!empty($columns),function ($q)use ($columns, $keyword){
                 $q->whereRaw("CONCAT_WS(' ', {$columns}) like '%{$keyword}%'");
