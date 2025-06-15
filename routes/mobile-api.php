@@ -47,6 +47,9 @@ Route::group(['middleware' => 'locale'], static function () {
     Route::apiResource('articles', ArticleController::class)->only('index', 'show');
     Route::apiResource('faqs', FaqController::class)->only('index');
     Route::apiResource('doctors', DoctorController::class)->only('index', 'show');
+
+    Route::get('doctors-order-by-upcoming-shifts', [DoctorController::class, 'newIndex']);
+
     Route::apiResource('files', FileController::class)->only('store', 'destroy');
 
     Route::get('reminder-durations', [NewAuthController::class, 'reminderDurations']);
@@ -228,7 +231,6 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::apiResource('doctor-schedule-days', DoctorScheduleDayController::class)->only('store', 'update', 'destroy');
             Route::apiResource('doctor-schedule-day-shifts', DoctorScheduleDayShiftController::class)->only( 'store', 'update', 'destroy');
             Route::get('nearest-doctor-schedule-day/{doctor}', [DoctorScheduleDayController::class, 'nearestAvailableDay']);
-            Route::get('doctors-order-by-upcoming-shifts', [DoctorController::class, 'newIndex']);
 
             // technical support doctor
             Route::post('technical-support', [TechnicalSupportController::class, 'createForDoctor']);
