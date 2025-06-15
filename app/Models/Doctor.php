@@ -268,7 +268,7 @@ class Doctor extends Model
             ->whereNotNull('dsds.parent_id')
             ->whereRaw("STR_TO_DATE(CONCAT(dsd.date, ' ', dsds.from_time), '%Y-%m-%d %H:%i:%s') > ?", [now()])
             ->select('doctors.*')
-            ->addSelect(DB::raw("MIN(STR_TO_DATE(CONCAT(dsd.date, ' ', dsds.from_time), '%Y-%m-%d %H:%i:%s')) as nearest_datetime"))
+            ->addSelect(\DB::raw("MIN(STR_TO_DATE(CONCAT(dsd.date, ' ', dsds.from_time), '%Y-%m-%d %H:%i:%s')) as nearest_datetime"))
             ->groupBy('doctors.id')
             ->havingRaw('nearest_datetime IS NOT NULL')
             ->orderBy('nearest_datetime')
