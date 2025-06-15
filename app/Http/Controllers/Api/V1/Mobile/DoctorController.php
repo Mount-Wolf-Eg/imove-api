@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 
 class DoctorController extends BaseApiController
 {
-        private ConsultationContract $ConsultationContract;
+    private ConsultationContract $ConsultationContract;
 
     /**
      * DoctorController constructor.
@@ -28,6 +28,7 @@ class DoctorController extends BaseApiController
      */
     public function __construct(DoctorContract $contract, ConsultationContract $ConsultationContract)
     {
+        dd('DoctorController constructor called');
         parent::__construct($contract, DoctorResource::class);
         $this->defaultScopes = ['requestStatus' => DoctorRequestStatusConstants::APPROVED->value, 'active' => true];
         $this->relations = [
