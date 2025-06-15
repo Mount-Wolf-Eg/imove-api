@@ -242,13 +242,11 @@ class Doctor extends Model
                         ->whereHas('availableSlots', function ($q) {
                             $q->whereTime('from_time', '>=', now()->format('H:i:s'));
                         })
-                        ->orderBy('date')
-                        ->limit(1);
+                        ->orderBy('date');
                 },
                 'scheduleDays.availableSlots' => function ($query) {
                     $query->whereTime('from_time', '>=', now()->format('H:i:s'))
-                        ->orderBy('from_time')
-                        ->limit(1);
+                        ->orderBy('from_time');
                 }
             ]);
     }
