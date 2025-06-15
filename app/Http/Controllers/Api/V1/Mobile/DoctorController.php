@@ -53,7 +53,7 @@ class DoctorController extends BaseApiController
 
     public function newIndex()
     {
-        $doctors = Doctor::ofWithUpcomingShifts()->paginate(10);
+        $doctors = Doctor::ofWithUpcomingShiftsOptimized()->paginate(10);
             
         return DoctorResource::collection($doctors);
     }
