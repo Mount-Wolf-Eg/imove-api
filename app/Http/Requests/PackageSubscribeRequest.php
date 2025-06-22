@@ -62,8 +62,7 @@ class PackageSubscribeRequest extends FormRequest
 
     public function validated($key = null, $default = null)
     {
-        $package = Package::findOrFail($this->route('package'));
-
+        $package   = Package::findOrFail($this->route('package'));
         $validated = parent::validated($key, $default);
 
         // Manual validation using ConsultationRequest rules
@@ -72,7 +71,7 @@ class PackageSubscribeRequest extends FormRequest
         // $consultationValidator = Validator::make($this->all(), $consultationRules);
 
         // $consultationValidated = $consultationValidator->validated();
-        $consultationRequest = app(ConsultationRequest::class);
+        $consultationRequest   = app(ConsultationRequest::class);
         $consultationValidated = $consultationRequest->validated();
 
         return array_merge($validated, $consultationValidated, [

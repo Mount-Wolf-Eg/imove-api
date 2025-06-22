@@ -117,7 +117,7 @@ class DoctorController extends BaseApiController
             ->orderBy('next_available_at', 'asc')
             ->paginate();
 
-        return CustomDoctorResource::collection($doctors);
+        return CustomDoctorResource::collection($doctors)->additional(['general_session_price' => GeneralSettings::getSettingValue('general_session_price')]);
     }
 
     /**
