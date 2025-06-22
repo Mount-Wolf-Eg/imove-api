@@ -24,12 +24,14 @@ class DoctorProfileRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'national_id' => config('validations.string.req') . '|regex:/^[1-4]/',
-            'medical_id' => config('validations.string.req'),
-            'date_of_birth' => config('validations.date.req'),
-            'phone' => config('validations.phone.req'),
+            'national_id'    => config('validations.string.req') . '|regex:/^[1-4]/',
+            'medical_id'     => config('validations.string.req'),
+            'date_of_birth'  => config('validations.date.req'),
+            'phone'          => config('validations.phone.req'),
 
-            'specialities' => config('validations.array.null'),
+            'bio'            => config('validations.string.null'),
+
+            'specialities'   => config('validations.array.null'),
             'specialities.*' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
         ];
     }
