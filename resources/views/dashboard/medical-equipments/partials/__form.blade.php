@@ -31,7 +31,7 @@
                         @enderror
                     </div>
                     <div class="col-lg-6">
-                        {{Form::label('type', __('messages.type'), ['class' => 'form-label'])}}
+                        {{Form::label('type', __('messages.equipment_category'), ['class' => 'form-label'])}}
                         <span class="text-danger fw-bold">*</span>
                         {!! Form::select('category_id', $category->pluck('name', 'id')->prepend(__('messages.select'), ''),
                             $medicalEquipment->category_id ?? '',

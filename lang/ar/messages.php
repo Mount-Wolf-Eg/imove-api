@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'equipment_category' => 'فئة المعدات',
+    'email_unique' => 'لديك مشرف بهذا البريد الإلكتروني :attribute برجاء استخدام بريد إلكتروني آخر.',
+    'supervisors' => 'المشرفين',
+    'supervisors_roles' => 'أدوار المشرفين',
     'sessions_per_specialty'   => 'عدد الجلسات لكل تخصص جديد',
     'specialties_per_sessions' => 'عدد التخصصات المتاحة بعد تحقيق عدد الجلسات',
 
@@ -27,7 +31,7 @@ return [
     'manage_packages' => 'إدارة الباقات',
     'created_at' => 'تاريخ الإنشاء',
     'num_of_sessions' => 'عدد الجلسات',
-    'duration' => 'المدة',
+    'duration' => 'المدة (بالأيام)',
     'price' => 'السعر',
     'is_active' => 'مفعل',
     'site_name' => 'اسم الموقع',

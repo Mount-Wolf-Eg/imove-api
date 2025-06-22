@@ -88,7 +88,7 @@
                     </div>
                     <div class="col-lg-6">
                         {{Form::label('medical_id', __('messages.medical_id'), ['class' => 'form-label'])}}
-                        {!! Form::number('medical_id' , $doctor->medical_id ?? '', ['class' => 'form-control', 'pattern' => '[0-9]', 'onkeypress' => 'return isNumberKey(event)']) !!}
+                        {!! Form::text('medical_id' , $doctor->medical_id ?? '', ['class' => 'form-control']) !!}
                         @error("medical_id")
                         <span class="text-danger">{{$message}}</span>
                         @enderror

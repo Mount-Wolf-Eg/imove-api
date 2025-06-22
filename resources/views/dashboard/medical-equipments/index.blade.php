@@ -14,7 +14,7 @@
     </div>
     <x-filter>
         <div class="col-lg-4">
-            {{Form::label('type', __('messages.type'), ['class' => 'form-label'])}}
+            {{Form::label('type', __('messages.equipment_category'), ['class' => 'form-label'])}}
             {!! Form::select('category', $category->pluck('name', 'id')->prepend(__('messages.select'), ''),
                 request('category') ?? '',
                 ['class' => 'form-select']) !!}
@@ -30,7 +30,7 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">{{__('messages.name')}}</th>
-                    <th scope="col">{{__('messages.type')}}</th>
+                    <th scope="col">{{__('messages.equipment_category')}}</th>
                     <th scope="col">{{__('messages.link')}}</th>
                     <th scope="col">{{__('messages.activation')}}</th>
                     <th scope="col">{{__('messages.actions')}}</th>

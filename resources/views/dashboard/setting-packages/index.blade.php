@@ -35,7 +35,7 @@
                         <td>{{$resource->num_of_sessions}}</td>
                         <td>{{$resource->duration}}</td>
                         <td>{{$resource->created_at?->format('Y-m-d')}}</td>
-                        @include('dashboard.partials.__table-actions', ['resource' => $resource, 'route' => 'setting-packages', 'showModel' => true, 'hideActive' => true])
+                        @include('dashboard.partials.__table-actions', ['resource' => $resource, 'route' => 'setting-packages', 'disableDelete' => true, 'showModel' => true, 'hideActive' => true])
                         @include('dashboard.setting-packages.show', ['resource' => $resource])
                     </tr>
                 @endforeach

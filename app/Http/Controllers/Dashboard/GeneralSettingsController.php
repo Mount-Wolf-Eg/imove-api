@@ -20,7 +20,7 @@ class GeneralSettingsController extends Controller
         $request->validate([
             'site_name'                => 'required|string',
             'app_payment_percentage'   => 'required|numeric|min:0',
-            'urgent_grace_period'      => 'required|numeric|min:0',
+            // 'urgent_grace_period'      => 'required|numeric|min:0',
             'normal_grace_period'      => 'required|numeric|min:0',
             'tax_percentage'           => 'required|numeric|min:0|max:100',
             'general_session_price'    => 'required|numeric|min:0',
@@ -30,7 +30,7 @@ class GeneralSettingsController extends Controller
 
         $settings->site_name                = $request->input('site_name');
         $settings->app_payment_percentage   = $request->input('app_payment_percentage');
-        $settings->urgent_grace_period      = $request->input('urgent_grace_period');
+        // $settings->urgent_grace_period      = $request->input('urgent_grace_period');
         $settings->normal_grace_period      = $request->input('normal_grace_period');
         $settings->tax_percentage           = $request->input('tax_percentage');
         $settings->general_session_price    = $request->input('general_session_price');

@@ -26,7 +26,7 @@
     </div>
 
     {{-- Reschedule Grace Period --}}
-    <div class="mb-3">
+    <!-- <div class="mb-3">
         <label for="urgent_grace_period" class="form-label">{{ __('messages.urgent_grace_period') }}</label>
         <input type="number" step="0.1" name="urgent_grace_period" id="urgent_grace_period"
             class="form-control @error('urgent_grace_period') is-invalid @enderror"
@@ -34,7 +34,7 @@
         @error('urgent_grace_period')
         <div class="invalid-feedback">{{ $message }}</div>
         @enderror
-    </div>
+    </div> -->
 
     {{-- Cancel Grace Period --}}
     <div class="mb-3">

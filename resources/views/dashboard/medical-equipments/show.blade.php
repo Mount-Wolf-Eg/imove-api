@@ -17,7 +17,7 @@
                     <p class="card-text">{{__('messages.created')}}: {{$medicalEquipment->created_at->format('Y-m-d')}}</p>
                     <h5 class="card-title py-2">{{__('messages.details')}}</h5>
                     <div class="row py-2">
-                        <div class="col-6">{{__('messages.type')}}</div>
+                        <div class="col-6">{{__('messages.equipment_category')}}</div>
                         <div class="col-6">{{$medicalEquipment->category->name}}</div>
                     </div>
                     <div class="row py-2">

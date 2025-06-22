@@ -409,7 +409,8 @@ class Consultation extends Model
 
     public function gracePeriod()
     {
-        return $this->type->is(ConsultationTypeConstants::WITH_APPOINTMENT ? GeneralSettings::getSettingValue('normal_grace_period') : GeneralSettings::getSettingValue('urgent_grace_period'));
+        return GeneralSettings::getSettingValue('normal_grace_period');
+        // return $this->type->is(ConsultationTypeConstants::WITH_APPOINTMENT ? GeneralSettings::getSettingValue('normal_grace_period') : GeneralSettings::getSettingValue('urgent_grace_period'));
     }
 
     public function inGracePeriod($graceLimit): bool

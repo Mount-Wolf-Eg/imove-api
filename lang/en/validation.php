@@ -12,6 +12,14 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
     */
+    'password_required'  => 'The password field is required.',
+    'password_string'    => 'The password must be a string.',
+    'password_min'       => 'The password must be at least 6 characters.',
+    'password_max'       => 'The password may not be greater than 250 characters.',
+    'password_confirmed' => 'The password confirmation does not match.',
+    'password_regex'     => 'The password must contain at least one lowercase letter, one uppercase letter, and one number.',
+    
+    'email_unique' => 'You already have an supervisor with this email :attribute. Please use a different email address.',
     'failed' => 'The given data was invalid.',
     'accepted' => 'The :attribute must be accepted.',
     'accepted_if' => 'The :attribute must be accepted when :other is :value.',
@@ -173,6 +181,14 @@ return [
         ],
         'doctor_schedule_day_shift_id' => [
             'required_if' => 'The doctor schedule day shift id field is required when type is with appointment.',
+        ],
+        'password' => [
+            'required'  => 'The password field is required.',
+            'string'    => 'The password must be a string.',
+            'min'       => 'The password must be at least 6 characters.',
+            'max'       => 'The password may not be greater than 250 characters.',
+            'confirmed' => 'The password confirmation does not match.',
+            'regex'     => 'The password must contain at least one lowercase letter, one uppercase letter, and one number.',
         ],
     ],
     'profile_mimes' => 'Profile image should be only one of these extensions  (PNG - JPG - JPEG)',

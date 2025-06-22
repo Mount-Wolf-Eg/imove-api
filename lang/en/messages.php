@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'equipment_category' => 'Equipment Category',
+    'supervisors' => 'Supervisors',
+    'supervisors_roles' => 'Supervisors Roles',
     'sessions_per_specialty'   => 'Number of Sessions per New Specialty',
     'specialties_per_sessions' => 'Number of Specialties to Unlock per Sessions Completed',
 
@@ -12,13 +15,13 @@ return [
     'manage_refund_requests' => 'Manage Refund Requests',
     'search_by_name_id' => 'Search by name',
     'iban_number' => 'IBAN Number',
-    'setting-package' => 'Setting Package',
-    'add_setting-package' => 'Add New Setting Package',
-    'edit_setting-package' => 'Edit Setting Package',
-    'setting-package_details' => 'Setting Package Details',
+    'setting-package' => 'Recommended Package',
+    'add_setting-package' => 'Add New Recommended Package',
+    'edit_setting-package' => 'Edit Recommended Package',
+    'setting-package_details' => 'Recommended Package Details',
     'created_at' => 'Created At',
-    'setting-packages' => 'Setting Packages',
-    'manage_setting-packages' => 'Manage Setting Packages',
+    'setting-packages' => 'Recommended Packages',
+    'manage_setting-packages' => 'Manage Recommended Packages',
 
     'package' => 'Package',
     'add_package' => 'Add New Package',
@@ -28,7 +31,7 @@ return [
     'packages' => 'Packages',
     'manage_packages' => 'Manage Packages',
     'num_of_sessions' => 'Number of sessions',
-    'duration' => 'Duration',
+    'duration' => 'Duration (Days)',
     'price' => 'Price',
     'is_active' => 'Active',
     'site_name' => 'Site Name',

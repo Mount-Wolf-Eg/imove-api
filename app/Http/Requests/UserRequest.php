@@ -32,38 +32,46 @@ class UserRequest extends FormRequest
 
     public static function prepareUserForRoles($validated, $role): array
     {
-        if (isset($validated['name'])){
+        if (isset($validated['name'])) {
             $validated['user']['name']['ar'] = $validated['name'];
             $validated['user']['name']['en'] = $validated['name'];
         }
-        if (isset($validated['email'])){
+        if (isset($validated['email'])) {
             $validated['user']['email'] = $validated['email'];
         }
-        if (isset($validated['phone'])){
+        if (isset($validated['phone'])) {
             $validated['user']['phone'] = $validated['phone'];
         }
-        if (isset($validated['address'])){
+        if (isset($validated['address'])) {
             $validated['user']['address'] = $validated['address'];
         }
-        if (isset($validated['date_of_birth'])){
+        if (isset($validated['date_of_birth'])) {
             $validated['user']['date_of_birth'] = $validated['date_of_birth'];
         }
-        if (isset($validated['image'])){
+        if (isset($validated['image'])) {
             $validated['user']['image'] = $validated['image'];
         }
-        if (isset($validated['password'])){
+        if (isset($validated['password'])) {
             $validated['user']['password'] = $validated['password'];
         }
         if (isset($validated['gender'])) {
             $validated['user']['gender'] = $validated['gender'];
         }
-        if (isset($validated['city_id'])){
+        if (isset($validated['city_id'])) {
             $validated['user']['city_id'] = $validated['city_id'];
         }
         $validated['user']['role_id'] = resolve(RoleContract::class)->findBy('name', $role)?->id;
-        unset($validated['name'], $validated['email'], $validated['phone'],
-            $validated['password'], $validated['address'], $validated['date_of_birth'],
-            $validated['image'], $validated['gender'], $validated['city_id']);
+        unset(
+            $validated['name'],
+            $validated['email'],
+            $validated['phone'],
+            $validated['password'],
+            $validated['address'],
+            $validated['date_of_birth'],
+            $validated['image'],
+            $validated['gender'],
+            $validated['city_id']
+        );
         return $validated;
     }
 
@@ -86,15 +94,15 @@ class UserRequest extends FormRequest
     {
         $rules = [
             'name' => config('validations.string.req'),
-            'email' => sprintf(config('validations.email.req'), 'users', 'email').','.$this->route('user')?->id,
-            'phone' => config('validations.phone.req').'|unique:users,phone,'.$this->route('user')?->id,
-            'image' =>  'nullable|'.config('validations.file.image') . '|mimes:jpeg,jpg,png|max:2048',
+            'email' => sprintf(config('validations.email.req'), 'users', 'email') . ',' . $this->route('user')?->id,
+            'phone' => config('validations.phone.req') . '|unique:users,phone,' . $this->route('user')?->id,
+            'image' =>  'nullable|' . config('validations.file.image') . '|mimes:jpeg,jpg,png|max:2048',
             'role_id' =>  sprintf(config('validations.model.active_req'), 'roles')
         ];
 
         if ($this->getMethod() === 'POST') {
             $rules['password'] = config('validations.password.req');
-        }else{
+        } else {
             $rules['password'] = config('validations.password.null');
         }
         return $rules;
@@ -104,7 +112,7 @@ class UserRequest extends FormRequest
      * Customizing input names displayed for user
      * @return array
      */
-    public function attributes() : array
+    public function attributes(): array
     {
         return [
             'name' => __('messages.name'),
@@ -122,8 +130,16 @@ class UserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'image.image' => __('validation.profile_mimes'),
-            'image.mimes' => __('validation.profile_mimes'),
+            'image.image'        => __('validation.profile_mimes'),
+            'image.mimes'        => __('validation.profile_mimes'),
+            'email.unique'       => __('validation.email_unique', ['attribute' => __('messages.email')]),
+
+            'password.required'  => __('validation.password_required'),
+            'password.string'    => __('validation.password_string'),
+            'password.min'       => __('validation.password_min'),
+            'password.max'       => __('validation.password_max'),
+            'password.confirmed' => __('validation.password_confirmed'),
+            'password.regex'     => __('validation.password_regex'),
         ];
     }
 }
