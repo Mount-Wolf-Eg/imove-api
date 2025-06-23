@@ -56,7 +56,7 @@ class Doctor extends Model
     ];
     protected array $searchable = ['user.name'];
     protected array $dates = [];
-    public array $filterModels = ['City', 'MedicalSpeciality', 'AcademicDegree', 'University', 'Hospital', 'DoctorScheduleDay'];
+    public array $filterModels = ['City', 'MedicalSpeciality', 'Seniority', 'AcademicDegree', 'University', 'Hospital', 'DoctorScheduleDay'];
     public array $filterCustom = ['consultationPeriods', 'reminders'];
     public array $translatable = [];
     public $casts = [
