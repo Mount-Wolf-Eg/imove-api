@@ -51,7 +51,8 @@ class MedicalEquipmentRequest extends FormRequest
             'name.ar' => __('messages.name_ar'),
             'name.en' => __('messages.name_en'),
             'link'    => __('messages.link'),
-            'category_id' => __('messages.type'),
+            'category_id' => __('messages.equipment_category'),
+            'photo' => __('messages.image'),
         ];
     }
 
