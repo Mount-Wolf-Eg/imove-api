@@ -45,7 +45,7 @@ class ExerciseRequest extends FormRequest
             $rules['media'] = 'nullable|'.config('validations.file.mixed').'|max:20048';
             $rules['main_image'] = 'nullable|'.config('validations.file.image').'|mimes:jpeg,jpg,png|max:2048';
         }
-        
+
         return $rules;
     }
 
@@ -63,6 +63,7 @@ class ExerciseRequest extends FormRequest
             'description.ar' => __('messages.description_ar'),
             'description.en' => __('messages.description_en'),
             'media' => __('messages.video'),
+            'main_image' => __('messages.main_image'),
         ];
     }
 
