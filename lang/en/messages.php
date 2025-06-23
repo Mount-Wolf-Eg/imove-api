@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'seniority' => 'Seniority',
+    'seniorities' => 'Seniorities',
+    'manage_seniorities' => 'Manage Seniorities',
+    'manage_seniority' => 'Manage Seniority',
+    'add_seniority' => 'Add New Seniority',
+    'edit_seniority' => 'Edit Seniority',
+    'seniority_details' => 'Seniority Details',
+
     'equipment_category' => 'Equipment Category',
     'supervisors' => 'Supervisors',
     'supervisors_roles' => 'Supervisors Roles',

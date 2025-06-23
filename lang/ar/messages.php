@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'seniority' => 'الدرجة العلمية',
+    'seniorities' => 'الدرجات العلمية',
+    'manage_seniorities' => 'إدارة الدرجات العلمية',
+    'manage_seniority' => 'إدارة الدرجة العلمية',
+    'add_seniority' => 'إضافة درجة علمية جديدة',
+    'edit_seniority' => 'تعديل الدرجة العلمية',
+    'seniority_details' => 'تفاصيل الدرجة العلمية',
+
     'equipment_category' => 'فئة المعدات',
     'email_unique' => 'لديك مشرف بهذا البريد الإلكتروني :attribute برجاء استخدام بريد إلكتروني آخر.',
     'supervisors' => 'المشرفين',

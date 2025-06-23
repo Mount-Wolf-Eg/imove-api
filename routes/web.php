@@ -47,6 +47,7 @@ use App\Http\Controllers\Dashboard\CityController;
 use App\Http\Controllers\Dashboard\SettingConsultationController;
 use App\Http\Controllers\Dashboard\ConsultationQuestionsController;
 use App\Http\Controllers\Dashboard\BannerController;
+use App\Http\Controllers\Dashboard\SeniorityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -175,6 +176,8 @@ Route::group([
 
         // setting-consultations
         Route::resource('setting-consultations', SettingConsultationController::class);
-        
+
+        Route::resource('seniorities', SeniorityController::class);
+        Route::put('seniorities/{seniority}/change-activation', [SeniorityController::class, 'changeActivation'])->name('seniorities.active');
     });
 });

@@ -114,6 +114,16 @@
                 </li>
                 @endif
 
+                @if(auth()->user()->can('read-seniority') || auth()->user()->can('view-all-seniority'))
+                <li class="nav-item">
+                    <a href="{{route('seniorities.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('seniorities.index', 'seniorities.show', 'seniorities.create',
+                        'seniorities.edit')])>
+                        <i class="bi bi-journal-plus"></i>
+                        <span data-key="t-dashboard">{{ __('messages.seniorities') }}</span>
+                    </a>
+                </li>
+                @endif
+
                 @if(auth()->user()->can('read-doctor') || auth()->user()->can('view-all-doctor'))
                 <li class="nav-item">
                     <a href="{{route('doctors.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('doctors.index', 'doctors.show', 'doctors.create',
