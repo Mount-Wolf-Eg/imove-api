@@ -44,6 +44,10 @@ class DoctorRequest extends FormRequest
             'email' => sprintf(config('validations.email.null'), 'users', 'email') . ',' . $this->route('doctor')?->user_id,
             'specialities' => config('validations.array.req'),
             'specialities.*' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
+
+            'seniorities' => config('validations.array.req'),
+            'seniorities.*' => sprintf(config('validations.model.active_req'), 'seniorities'),
+
             'academic_degree_id' => sprintf(config('validations.model.active_req'), 'academic_degrees'),
             'university' => config('validations.string.null'),
             'name' => config('validations.string.req'),

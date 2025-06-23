@@ -32,6 +32,18 @@
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
+
+                    <div class="col-lg-6">
+                        {{Form::label('seniorities', __('messages.seniorities'), ['class' => 'form-label'])}}
+                        <span class="text-danger fw-bold">*</span>
+                        {!! Form::select('seniorities[]', $seniorities->pluck('name', 'id'),
+                            isset($doctor) ? $doctor->seniorities->pluck('id') : [],
+                            ['class' => 'form-select', 'multiple' => true]) !!}
+                        @error("seniorities")
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                    </div>
+
                     <div class="col-lg-6">
                         {{Form::label('consultation_types', __('messages.consultation_types'), ['class' => 'form-label'])}}
                         <div class="card">

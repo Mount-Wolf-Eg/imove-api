@@ -8,6 +8,7 @@
                 <th scope="col">{{__('messages.name')}}</th>
                 <th scope="col">{{__('messages.avg_rates')}}</th>
                 <th scope="col">{{__('messages.speciality')}}</th>
+                <th scope="col">{{__('messages.seniorities')}}</th>
                 <th scope="col">{{__('messages.medical_id')}}</th>
                 <th scope="col">{{__('messages.national_id')}}</th>
                 <th scope="col">{{__('messages.phone')}}</th>
@@ -28,6 +29,13 @@
                            - {{$speciality->name}} <br>
                         @endforeach
                     </td>
+
+                    <td>
+                        @foreach($resource->seniorities as $seniority)
+                           - {{$seniority->name}} <br>
+                        @endforeach
+                    </td>
+
                     <td>{{$resource->medical_id}}</td>
                     <td>{{$resource->national_id}}</td>
                     <td>{{$resource->user?->phone}}</td>

@@ -47,6 +47,7 @@ class DoctorResource extends BaseResource
         $this->relations = [
             'user' => $this->relationLoaded('user') ? new UserResource($this->user) : null,
             'medical_specialities' => $this->relationLoaded('medicalSpecialities') ? MedicalSpecialityResource::collection($this->medicalSpecialities) : [],
+            'seniorities' => $this->relationLoaded('seniorities') ? SeniorityResource::collection($this->seniorities) : [],
             'academic_degree' => $this->relationLoaded('academicDegree') ? new AcademicDegreeResource($this->academicDegree) : null,
             'attachments' => $this->relationLoaded('attachments') ? FileResource::collection($this->attachments) : [],
             'rates_count' => $this->relationLoaded('rates') ? $this->rates->count() : 0,

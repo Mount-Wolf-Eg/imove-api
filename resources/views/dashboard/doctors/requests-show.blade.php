@@ -16,6 +16,12 @@
                             <div class="col-6">{{__('messages.speciality')}}</div>
                             <div class="col-6">{{$resource->speciality}}</div>
                         </div>
+
+                        <div class="row py-2">
+                            <div class="col-6">{{__('messages.seniority')}}</div>
+                            <div class="col-6">{{$resource->seniority}}</div>
+                        </div>
+
                         <div class="row py-2">
                             <div class="col-6">{{__('messages.medical_id')}}</div>
                             <div class="col-6">{{$resource->medical_id}}</div>

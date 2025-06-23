@@ -58,6 +58,15 @@
                                 @endforeach
                             </div>
                         </div>
+
+                        <div class="row py-2">
+                            <div class="col-6">{{__('messages.seniorities')}}</div>
+                            <div class="col-6">
+                                @foreach($doctor->seniorities as $seniority)
+                                    <span class="d-block">- {{$seniority->name}}</span>
+                                @endforeach
+                            </div>
+                        </div>
                     <div class="py-2">
                         <h5 class="card-title py-2">{{__('messages.universities')}}</h5>
                         <div class="row py-2">

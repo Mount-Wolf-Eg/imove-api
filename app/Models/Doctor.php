@@ -45,6 +45,7 @@ class Doctor extends Model
         'keyword',
         'requestStatus',
         'medicalSpeciality',
+        'seniority',
         'academicDegree',
         'city',
         'topRated',
@@ -71,8 +72,12 @@ class Doctor extends Model
 
     public function medicalSpecialities(): BelongsToMany
     {
-        return $this->belongsToMany(MedicalSpeciality::class, 'doctor_medical_speciality')
-            ->withPivot('price')->withTimestamps();
+        return $this->belongsToMany(MedicalSpeciality::class, 'doctor_medical_speciality')->withPivot('price')->withTimestamps();
+    }
+
+    public function seniorities(): BelongsToMany
+    {
+        return $this->belongsToMany(Seniority::class, 'doctor_seniority')->withTimestamps();
     }
 
     public function academicDegree(): BelongsTo

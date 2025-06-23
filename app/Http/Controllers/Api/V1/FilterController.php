@@ -14,6 +14,7 @@ use App\Http\Resources\UniversityResource;
 use App\Http\Resources\VendorServiceResource;
 use App\Http\Resources\VendorTypeResource;
 use App\Http\Resources\DoctorScheduleDayResource;
+use App\Http\Resources\SeniorityResource;
 use App\Models\DoctorScheduleDay;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -71,6 +72,7 @@ class FilterController extends Controller
         return match ($model) {
             'City' => CityResource::collection($data),
             'MedicalSpeciality' => MedicalSpecialityResource::collection($data),
+            'Seniority' => SeniorityResource::collection($data),
             'ConsultationQuestion' => ConsultationQuestionResource::collection($data),
             'AcademicDegree' => AcademicDegreeResource::collection($data),
             'VendorType' => VendorTypeResource::collection($data),

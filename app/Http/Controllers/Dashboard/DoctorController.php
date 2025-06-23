@@ -15,12 +15,14 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Exceptions\CantDeleteModelException;
+use App\Repositories\Contracts\SeniorityContract;
 
 class DoctorController extends BaseWebController
 {
 
     protected MedicalSpecialityContract $medicalSpecialityContract;
     protected AcademicDegreeContract $academicDegreeContract;
+    protected SeniorityContract $seniorityContract;
 
     /**
      * DoctorController constructor.
@@ -28,11 +30,12 @@ class DoctorController extends BaseWebController
      * @param MedicalSpecialityContract $medicalSpecialityContract
      * @param AcademicDegreeContract $academicDegreeContract
      */
-    public function __construct(DoctorContract $contract, MedicalSpecialityContract $medicalSpecialityContract, AcademicDegreeContract $academicDegreeContract)
+    public function __construct(DoctorContract $contract, MedicalSpecialityContract $medicalSpecialityContract, SeniorityContract $seniorityContract, AcademicDegreeContract $academicDegreeContract)
     {
         parent::__construct($contract, 'dashboard');
         $this->medicalSpecialityContract = $medicalSpecialityContract;
-        $this->academicDegreeContract = $academicDegreeContract;
+        $this->academicDegreeContract    = $academicDegreeContract;
+        $this->seniorityContract         = $seniorityContract;
     }
 
     /**
@@ -54,9 +57,10 @@ class DoctorController extends BaseWebController
      */
     public function create(): View|Factory|Application
     {
-        $specialities = $this->medicalSpecialityContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
+        $specialities    = $this->medicalSpecialityContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
+        $seniorities     = $this->seniorityContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
         $academicDegrees = $this->academicDegreeContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
-        return $this->createBlade(['specialities' => $specialities, 'academicDegrees' => $academicDegrees]);
+        return $this->createBlade(['specialities' => $specialities, 'seniorities' => $seniorities, 'academicDegrees' => $academicDegrees]);
     }
 
     /**
@@ -93,9 +97,10 @@ class DoctorController extends BaseWebController
      */
     public function edit(Doctor $doctor): View|Factory|Application
     {
-        $specialities = $this->medicalSpecialityContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
+        $specialities    = $this->medicalSpecialityContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
+        $seniorities     = $this->seniorityContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
         $academicDegrees = $this->academicDegreeContract->search(['active' => true], [], ['limit' => 0, 'page' => 0]);
-        return $this->editBlade(['doctor' => $doctor, 'specialities' => $specialities, 'academicDegrees' => $academicDegrees]);
+        return $this->editBlade(['doctor' => $doctor, 'specialities' => $specialities, 'seniorities' => $seniorities, 'academicDegrees' => $academicDegrees]);
     }
 
     /**

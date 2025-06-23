@@ -33,6 +33,9 @@ class DoctorProfileRequest extends FormRequest
 
             'specialities'   => config('validations.array.null'),
             'specialities.*' => sprintf(config('validations.model.active_null'), 'medical_specialities'),
+
+            'seniorities'    => config('validations.array.null'),
+            'seniorities.*'  => sprintf(config('validations.model.active_null'), 'seniorities'),
         ];
     }
 }

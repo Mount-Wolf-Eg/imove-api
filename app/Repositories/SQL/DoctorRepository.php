@@ -43,6 +43,11 @@ class DoctorRepository extends BaseRepository implements DoctorContract
         if (isset($attributes['specialities'])) {
             $model->medicalSpecialities()->sync($attributes['specialities']);
         }
+
+        if (isset($attributes['seniorities'])) {
+            $model->seniorities()->sync($attributes['seniorities']);
+        }
+
         if (isset($attributes['attachments'])) {
             self::syncAttachments($model, $attributes);
         }
