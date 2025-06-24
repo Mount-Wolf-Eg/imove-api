@@ -37,7 +37,7 @@ class PatientController extends BaseWebController
         return $this->indexBlade(['resources' => $resources]);
     }
 
-     /**
+    /**
      * Show the form for creating a new resource.
      *
      * @return Application|Factory|View
@@ -129,5 +129,31 @@ class PatientController extends BaseWebController
         $this->contract->toggleField($patient, 'is_active');
         resolve(UserContract::class)->toggleField($patient->user, 'is_active');
         return $this->redirectBack()->with('success', __('messages.actions_messages.update_success'));
+    }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids');
+
+        try {
+            if (!$ids || !is_array($ids)) {
+                return redirect()->back()->with('error', __('messages.no_items_selected'));
+            }
+
+            foreach ($ids as $id) {
+                $patient = Patient::find($id);
+                if ($patient) {
+                    $this->contract->remove($patient);
+                    resolve(UserContract::class)->remove($patient->user);
+                }
+            }
+
+            return redirect()->route('patients.index')->with('success', __('messages.selected_deleted_successfully'));
+        } catch (Exception $e) {
+            return $this->redirectBack()->with('error', $e->getMessage());
+        } catch (\Exception $e) {
+            \Log::error('Failed to delete patient: ' . $e->getMessage(), ['patient_id' => $patient->id]);
+            return $this->redirectBack()->with('error', __('messages.actions_messages.delete_failed'));
+        }
     }
 }

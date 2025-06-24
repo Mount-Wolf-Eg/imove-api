@@ -1,6 +1,19 @@
 <?php
 
 return [
+    'delete_selected' => 'حذف المحدد',
+    'no_items_selected' => 'لم يتم تحديد أي عنصر',
+    'selected_deleted_successfully' => 'تم حذف العناصر المحددة بنجاح',
+
+    'confirm_delete_selected' => 'هل تريد حذف المرضى المحددين؟',
+
+    'confirm' => [
+        'are_you_sure' => 'هل أنت متأكد؟',
+        'confirm_delete_selected' => 'هل تريد حذف المرضى المحددين؟',
+        'yes_delete' => 'نعم، احذف',
+        'cancel' => 'إلغاء',
+    ],
+
     'balance' => 'الرصيد',
     'seniority' => 'الخبرة',
     'seniorities' => 'الخبرات',
@@ -318,7 +331,7 @@ return [
         'cannot_delete_doctor_with_upcoming_consultations' => 'لا يمكن حذف :model لأن لديه :count استشارات قادمة.',
         'cannot_delete_doctor_with_package_consultations' => 'لا يمكن حذف :model لأن لديه :count استشارات مرتبطة بالباقات.',
         'no_doctor_account' => 'لا يوجد حساب أخصائي مرتبط بهذا المستخدم.',
-        
+
         'cannot_delete_doctor' => 'لا يمكن حذف :model بسبب قيود إضافية.',
         'cannot_delete_patient_with_wallet_balance' => 'لا يمكن حذف :model لأن لديه رصيد في المحفظة (:balance).',
         'cannot_delete_patient_with_upcoming_consultations' => 'لا يمكن حذف :model لأن لديه استشارات قادمة.',
@@ -677,7 +690,7 @@ return [
     'manage_static-pages' => 'اداره الصفحات الثابته',
     'static-page' => 'الصفحة الثابته',
     'edit_static-page' => 'تعديل الصفحة الثابته',
-    'technical_support_added'=> 'تمت إضافة رسالة للدعم الفني بنجاح',
+    'technical_support_added' => 'تمت إضافة رسالة للدعم الفني بنجاح',
     'technical-support' => 'الدعم الفنى',
     'manage_technical-support' => 'اداره الدعم الفنى',
     'create_success' => 'تم الإنشاء بنجاح',
@@ -687,7 +700,7 @@ return [
     'Unauthorized: This consultation is not for you' => 'غير مصرح: هذه الاستشارة لا تخصك',
     'Like added successfully' => 'تم اضافة الاعجاب بنجاح',
     'Like removed successfully' => 'تم حذف الاعجاب',
-    
+
     'educational-contents'          => 'المحتوى التعليمى',
     'manage_educational-contents'   => 'اداره المحتوى التعليمى',
     'educational-contents_details'  => 'تفاصيل المحتوى التعليمى',
@@ -711,14 +724,14 @@ return [
         'delete_failed' => 'فشل الحذف، حاول مرة أخرى',
     ],
 
-    
+
     'unauthorized' => 'غير مصرح لك',
     'session_active' => 'يوجد جلسة نشطة بالفعل، يرجى إكمالها أولاً',
     'session_week_exceeded' => 'الأسبوع المحدد يتجاوز الحد الأقصى (:max أسابيع)',
     'session_day_exceeded' => 'اليوم المحدد يتجاوز الحد الأقصى (:max أيام)',
     'session_limit_exceeded' => 'تم الوصول إلى الحد الأقصى للجلسات اليومية (:max جلسات)',
     'no_exercises_in_program' => 'البرنامج لا يحتوي على تمارين',
-    
+
     'exercises' => 'التمارين الطبية',
     'manage_exercises' => 'اداره التمارين الطبية',
     'brief' => 'مختصر',

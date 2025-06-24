@@ -105,6 +105,9 @@ Route::group([
         Route::put('diseases/{disease}/change-activation', [DiseaseController::class, 'changeActivation'])->name('diseases.active');
         Route::resource('patients', PatientController::class);
         Route::put('patients/{patient}/change-activation', [PatientController::class, 'changeActivation'])->name('patients.active');
+
+        Route::put('patients-bulk-delete', [PatientController::class, 'bulkDelete'])->name('patients.bulk-delete');
+
         Route::resource('articles', ArticleController::class);
         Route::put('articles/{article}/change-activation', [ArticleController::class, 'changeActivation'])->name('articles.active');
         Route::put('articles/{id}/publish', [ArticleController::class, 'publish'])->name('articles.publish');

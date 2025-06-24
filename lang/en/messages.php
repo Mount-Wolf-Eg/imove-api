@@ -1,6 +1,20 @@
 <?php
 
 return [
+    'delete_selected' => 'Delete Selected',
+    'no_items_selected' => 'No items selected',
+    'no_items_selected_message' => 'Please select at least one item to perform this action.',
+    'selected_deleted_successfully' => 'Selected items deleted successfully',
+
+    'confirm_delete_selected' => 'Do you want to delete the selected items?',
+
+    'confirm' => [
+        'are_you_sure' => 'Are you sure?',
+        'confirm_delete_selected' => 'Do you want to delete the selected items?',
+        'yes_delete' => 'Yes, delete!',
+        'cancel' => 'Cancel',
+    ],
+
     'balance' => 'Balance',
     'seniority' => 'Seniority',
     'seniorities' => 'Seniorities',
