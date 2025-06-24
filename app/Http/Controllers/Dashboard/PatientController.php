@@ -111,7 +111,7 @@ class PatientController extends BaseWebController
             $this->contract->remove($patient);
             resolve(UserContract::class)->remove($patient->user);
             return $this->redirectBack()->with('success', __('messages.actions_messages.delete_success'));
-        } catch (CantDeleteModelException $e) {
+        } catch (Exception $e) {
             return $this->redirectBack()->with('error', $e->getMessage());
         } catch (\Exception $e) {
             \Log::error('Failed to delete patient: ' . $e->getMessage(), ['patient_id' => $patient->id]);

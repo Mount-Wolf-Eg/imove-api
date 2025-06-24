@@ -30,14 +30,59 @@
             </div>
             <ul class="navbar-nav" id="navbar-nav">
                 <li class="menu-title"><span data-key="t-menu">{{ __('t-menu') }}</span></li>
+
                 <li class="nav-item">
                     <a href="{{route('dashboard')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('dashboard')])>
                         <i class="bi bi-speedometer2"></i>
                         <span data-key="t-dashboard">{{ __('t-dashboard') }}</span>
                      </a>
                 </li>
+                @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
+                <li class="nav-item">
+                    <a href="{{route('settings.edit')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('settings.edit')])>
+                        <i class="bi bi-question-octagon"></i>
+                        <span data-key="t-dashboard">{{ __('messages.settings') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
+                <li class="nav-item">
+                    <a href="{{route('setting-consultations.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('setting-consultations.index', 'setting-consultations.show', 'setting-consultations.create', 'setting-consultations.edit')])>
+                        <i class="bi bi-cash-stack"></i>
+                        <span data-key="t-dashboard">{{ __('messages.setting-consultations') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-banner') || auth()->user()->can('view-all-banner'))
+                <li class="nav-item">
+                    <a href="{{route('banners.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('banners.index', 'banners.show', 'banners.create', 'banners.edit')])>
+                        <i class="bi bi-card-image"></i>
+                        <span data-key="t-dashboard">{{ __('messages.banners') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
+                <li class="nav-item">
+                    <a href="{{route('static-pages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('static-pages.index', 'static-pages.show', 'static-pages.create', 'static-pages.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.static-pages') }}</span>
+                    </a>
+                </li>
+                @endif
 
                 <hr class="menu-title mt-2"/>
+
+                @if(auth()->user()->can('read-user') || auth()->user()->can('view-all-user'))
+                <li class="nav-item">
+                    <a href="{{route('users.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('users.index', 'users.show', 'users.create', 'users.edit')])>
+                        <i class="bi bi-person"></i>
+                        <span data-key="t-dashboard">{{ __('messages.supervisors') }}</span>
+                    </a>
+                </li>
+                @endif
 
                 @if(auth()->user()->can('read-role') || auth()->user()->can('view-all-role'))
                 <li class="nav-item">
@@ -48,11 +93,22 @@
                 </li>
                 @endif
 
-                @if(auth()->user()->can('read-user') || auth()->user()->can('view-all-user'))
+                @if(auth()->user()->can('read-doctor') || auth()->user()->can('view-all-doctor'))
                 <li class="nav-item">
-                    <a href="{{route('users.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('users.index', 'users.show', 'users.create', 'users.edit')])>
-                        <i class="bi bi-person"></i>
-                        <span data-key="t-dashboard">{{ __('messages.supervisors') }}</span>
+                    <a href="{{route('doctors.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('doctors.index', 'doctors.show', 'doctors.create',
+                        'doctors.edit')])>
+                        <i class="bi bi-journal-plus"></i>
+                        <span data-key="t-dashboard">{{ __('messages.doctors') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-patient') || auth()->user()->can('view-all-patient'))
+                <li class="nav-item">
+                    <a href="{{route('patients.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('patients.index', 'patients.show', 'patients.create',
+                        'patients.edit')])>
+                        <i class="bi bi-person-badge"></i>
+                        <span data-key="t-dashboard">{{ __('messages.patients') }}</span>
                     </a>
                 </li>
                 @endif
@@ -69,8 +125,6 @@
                 </li>
                 @endif
 
-                <hr class="menu-title mt-2"/>
-
                 @if(auth()->user()->can('read-medical-speciality') || auth()->user()->can('view-all-medical-speciality'))
                 <li class="nav-item">
                     <a href="{{route('medical-specialities.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('medical-specialities.index', 'medical-specialities.show', 'medical-specialities.create',
@@ -81,35 +135,11 @@
                 </li>
                 @endif
 
-                <hr class="menu-title mt-2"/>
-
-                @if(auth()->user()->can('read-vendor-service') || auth()->user()->can('view-all-vendor-service'))
+                @if(auth()->user()->can('read-university') || auth()->user()->can('view-all-university'))
                 <li class="nav-item">
-                    <a href="{{route('vendor-services.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('vendor-services.index', 'vendor-services.show', 'vendor-services.create',
-                        'vendor-services.edit')])>
-                        <i class="bi bi-box-seam-fill"></i>
-                        <span data-key="t-dashboard">{{ __('messages.vendor_services') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                <!-- @if(auth()->user()->can('read-disease') || auth()->user()->can('view-all-disease'))
-                <li class="nav-item">
-                    <a href="{{route('diseases.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('diseases.index', 'diseases.show', 'diseases.create',
-                        'diseases.edit')])>
-                        <i class="bi bi-activity"></i>
-                        <span data-key="t-dashboard">{{ __('messages.disease_list') }}</span>
-                    </a>
-                </li>
-                @endif -->
-                <hr class="menu-title mt-2"/>
-
-                @if(auth()->user()->can('read-patient') || auth()->user()->can('view-all-patient'))
-                <li class="nav-item">
-                    <a href="{{route('patients.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('patients.index', 'patients.show', 'patients.create',
-                        'patients.edit')])>
-                        <i class="bi bi-person-badge"></i>
-                        <span data-key="t-dashboard">{{ __('messages.patients') }}</span>
+                    <a href="{{route('universities.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('universities.index', 'universities.show', 'universities.create', 'universities.edit')])>
+                        <i class="bi bi-building"></i>
+                        <span data-key="t-dashboard">{{ __('messages.universities') }}</span>
                     </a>
                 </li>
                 @endif
@@ -124,15 +154,7 @@
                 </li>
                 @endif
 
-                @if(auth()->user()->can('read-doctor') || auth()->user()->can('view-all-doctor'))
-                <li class="nav-item">
-                    <a href="{{route('doctors.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('doctors.index', 'doctors.show', 'doctors.create',
-                        'doctors.edit')])>
-                        <i class="bi bi-journal-plus"></i>
-                        <span data-key="t-dashboard">{{ __('messages.doctors') }}</span>
-                    </a>
-                </li>
-                @endif
+                <hr class="menu-title mt-2"/>
 
                 @if(auth()->user()->can('read-vendor') || auth()->user()->can('view-all-vendor'))
                 <li class="nav-item">
@@ -143,80 +165,6 @@
                     </a>
                 </li>
                 @endif
-
-                <hr class="menu-title mt-2"/>
-
-                @if(auth()->user()->can('read-faq-subject') || auth()->user()->can('view-all-faq-subject'))
-                <li class="nav-item">
-                    <a href="{{route('faq-subjects.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('faq-subjects.index', 'faq-subjects.show', 'faq-subjects.create',
-                        'faq-subjects.edit')])>
-                        <i class="bi bi-patch-question-fill"></i>
-                        <span data-key="t-dashboard">{{ __('messages.faq_subjects') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                @if(auth()->user()->can('read-faq') || auth()->user()->can('view-all-faq'))
-                <li class="nav-item">
-                    <a href="{{route('faqs.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('faqs.index', 'faqs.show', 'faqs.create', 'faqs.edit')])>
-                        <i class="bi bi-question-octagon"></i>
-                        <span data-key="t-dashboard">{{ __('messages.faqs') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                <hr class="menu-title mt-2"/>
-
-                @if(auth()->user()->can('read-coupon') || auth()->user()->can('view-all-coupon'))
-                <li class="nav-item">
-                    <a href="{{route('coupons.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('coupons.index', 'coupons.show', 'coupons.create',
-                        'coupons.edit')])>
-                        <i class="bi bi-card-text"></i>
-                        <span data-key="t-dashboard">{{ __('messages.coupons') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                <!-- @if(auth()->user()->can('read-featured-list') || auth()->user()->can('view-all-featured-list'))
-                    <li class="nav-item">
-                        <a href="{{route('featured-list.edit')}}" @class(['nav-link', 'menu-link',
-                    'active' => request()->routeIs(['featured-list.edit'])])>
-                            <i class="bi bi-award"></i>
-                            <span data-key="t-dashboard">{{ __('messages.featured_list') }}</span>
-                        </a>
-                    </li>
-                @endif -->
-
-                <!-- @if(auth()->user()->can('read-referral') || auth()->user()->can('view-all-referral'))
-                <li class="nav-item">
-                    <a href="{{route('referrals.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('referrals.index', 'referrals.show')])>
-                        <i class="bi bi-tv"></i>
-                        <span data-key="t-dashboard">{{ __('messages.referrals') }}</span>
-                    </a>
-                </li>
-                @endif -->
-
-                <hr class="menu-title mt-2"/>
-
-                @if(auth()->user()->can('read-payment') || auth()->user()->can('view-all-payment'))
-                <li class="nav-item">
-                    <a href="{{route('payments.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('payments.index', 'payments.show')])>
-                        <i class="bi bi-tv"></i>
-                        <span data-key="t-dashboard">{{ __('messages.payments') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                @if(auth()->user()->can('read-payment') || auth()->user()->can('view-all-payment'))
-                <li class="nav-item">
-                    <a href="{{route('refund-request')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('refunds.index', 'refunds.show')])>
-                        <i class="bi bi-tv"></i>
-                        <span data-key="t-dashboard">{{ __('messages.refunds') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                <hr class="menu-title mt-2"/>
 
                 @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
                 <li class="nav-item">
@@ -247,27 +195,14 @@
 
                 <hr class="menu-title mt-2"/>
 
-                @if(auth()->user()->can('read-academic-degree') || auth()->user()->can('view-all-academic-degree'))
+                @if(auth()->user()->can('read-article') || auth()->user()->can('view-all-article'))
                 <li class="nav-item">
-                    <a href="{{route('medical-equipments.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('medical-equipments.index', 'medical-equipments.show',
-                        'medical-equipments.create', 'medical-equipments.edit')])>
-                        <i class="bi bi-book"></i>
-                        <span data-key="t-dashboard">{{ __('messages.medical-equipments') }}</span>
+                    <a href="{{route('exercises.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('exercises.index', 'exercises.show', 'exercises.create', 'exercises.edit')])>
+                        <i class="bi bi-heart-pulse-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.exercises') }}</span>
                     </a>
                 </li>
                 @endif
-
-                @if(auth()->user()->can('read-academic-degree') || auth()->user()->can('view-all-academic-degree'))
-                <li class="nav-item">
-                    <a href="{{route('category-medical-equipments.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('category-medical-equipments.index', 'category-medical-equipments.show', 'category-medical-equipments.create',
-                        'category-medical-equipments.edit')])>
-                        <i class="bi bi-book"></i>
-                        <span data-key="t-dashboard">{{ __('messages.equipment-categories') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                <hr class="menu-title mt-2"/>
 
                 @if(auth()->user()->can('read-article') || auth()->user()->can('view-all-article'))
                 <li class="nav-item">
@@ -287,25 +222,26 @@
                 </li>
                 @endif
 
-                @if(auth()->user()->can('read-article') || auth()->user()->can('view-all-article'))
+                <hr class="menu-title mt-2"/>
+
+                @if(auth()->user()->can('read-faq-subject') || auth()->user()->can('view-all-faq-subject'))
                 <li class="nav-item">
-                    <a href="{{route('exercises.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('exercises.index', 'exercises.show', 'exercises.create', 'exercises.edit')])>
-                        <i class="bi bi-heart-pulse-fill"></i>
-                        <span data-key="t-dashboard">{{ __('messages.exercises') }}</span>
+                    <a href="{{route('faq-subjects.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('faq-subjects.index', 'faq-subjects.show', 'faq-subjects.create',
+                        'faq-subjects.edit')])>
+                        <i class="bi bi-patch-question-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.faq_subjects') }}</span>
                     </a>
                 </li>
                 @endif
 
-                <hr class="menu-title mt-2"/>
-
-                {{-- @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
+                @if(auth()->user()->can('read-faq') || auth()->user()->can('view-all-faq'))
                 <li class="nav-item">
-                    <a href="{{route('contact.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('contacts.index')])>
-                        <i class="bi bi-telephone"></i>
-                        <span data-key="t-dashboard">{{ __('messages.contacts') }}</span>
+                    <a href="{{route('faqs.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('faqs.index', 'faqs.show', 'faqs.create', 'faqs.edit')])>
+                        <i class="bi bi-question-octagon"></i>
+                        <span data-key="t-dashboard">{{ __('messages.faqs') }}</span>
                     </a>
                 </li>
-                @endif --}}
+                @endif
 
                 @if(auth()->user()->can('read-contact') || auth()->user()->can('view-all-contact'))
                 <li class="nav-item">
@@ -317,6 +253,16 @@
                 @endif
 
                 <hr class="menu-title mt-2"/>
+
+                @if(auth()->user()->can('read-coupon') || auth()->user()->can('view-all-coupon'))
+                <li class="nav-item">
+                    <a href="{{route('coupons.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('coupons.index', 'coupons.show', 'coupons.create',
+                        'coupons.edit')])>
+                        <i class="bi bi-card-text"></i>
+                        <span data-key="t-dashboard">{{ __('messages.coupons') }}</span>
+                    </a>
+                </li>
+                @endif
 
                 @if(auth()->user()->can('read-setting-package') || auth()->user()->can('view-all-setting-package'))
                 <li class="nav-item">
@@ -336,13 +282,42 @@
                 </li>
                 @endif
 
+                @if(auth()->user()->can('read-payment') || auth()->user()->can('view-all-payment'))
+                <li class="nav-item">
+                    <a href="{{route('payments.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('payments.index', 'payments.show')])>
+                        <i class="bi bi-tv"></i>
+                        <span data-key="t-dashboard">{{ __('messages.payments') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-payment') || auth()->user()->can('view-all-payment'))
+                <li class="nav-item">
+                    <a href="{{route('refund-request')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('refunds.index', 'refunds.show')])>
+                        <i class="bi bi-tv"></i>
+                        <span data-key="t-dashboard">{{ __('messages.refunds') }}</span>
+                    </a>
+                </li>
+                @endif
+
                 <hr class="menu-title mt-2"/>
 
-                @if(auth()->user()->can('read-university') || auth()->user()->can('view-all-university'))
+                @if(auth()->user()->can('read-academic-degree') || auth()->user()->can('view-all-academic-degree'))
                 <li class="nav-item">
-                    <a href="{{route('universities.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('universities.index', 'universities.show', 'universities.create', 'universities.edit')])>
-                        <i class="bi bi-building"></i>
-                        <span data-key="t-dashboard">{{ __('messages.universities') }}</span>
+                    <a href="{{route('medical-equipments.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('medical-equipments.index', 'medical-equipments.show',
+                        'medical-equipments.create', 'medical-equipments.edit')])>
+                        <i class="bi bi-book"></i>
+                        <span data-key="t-dashboard">{{ __('messages.medical-equipments') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-academic-degree') || auth()->user()->can('view-all-academic-degree'))
+                <li class="nav-item">
+                    <a href="{{route('category-medical-equipments.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('category-medical-equipments.index', 'category-medical-equipments.show', 'category-medical-equipments.create',
+                        'category-medical-equipments.edit')])>
+                        <i class="bi bi-book"></i>
+                        <span data-key="t-dashboard">{{ __('messages.equipment-categories') }}</span>
                     </a>
                 </li>
                 @endif
@@ -369,40 +344,12 @@
 
                 <hr class="menu-title mt-2"/>
 
-                @if(auth()->user()->can('read-banner') || auth()->user()->can('view-all-banner'))
+                @if(auth()->user()->can('read-vendor-service') || auth()->user()->can('view-all-vendor-service'))
                 <li class="nav-item">
-                    <a href="{{route('banners.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('banners.index', 'banners.show', 'banners.create', 'banners.edit')])>
-                        <i class="bi bi-card-image"></i>
-                        <span data-key="t-dashboard">{{ __('messages.banners') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
-                <li class="nav-item">
-                    <a href="{{route('static-pages.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('static-pages.index', 'static-pages.show', 'static-pages.create', 'static-pages.edit')])>
-                        <i class="bi bi-postcard-fill"></i>
-                        <span data-key="t-dashboard">{{ __('messages.static-pages') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
-                <li class="nav-item">
-                    <a href="{{route('setting-consultations.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('setting-consultations.index', 'setting-consultations.show', 'setting-consultations.create', 'setting-consultations.edit')])>
-                        <i class="bi bi-cash-stack"></i>
-                        <span data-key="t-dashboard">{{ __('messages.setting-consultations') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                <hr class="menu-title mt-2"/>
-
-                @if(auth()->user()->can('read-general-settings') || auth()->user()->can('view-all-general-settings'))
-                <li class="nav-item">
-                    <a href="{{route('settings.edit')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('settings.edit')])>
-                        <i class="bi bi-question-octagon"></i>
-                        <span data-key="t-dashboard">{{ __('messages.settings') }}</span>
+                    <a href="{{route('vendor-services.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('vendor-services.index', 'vendor-services.show', 'vendor-services.create',
+                        'vendor-services.edit')])>
+                        <i class="bi bi-box-seam-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.vendor_services') }}</span>
                     </a>
                 </li>
                 @endif
