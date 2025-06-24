@@ -89,7 +89,7 @@ class ConsultationRequest extends FormRequest
             }
 
             if ($couponCode = request('coupon_code') && (! isset($validated['package_id']) || $validated['package_id'] == null)) {
-                $coupon = resolve(ConsultationContract::class)->findBy('code', $couponCode, false);
+                $coupon = resolve(CouponContract::class)->findBy('code', $couponCode, false);
 
                 if (
                     $coupon &&
