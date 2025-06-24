@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'seniority' => 'الدرجة العلمية',
-    'seniorities' => 'الدرجات العلمية',
+    'seniority' => 'الخبرة',
+    'seniorities' => 'الخبرات',
     'manage_seniorities' => 'إدارة الدرجات العلمية',
     'manage_seniority' => 'إدارة الدرجة العلمية',
     'add_seniority' => 'إضافة درجة علمية جديدة',
@@ -28,7 +28,7 @@ return [
     'add_setting-package' => 'إضافة باقة جديدة',
     'edit_setting-package' => 'تعديل الباقة',
     'setting-package_details' => 'تفاصيل الباقة',
-    'setting-packages' => 'الباقات',
+    'setting-packages' => 'اقتراحات الباقات',
     'manage_setting-packages' => 'إدارة الباقات',
 
     'package' => 'الباقة',
