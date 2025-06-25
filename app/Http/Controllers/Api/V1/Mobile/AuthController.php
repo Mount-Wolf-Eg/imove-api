@@ -18,6 +18,7 @@ class AuthController extends BaseApiController
     private UserAuthService $userAuthService;
     private array $doctorRelations = [
         'doctor.medicalSpecialities',
+        'doctor.seniorities',
         'doctor.academicDegree',
         'doctor.attachments',
         'doctor.city',

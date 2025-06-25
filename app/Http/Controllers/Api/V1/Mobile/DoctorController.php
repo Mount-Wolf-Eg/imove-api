@@ -36,6 +36,7 @@ class DoctorController extends BaseApiController
         $this->relations = [
             'rates',
             'medicalSpecialities',
+            'seniorities',
             'city',
             'attachments',
             'academicDegree',
@@ -78,6 +79,7 @@ class DoctorController extends BaseApiController
                     $query->orderBy('from_time', 'asc');
                 },
                 'medicalSpecialities',
+                'seniorities',
                 'academicDegree',
                 'attachments',
                 'rates',
