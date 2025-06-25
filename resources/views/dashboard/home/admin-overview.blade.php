@@ -93,9 +93,9 @@
             <tbody>
                 @foreach($topThreeDoctors as $doctor)
                 <tr>
-                    <td>{{ $doctor->user->name }}</td>
+                    <td>{{ $doctor->user?->name }}</td>
                     <td>{{ number_format($doctor->rates_avg_value, 1) }}</td>
-                    <td>{{ $doctor->medicalSpecialities->first()?->name }}</td>
+                    <td>{{ $doctor->medicalSpecialities?->first()?->name }}</td>
                     <td>{{ $doctor->consultations_count }}</td>
                 </tr>
                 @endforeach

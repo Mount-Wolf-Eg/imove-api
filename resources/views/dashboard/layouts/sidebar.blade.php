@@ -156,6 +156,16 @@
 
                 <hr class="menu-title mt-2"/>
 
+                @if(auth()->user()->can('read-vendor-service') || auth()->user()->can('view-all-vendor-service'))
+                <li class="nav-item">
+                    <a href="{{route('vendor-services.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('vendor-services.index', 'vendor-services.show', 'vendor-services.create',
+                        'vendor-services.edit')])>
+                        <i class="bi bi-box-seam-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.vendor_services') }}</span>
+                    </a>
+                </li>
+                @endif
+
                 @if(auth()->user()->can('read-vendor') || auth()->user()->can('view-all-vendor'))
                 <li class="nav-item">
                     <a href="{{route('vendors.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('vendors.index', 'vendors.show', 'vendors.create',
@@ -197,6 +207,15 @@
 
                 @if(auth()->user()->can('read-article') || auth()->user()->can('view-all-article'))
                 <li class="nav-item">
+                    <a href="{{route('educational-contents.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('educational-contents.index', 'educational-contents.show', 'educational-contents.create', 'educational-contents.edit')])>
+                        <i class="bi bi-postcard-fill"></i>
+                        <span data-key="t-dashboard">{{ __('messages.educational-contents') }}</span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->can('read-article') || auth()->user()->can('view-all-article'))
+                <li class="nav-item">
                     <a href="{{route('exercises.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('exercises.index', 'exercises.show', 'exercises.create', 'exercises.edit')])>
                         <i class="bi bi-heart-pulse-fill"></i>
                         <span data-key="t-dashboard">{{ __('messages.exercises') }}</span>
@@ -209,15 +228,6 @@
                     <a href="{{route('articles.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('articles.index', 'articles.show', 'articles.create', 'articles.edit')])>
                         <i class="bi bi-postcard-fill"></i>
                         <span data-key="t-dashboard">{{ __('messages.articles') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                @if(auth()->user()->can('read-article') || auth()->user()->can('view-all-article'))
-                <li class="nav-item">
-                    <a href="{{route('educational-contents.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('educational-contents.index', 'educational-contents.show', 'educational-contents.create', 'educational-contents.edit')])>
-                        <i class="bi bi-postcard-fill"></i>
-                        <span data-key="t-dashboard">{{ __('messages.educational-contents') }}</span>
                     </a>
                 </li>
                 @endif
@@ -338,18 +348,6 @@
                     <a href="{{route('cities.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('cities.index', 'cities.show', 'cities.create', 'cities.edit')])>
                         <i class="bi bi-geo-alt-fill"></i>
                         <span data-key="t-dashboard">{{ __('messages.cities') }}</span>
-                    </a>
-                </li>
-                @endif
-
-                <hr class="menu-title mt-2"/>
-
-                @if(auth()->user()->can('read-vendor-service') || auth()->user()->can('view-all-vendor-service'))
-                <li class="nav-item">
-                    <a href="{{route('vendor-services.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('vendor-services.index', 'vendor-services.show', 'vendor-services.create',
-                        'vendor-services.edit')])>
-                        <i class="bi bi-box-seam-fill"></i>
-                        <span data-key="t-dashboard">{{ __('messages.vendor_services') }}</span>
                     </a>
                 </li>
                 @endif
