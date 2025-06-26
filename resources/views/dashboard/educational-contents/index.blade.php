@@ -46,7 +46,7 @@
                         </th>
                         <td>{{$resource->title}}</td> 
                         <td>{{$resource->medicalSpeciality?->name}}</td>
-                        <td>{{$resource->author->name}}</td>
+                        <td>{{$resource->author?->name}}</td>
                         <td>{{$resource->publish_date ? $resource->publish_date?->format('Y-m-d') : __('messages.not_published')}}</td>
                         <td>{{count($resource->likes)}}</td>
                         <td>{{$resource->views}}</td>

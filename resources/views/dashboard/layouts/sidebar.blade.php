@@ -156,7 +156,7 @@
 
                 <hr class="menu-title mt-2"/>
 
-                @if(auth()->user()->can('read-vendor-service') || auth()->user()->can('view-all-vendor-service'))
+                {{-- @if(auth()->user()->can('read-vendor-service') || auth()->user()->can('view-all-vendor-service'))
                 <li class="nav-item">
                     <a href="{{route('vendor-services.index')}}" @class(['nav-link', 'menu-link' , 'active'=> request()->routeIs('vendor-services.index', 'vendor-services.show', 'vendor-services.create',
                         'vendor-services.edit')])>
@@ -174,7 +174,7 @@
                         <span data-key="t-dashboard">{{ __('messages.vendors') }}</span>
                     </a>
                 </li>
-                @endif
+                @endif --}}
 
                 @if(auth()->user()->can('read-consultation') || auth()->user()->can('view-all-consultation'))
                 <li class="nav-item">
