@@ -1,10 +1,10 @@
 @extends('dashboard.layouts.master')
 @section('title')
-    {{__('messages.manage_referrals')}}
+    {{__('messages.manage_consultations')}}"
 @endsection
 @section('content')
-    <x-breadcrumb title="{{__('messages.manage_referrals')}}"
-                  pagetitle="{{__('messages.referrals')}}"
+    <x-breadcrumb title="{{__('messages.manage_consultations')}}"
+                  pagetitle="{{__('messages.consultations')}}"
                   route="{{route('consultations.index')}}"/>
     <x-filter>
         <div class="col-lg-2 py-1">

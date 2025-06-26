@@ -41,6 +41,7 @@ class Doctor extends Model
         'is_active',
         'general_session_enabled',
     ];
+
     protected array $filters = [
         'keyword',
         'requestStatus',
@@ -53,7 +54,9 @@ class Doctor extends Model
         'canAcceptUrgentCases',
         'withUpcomingShifts',
         'generalSessionEnabled',
+        'gender'
     ];
+
     protected array $searchable = ['user.name'];
     protected array $dates = [];
     public array $filterModels = ['City', 'MedicalSpeciality', 'Seniority', 'AcademicDegree', 'University', 'Hospital', 'DoctorScheduleDay'];
@@ -339,6 +342,13 @@ class Doctor extends Model
         return $query->where('general_session_enabled', $value)
             ->ofActive()
             ->ofRequestStatus(DoctorRequestStatusConstants::APPROVED);
+    }
+
+    public function scopeOfGender($query, $value)
+    {
+        return $query->whereHas('user', function ($q) use ($value) {
+            $q->where('gender', $value);
+        });
     }
     //---------------------Scopes-------------------------------------
 

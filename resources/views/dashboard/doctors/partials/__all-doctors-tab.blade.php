@@ -1,4 +1,10 @@
-<x-filter/>
+<x-filter>
+    <div class="col-lg-2 py-1">
+        {{ Form::label('gender', __('messages.gender'), ['class' => 'form-label']) }}
+        {!! Form::select('gender' , ['' => __('messages.select'), 1 => __('messages.male'), 2 => __('messages.female')], request('gender'),  ['class' => 'form-control select2']) !!}
+    </div>
+</x-filter>
+
 <div class="row">
     <div class="col-12">
         <table class="table table-nowrap">
