@@ -31,9 +31,10 @@ class MedicalSpecialityRequest extends FormRequest
             'name.en' => config('validations.string.req') . '|unique:medical_specialities,name->en,' .$this->route('medical_speciality')?->id,
             'description.ar' => config('validations.string.null'),
             'description.en' => config('validations.string.null'),
-            'percentage' => config('validations.double.req') . '|min:1|max:100',
 
-            'position' => 'required|min:front,back',
+            'percentage' => config('validations.double.null') . '|min:1|max:100',
+
+            'position' => 'nullable|min:front,back',
 
             'icon' => sprintf(config('validations.model.null'), 'files')
         ];
