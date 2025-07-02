@@ -21,7 +21,7 @@ class FcmNotification extends Notification implements ShouldQueue
      */
     public function __construct($data)
     {
-        $this->data = $data + ['sound' => 'default'];
+        $this->data = (array) $data + ['sound' => 'default'];
     }
 
     /**
