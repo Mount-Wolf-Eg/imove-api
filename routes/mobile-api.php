@@ -146,7 +146,7 @@ Route::group(['middleware' => 'locale'], static function () {
 
             Route::controller(HyperPayController::class)->prefix('hyper-pay-payment')->group(function () {
                 Route::post('/checkout', 'createCheckout');
-                Route::post('/callback', 'callback')->name('hyper-pay-payment.callback');
+                Route::get('/callback', 'callback')->name('hyper-pay-payment.callback');
                 Route::post('/webhook', 'webhook')->name('hyper-pay-payment.webhook');
                 Route::post('/status', 'checkPaymentStatus')->name('hyper-pay-payment.status')->withoutMiddleware(['auth:sanctum', 'active_patient']);
             });
