@@ -85,7 +85,7 @@ class HyperPayController extends Controller
     {
         try {
             $request->validate([
-                'id' => 'required|string', // Checkout ID من HyperPay
+                'id' => 'required|string', // Checkout ID from HyperPay
                 'resourcePath' => 'required|string', // Track to check payment status
                 'type' => 'required|in:consultation,subscription',
                 'oid' => 'required|integer', // Order ID
