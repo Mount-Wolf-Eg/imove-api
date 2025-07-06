@@ -1,40 +1,41 @@
 <?php
 
-use App\Http\Controllers\Api\V1\FilterController;
-use App\Http\Controllers\Api\V1\Mobile\ArticleController;
-use App\Http\Controllers\Api\V1\Mobile\BankController;
-use App\Http\Controllers\Api\V1\Mobile\NewAuthController;
-use App\Http\Controllers\Api\V1\Mobile\ComplaintController;
-use App\Http\Controllers\Api\V1\Mobile\ContactController;
-use App\Http\Controllers\Api\V1\Mobile\CouponController;
-use App\Http\Controllers\Api\V1\Mobile\DoctorConsultationController;
-use App\Http\Controllers\Api\V1\Mobile\DoctorProfileController;
-use App\Http\Controllers\Api\V1\Mobile\DoctorScheduleDayShiftController;
-use App\Http\Controllers\Api\V1\Mobile\FaqController;
-use App\Http\Controllers\Api\V1\Mobile\NotificationController;
-use App\Http\Controllers\Api\V1\Mobile\PatientConsultationController;
-use App\Http\Controllers\Api\V1\Mobile\DoctorController;
-use App\Http\Controllers\Api\V1\Mobile\DoctorPackageController;
-use App\Http\Controllers\Api\V1\Mobile\DoctorScheduleDayController;
-use App\Http\Controllers\Api\V1\Mobile\FileController;
-use App\Http\Controllers\Api\V1\Mobile\MyFatoorahController;
-use App\Http\Controllers\Api\V1\Mobile\PatientProfileController;
-use App\Http\Controllers\Api\V1\Mobile\PatientRelativeController;
-use App\Http\Controllers\Api\V1\Mobile\PaymentController;
-use App\Http\Controllers\Api\V1\Mobile\RateController;
-use App\Http\Controllers\Api\V1\Mobile\VendorController;
-use App\Http\Controllers\Api\V1\Mobile\MedicalEquipmentController;
-use App\Http\Controllers\Api\V1\Mobile\StaticPageController;
-use App\Http\Controllers\Api\V1\Mobile\TechnicalSupportController;
-use App\Http\Controllers\Api\V1\Mobile\EducationalContentController;
-use App\Http\Controllers\Api\V1\Mobile\HomeCareRequestController;
-use App\Http\Controllers\Api\V1\Mobile\PatientPackageController;
-use App\Http\Controllers\Api\V1\Mobile\ExerciseController;
-use App\Http\Controllers\Api\V1\Mobile\PatientProgramController;
-use App\Http\Controllers\Api\V1\Mobile\DoctorExerciseController;
-use App\Http\Controllers\Api\V1\Mobile\BannerController;
-use App\Http\Controllers\Api\V1\Mobile\doctorProgramController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\V1\FilterController;
+use App\Http\Controllers\Api\V1\Mobile\FaqController;
+use App\Http\Controllers\Api\V1\Mobile\BankController;
+use App\Http\Controllers\Api\V1\Mobile\FileController;
+use App\Http\Controllers\Api\V1\Mobile\RateController;
+use App\Http\Controllers\Api\V1\Mobile\BannerController;
+use App\Http\Controllers\Api\V1\Mobile\CouponController;
+use App\Http\Controllers\Api\V1\Mobile\DoctorController;
+use App\Http\Controllers\Api\V1\Mobile\VendorController;
+use App\Http\Controllers\Api\V1\Mobile\ArticleController;
+use App\Http\Controllers\Api\V1\Mobile\ContactController;
+use App\Http\Controllers\Api\V1\Mobile\NewAuthController;
+use App\Http\Controllers\Api\V1\Mobile\PaymentController;
+use App\Http\Controllers\Api\V1\Mobile\ExerciseController;
+use App\Http\Controllers\Api\V1\Mobile\HyperPayController;
+use App\Http\Controllers\Api\V1\Mobile\ComplaintController;
+use App\Http\Controllers\Api\V1\Mobile\MyFatoorahController;
+use App\Http\Controllers\Api\V1\Mobile\StaticPageController;
+use App\Http\Controllers\Api\V1\Mobile\NotificationController;
+use App\Http\Controllers\Api\V1\Mobile\DoctorPackageController;
+use App\Http\Controllers\Api\V1\Mobile\DoctorProfileController;
+use App\Http\Controllers\Api\V1\Mobile\doctorProgramController;
+use App\Http\Controllers\Api\V1\Mobile\DoctorExerciseController;
+use App\Http\Controllers\Api\V1\Mobile\PatientPackageController;
+use App\Http\Controllers\Api\V1\Mobile\PatientProfileController;
+use App\Http\Controllers\Api\V1\Mobile\PatientProgramController;
+use App\Http\Controllers\Api\V1\Mobile\HomeCareRequestController;
+use App\Http\Controllers\Api\V1\Mobile\PatientRelativeController;
+use App\Http\Controllers\Api\V1\Mobile\MedicalEquipmentController;
+use App\Http\Controllers\Api\V1\Mobile\TechnicalSupportController;
+use App\Http\Controllers\Api\V1\Mobile\DoctorScheduleDayController;
+use App\Http\Controllers\Api\V1\Mobile\DoctorConsultationController;
+use App\Http\Controllers\Api\V1\Mobile\EducationalContentController;
+use App\Http\Controllers\Api\V1\Mobile\PatientConsultationController;
+use App\Http\Controllers\Api\V1\Mobile\DoctorScheduleDayShiftController;
 
 Route::group(['middleware' => 'locale'], static function () {
     // Route::post('register-user-as-patient', [NewAuthController::class, 'registerUserAsPatient']); // old
@@ -141,6 +142,13 @@ Route::group(['middleware' => 'locale'], static function () {
             Route::controller(MyFatoorahController::class)->prefix('payment')->group(function () {
                 Route::post('/', 'getUrl');
                 Route::get('/callback', 'callback')->name('payment.callback')->withoutMiddleware(['auth:sanctum', 'active_patient']);
+            });
+
+            Route::controller(HyperPayController::class)->prefix('hyper-pay-payment')->group(function () {
+                Route::post('/checkout', 'createCheckout');
+                Route::post('/callback', 'callback')->name('hyper-pay-payment.callback');
+                Route::post('/webhook', 'webhook')->name('hyper-pay-payment.webhook');
+                Route::post('/status', 'checkPaymentStatus')->name('hyper-pay-payment.status')->withoutMiddleware(['auth:sanctum', 'active_patient']);
             });
 
             // technical support patient
