@@ -38,8 +38,9 @@ class EducationalContentRequest extends FormRequest
             'medical_speciality_id' => sprintf(config('validations.model.active_req'), 'medical_specialities'),
             'title.ar' => config('validations.string.req'),
             'title.en' => config('validations.string.req'),
-            'content.ar' => config('validations.long_text.req'),
-            'content.en' => config('validations.long_text.req'),
+            // 'content.ar' => config('validations.long_text.req'),
+            'content.ar' => 'required|string|min:3|max:18000',
+            'content.en' => 'required|string|min:3|max:18000',
         ];
         if ($this->isMethod('post')) {
             $rules['main_image'] = 'required|'.config('validations.file.image').'|mimes:jpeg,jpg,png|max:2048';
