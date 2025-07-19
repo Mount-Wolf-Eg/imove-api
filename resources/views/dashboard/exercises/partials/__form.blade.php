@@ -133,9 +133,7 @@
                             </div>
                             <div class="card-body pt-2 pb-3">
                                 {!! Form::file('main_image', ['class' => 'form-control', 'accept' => 'image/jpeg, image/png', 'value' => old('main_image')]) !!}
-                                @if(request()->routeIs('exercises.create'))
-                                    <span class="text-danger fw-bold">*</span>
-                                @endif
+        
                                 @error("main_image")
                                 <span class="text-danger">{{$message}}</span>
                                 @enderror
