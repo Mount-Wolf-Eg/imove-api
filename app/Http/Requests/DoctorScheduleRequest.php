@@ -69,7 +69,8 @@ class DoctorScheduleRequest extends FormRequest
             'schedule_repeat_from'               => config('validations.date.null') . '|after_or_equal:today',
             'schedule_repeat_to'                 => config('validations.date.null') . '|after:schedule_repeat_from',
             'reminder_before_consultation'       => config('validations.integer.null'),
-            'price'                              => config('validations.integer.null')
+            'price'                              => config('validations.integer.null'),
+            'general_session_enabled'            => config('validations.boolean.null'),
         ];
     }
 }
