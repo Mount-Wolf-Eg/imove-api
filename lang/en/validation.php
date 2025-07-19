@@ -18,7 +18,7 @@ return [
     'password_max'       => 'The password may not be greater than 250 characters.',
     'password_confirmed' => 'The password confirmation does not match.',
     'password_regex'     => 'The password must contain at least one lowercase letter, one uppercase letter, and one number.',
-    
+
     'email_unique' => 'You already have an supervisor with this email :attribute. Please use a different email address.',
     'failed' => 'The given data was invalid.',
     'accepted' => 'The :attribute must be accepted.',
@@ -194,6 +194,8 @@ return [
     'profile_mimes' => 'Profile image should be only one of these extensions  (PNG - JPG - JPEG)',
     'main_image_mimes' => 'Main image should be only one of these extensions  (PNG - JPG - JPEG)',
     'images_mimes' => 'All images should be only one of these extensions  (PNG - JPG - JPEG)',
+    'main_video_mimes' => 'Main video should be only one of these extensions (MP4,AVI,WEBM)',
+    'max_file_size' => 'Max File Size ',
 
     /*
     |--------------------------------------------------------------------------

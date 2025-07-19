@@ -39,11 +39,11 @@ class ExerciseRequest extends FormRequest
             'description.en' => config('validations.long_text.req'),
         ];
         if ($this->isMethod('post')) {
-            $rules['media'] = 'required|'.config('validations.file.mixed').'|max:20048';
-            $rules['main_image'] = 'required|'.config('validations.file.image').'|mimes:jpeg,jpg,png|max:2048';
+            $rules['media'] = 'required|'.config('validations.file.video').'|max:20048';
+            $rules['main_image'] = 'required|'.config('validations.file.image').'|mimes:jpeg,jpg,png|max:3048';
         }else{
-            $rules['media'] = 'nullable|'.config('validations.file.mixed').'|max:20048';
-            $rules['main_image'] = 'nullable|'.config('validations.file.image').'|mimes:jpeg,jpg,png|max:2048';
+            $rules['media'] = 'nullable|'.config('validations.file.video').'|max:20048';
+            $rules['main_image'] = 'nullable|'.config('validations.file.image').'|mimes:jpeg,jpg,png|max:3048';
         }
 
         return $rules;
@@ -70,11 +70,14 @@ class ExerciseRequest extends FormRequest
     /**
      * @return array
      */
-    public function messages() : array
+    public function messages(): array
     {
         return [
-            'media.image' => __('validation.main_image_mimes'),
-            'media.mimes' => __('validation.main_image_mimes'),
+            'media.mixed' => __('validation.main_video_mimes'),
+            'media.mimes' => __('validation.main_video_mimes'),
+            'media.max' => __('validation.max_file_size', ['size' => 20]),
+            'main_image.mimes' => __('validation.main_image_mimes'),
+            'main_image.max' => __('validation.max_file_size', ['size' => 2])
         ];
     }
 }

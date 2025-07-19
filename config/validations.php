@@ -2,7 +2,8 @@
 return [
     'file' => [
         'image' => 'image|mimes:png,jpg,jpeg,svg',
-        'mixed' => 'mimes:png,jpg,jpeg,svg,pdf,doc,docx,xlsx,xls,txt,csv,odt,ods,mp4,avi,webm,svg'
+        'mixed' => 'mimes:png,jpg,jpeg,svg,pdf,doc,docx,xlsx,xls,txt,csv,odt,ods,mp4,avi,webm,svg',
+        'video' => 'mimes:svg,odt,ods,mp4,avi,webm,ogg,svg'
     ],
     'string' => [
         'req' => 'required|string|min:3|max:250',

@@ -132,52 +132,81 @@ class ExerciseRepository extends BaseRepository implements ExerciseContract
         return $model;
     }
 
-    public static function syncMainImage($model, $attributes)
-    {
-        if (isset($attributes['main_image'])) {
-            if ($model->mainImage && $model->mainImage->id != $attributes['main_image'])
-                resolve(FileContract::class)->remove($model->mainImage);
-            if (is_file($attributes['main_image'])) {
-                $file = resolve(FileContract::class)->create([
-                    'file' => $attributes['main_image'],
-                    'type' => FileConstants::FILE_TYPE_EXERCISE_MAIN_IMAGE->value
-                ]);
-            } else {
-                $file = resolve(FileContract::class)->find($attributes['main_image']);
-            }
-            $model->mainImage()->save($file);
-        }
-        return $model;
-    }
+    // public static function syncMainImage($model, $attributes)
+    // {
+    //     if (isset($attributes['main_image'])) {
+    //         if ($model->mainImage && $model->mainImage->id != $attributes['main_image'])
+    //             resolve(FileContract::class)->remove($model->mainImage);
+    //         if (is_file($attributes['main_image'])) {
+    //             $file = resolve(FileContract::class)->create([
+    //                 'file' => $attributes['main_image'],
+    //                 'type' => FileConstants::FILE_TYPE_EXERCISE_MAIN_IMAGE->value
+    //             ]);
+    //         } else {
+    //             $file = resolve(FileContract::class)->find($attributes['main_image']);
+    //         }
+    //         $model->mainImage()->save($file);
+    //     }
+    //     return $model;
+    // }
 
     // public static function syncMainImage($model, $attributes)
     // {
-    //     if (!isset($attributes['main_image'])) {
-    //         return $model;
+    //     if (isset($attributes['main_image'])) {
+    //         if ($model->mainImage && $model->mainImage->id != $attributes['main_image'] && !is_object($attributes['main_image'])) {
+    //             resolve(FileContract::class)->remove($model->mainImage);
+    //         }
+
+    //         $file = null;
+
+    //         // Handle uploaded file (Illuminate\Http\UploadedFile)
+    //         if ($attributes['main_image'] instanceof \Illuminate\Http\UploadedFile) {
+    //             $file = resolve(FileContract::class)->create([
+    //                 'file' => $attributes['main_image'],
+    //                 'type' => FileConstants::FILE_TYPE_EXERCISE_MAIN_IMAGE->value
+    //             ]);
+    //         }
+    //         // Handle existing file ID
+    //         elseif (is_numeric($attributes['main_image'])) {
+    //             $file = resolve(FileContract::class)->find($attributes['main_image']);
+    //         }
+
+    //         if ($file) {
+    //             $model->mainImage()->save($file);
+    //         }
     //     }
-
-    //     $mainImage = $attributes['main_image'];
-
-    //     // Remove the old image if it exists and is different
-    //     if ($model->mainImage && !($mainImage instanceof \Illuminate\Http\UploadedFile) && $model->mainImage->id != $mainImage) {
-    //         resolve(FileContract::class)->remove($model->mainImage);
-    //     }
-
-    //     // If the uploaded image is new
-    //     if ($mainImage instanceof \Illuminate\Http\UploadedFile) {
-    //         $file = resolve(FileContract::class)->create([
-    //             'file' => $mainImage,
-    //             'type' => FileConstants::FILE_TYPE_EXERCISE_MAIN_IMAGE->value
-    //         ]);
-    //     } else {
-    //         // If media is an ID of an existing file
-    //         $file = resolve(FileContract::class)->find($mainImage);
-    //     }
-
-    //     $model->mainImage()->save($file);
 
     //     return $model;
     // }
+
+    public static function syncMainImage($model, $attributes)
+    {
+        if (!isset($attributes['main_image'])) {
+            return $model;
+        }
+
+        $mainImage = $attributes['main_image'];
+
+        // Remove the old image if it exists and is different
+        if ($model->mainImage && !($mainImage instanceof \Illuminate\Http\UploadedFile) && $model->mainImage->id != $mainImage) {
+            resolve(FileContract::class)->remove($model->mainImage);
+        }
+
+        // If the uploaded image is new
+        if ($mainImage instanceof \Illuminate\Http\UploadedFile) {
+            $file = resolve(FileContract::class)->create([
+                'file' => $mainImage,
+                'type' => FileConstants::FILE_TYPE_EXERCISE_MAIN_IMAGE->value
+            ]);
+        } else {
+            // If media is an ID of an existing file
+            $file = resolve(FileContract::class)->find($mainImage);
+        }
+
+        $model->mainImage()->save($file);
+
+        return $model;
+    }
 
 
 }
